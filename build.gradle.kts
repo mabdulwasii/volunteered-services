@@ -1,14 +1,29 @@
-plugins {
-    kotlin("jvm") version "1.5.31"
+version = "0.0.1-SNAPSHOT"
+
+val excludedProjects = setOf("apps", "libs")
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-group = "org.volunteered"
-version = "1.0-SNAPSHOT"
+subprojects {
+    if (this.name !in excludedProjects) {
+        version = rootProject.version
 
-repositories {
-    mavenCentral()
-}
+        if (path.startsWith(":apps")) {
+            group = "org.volunteered.apps"
+        }
 
-dependencies {
-    implementation(kotlin("stdlib"))
+        if (path.startsWith(":libs")) {
+            group = "org.volunteered.libs"
+        }
+
+        apply {
+            if (path.startsWith(":libs")) {
+                plugin("java-library")
+            }
+        }
+    }
 }
