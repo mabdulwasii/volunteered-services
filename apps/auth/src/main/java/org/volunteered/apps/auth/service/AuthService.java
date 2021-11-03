@@ -31,15 +31,9 @@ public class AuthService {
     }
 
     public String authenticate(String username, String password) {
-        // User authentication
-        Authentication authentication = null;
+        Authentication authentication;
         try {
-            // This method will call UserDetailsServiceImpl.loadUserByUsername'
-            System.out.println("username ===> " + username);
-            System.out.println("password ===> " + password);
-
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            System.out.println("Auth ===> " + authentication.toString());
         } catch (BadCredentialsException e) {
             e.printStackTrace();
             throw new RuntimeException("Bad Credentials");

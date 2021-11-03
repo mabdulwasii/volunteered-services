@@ -4,15 +4,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.volunteered.apps.auth.repository.UserRepository;
 import org.volunteered.apps.auth.service.AuthService;
 
 @RestController
-public class LoginController {
+public class AuthController {
 
     private final AuthService authService;
 
-    public LoginController(AuthService authService, UserRepository userRepository) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 

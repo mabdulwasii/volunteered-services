@@ -30,20 +30,20 @@ public class RSAKeyConfigProperties {
 
     private PrivateKey privateKey;
 
-    @Value("${rsa.key.secret}")
-    private String secret;
-
     @PostConstruct
-    public void createRSAKey() throws Exception {
-        logger.info("This.publicKeyFile " + publicKeyFile);
-        logger.info("This.privateKeyFile " + privateKeyFile);
-        RSAEncryptionUtils.generateKey(publicKeyFile, privateKeyFile, secret, 1);
+    public void loadRSAKey() throws Exception {
 
+        logger.info("This.privateKeyFile " + privateKeyFile);
+        logger.info("This.publicKeyFile " + publicKeyFile);
+
+
+        //Todo read from file
         this.publicKey = RSAEncryptionUtils.getPublicKey(publicKeyFile);
         this.privateKey = RSAEncryptionUtils.getPrivateKey(privateKeyFile);
         logger.info("This.PrivateKey " + privateKey);
         logger.info("This.PublicKey " + publicKey);
     }
+
 
     public PublicKey getPublicKey() {
         return publicKey;

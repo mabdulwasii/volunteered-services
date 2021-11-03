@@ -2,14 +2,20 @@ package org.volunteered.apps.auth.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class RSAEncryptionUtils {
@@ -19,14 +25,14 @@ public class RSAEncryptionUtils {
      */
     public static final String ENCRYPT_ALGORITHM = "RSA";
 
-    /**
-     * Key length
-     */
-    private static final int DEFAULT_KEY_SIZE = 2048;
-
 
     private static final Logger logger = LoggerFactory.getLogger(RSAEncryptionUtils.class);
 
+    private final ResourceLoader resourceLoader;
+
+    public RSAEncryptionUtils(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
     /**
      * Read public key from file
@@ -37,6 +43,7 @@ public class RSAEncryptionUtils {
      */
     public static PublicKey getPublicKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
+        logger.info("Public bytes  ===> " + Arrays.toString(bytes));
         return getPublicKey(bytes);
     }
 
@@ -49,6 +56,7 @@ public class RSAEncryptionUtils {
      */
     public static PrivateKey getPrivateKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
+        logger.info("Public bytes  ===> " + Arrays.toString(bytes));
         return getPrivateKey(bytes);
     }
 
@@ -82,55 +90,19 @@ public class RSAEncryptionUtils {
         return factory.generatePrivate(spec);
     }
 
-    /**
-     * According to the ciphertext, the RSA public key and key are generated and written into the file
-     *
-     * @param publicKeyFilename  Public key file path
-     * @param privateKeyFilename Private key file path
-     * @param secret             Ciphertext for generating key
-     * @param keySize            Specify the key length. If it is smaller than the default, select the default length 2048
-     * @throws Exception
-     */
-    public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret, int keySize) throws Exception {
-        logger.info("Public Key FileName ===> " + publicKeyFilename);
-        logger.info("Private Key Filename ===> " + privateKeyFilename);
-
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ENCRYPT_ALGORITHM);
-        SecureRandom secureRandom = new SecureRandom(secret.getBytes());
-        keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
-        KeyPair keyPair = keyPairGenerator.genKeyPair();
-
-        // Get the public key and write it out
-        byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
-        publicKeyBytes = Base64.getEncoder().encode(publicKeyBytes);
-
-        writeFile(publicKeyFilename, publicKeyBytes);
-
-        // Get the private key and write it out
-        byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
-        privateKeyBytes = Base64.getEncoder().encode(privateKeyBytes);
-
-        writeFile(privateKeyFilename, privateKeyBytes);
-    }
-
     private static byte[] readFile(String filename) throws IOException {
-
-        return Files.readAllBytes(new File(filename).toPath());
+        return Files.readAllBytes(new File(filename).getAbsoluteFile().toPath());
     }
 
-    private static void writeFile(String filename, byte[] bytes) throws IOException {
-        File file = new File(filename);
+    private byte[] loadKeyFile(String path) throws IOException {
+        // ReadKey.
+        File filePublicKey = new File(path);
+        FileInputStream fis = new FileInputStream(path);
+        byte[] encodedKey = new byte[(int) filePublicKey.length()];
+        fis.read(encodedKey);
+        fis.close();
 
-        File fileParent = file.getParentFile();
-
-        if (!file.exists()) {
-            if (!fileParent.exists()) {
-                fileParent.mkdirs();
-            }
-            file.createNewFile();
-
-        }
-        Files.write(file.toPath(), bytes);
-
+        return encodedKey;
     }
+
 }
