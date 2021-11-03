@@ -1,0 +1,51 @@
+server:
+  port: 8181
+  servlet:
+    context-path: /auth
+
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        generate_statistics: true
+        format_sql: true
+        show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: '/h2-console'
+      settings:
+        trace: true
+        web-allow-others: false
+
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        stat: debug
+        type: trace
+
+rsa:
+  key:
+    privateKeyFile: 'src/main/resources/privateKey.txt'
+    publicKeyFile: 'src/main/resources/publicKey.txt'
+    secret: '(EMOK:)_$^11244^%$_(IS:)_@@++--(COOL:)_++++_.sds_(GUY:)'
+
+
+token:
+  header: 'Authorization'
+  expiration: 3200
