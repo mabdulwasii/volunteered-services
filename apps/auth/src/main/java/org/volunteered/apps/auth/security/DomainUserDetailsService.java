@@ -1,9 +1,7 @@
 package org.volunteered.apps.auth.security;
 
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +13,6 @@ import org.volunteered.apps.auth.domain.User;
 import org.volunteered.apps.auth.repository.UserRepository;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -26,24 +23,20 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public DomainUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String username) {
         log.debug("Authenticating {}", username);
 
-        if (new EmailValidator().isValid(username, null)) {
-            return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(username)
-                    .map(user -> createSpringSecurityUser(username, user))
-                    .orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " was not found in the database"));
-        }
-
-        String lowerUsername = username.toLowerCase(Locale.ENGLISH);
-        return userRepository.findOneWithAuthoritiesByUsername(lowerUsername)
-                .map(user -> createSpringSecurityUser(lowerUsername, user))
-                .orElseThrow(() -> new UsernameNotFoundException("User " + lowerUsername + " was not found in the database"));
+        return userRepository.findOneWithAuthoritiesByUsernameIgnoreCase(username)
+                .map(user -> createSpringSecurityUser(username, user))
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not found in the database"));
 
     }
 
@@ -52,7 +45,7 @@ public class DomainUserDetailsService implements UserDetailsService {
             throw new UserNotActivatedException("User " + username + " was not activated");
         }
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getName().toString()))
                 .collect(Collectors.toList());
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(),

@@ -18,9 +18,6 @@ public class JWTToken {
     @Value("${token.header}")
     private String header;
 
-    //@Value("${token.secret}")
-    //private String secret;
-
     @Value("${token.expiration}")
     private long expiration;
 
@@ -88,18 +85,6 @@ public class JWTToken {
             refreshedToken = null;
         }
         return refreshedToken;
-    }
-
-    /**
-     * Authentication token
-     *
-     * @param token       token
-     * @param userDetails user
-     * @return Is it effective
-     */
-    public Boolean validateToken(String token, UserDetails userDetails, PublicKey publicKey) {
-        String username = getUsernameFromToken(token, publicKey);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token, publicKey));
     }
 
     /**

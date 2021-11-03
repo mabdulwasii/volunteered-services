@@ -1,6 +1,5 @@
 package org.volunteered.apps.auth.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,10 +10,11 @@ import org.volunteered.apps.auth.service.AuthService;
 @RestController
 public class LoginController {
 
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private UserRepository userRepository;
+    private final AuthService authService;
+
+    public LoginController(AuthService authService, UserRepository userRepository) {
+        this.authService = authService;
+    }
 
     @PostMapping({"/login/{username}/{password}"})
     public ResponseEntity<String> login(@PathVariable String username, @PathVariable String password) {

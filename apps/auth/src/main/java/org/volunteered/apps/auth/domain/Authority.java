@@ -2,13 +2,9 @@ package org.volunteered.apps.auth.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.volunteered.apps.auth.domain.enumeration.AuthorityType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -16,14 +12,32 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Authority implements Serializable {
 
-
     private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Size(max = 50)
     @Id
-    @Column(length = 50, name = "name")
-    private String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "authority_id")
+    private int id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "name", nullable = false, length = 50)
+    private AuthorityType name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public AuthorityType getName() {
+        return name;
+    }
+
+    public void setName(AuthorityType name) {
+        this.name = name;
+    }
 
     // prettier-ignore
     @Override
@@ -31,9 +45,5 @@ public class Authority implements Serializable {
         return "Authority{" +
                 "name='" + name + '\'' +
                 "}";
-    }
-
-    public String getName() {
-        return name;
     }
 }

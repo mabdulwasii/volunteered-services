@@ -2,7 +2,6 @@ package org.volunteered.apps.auth.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,15 +18,17 @@ public class AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final JWTToken jwtToken;
 
-    @Autowired
-    private JWTToken jwtToken;
+    private final RSAKeyConfigProperties rsaKeyProp;
 
-    @Autowired
-    private RSAKeyConfigProperties rsaKeyProp;
+    public AuthService(AuthenticationManager authenticationManager, JWTToken jwtToken, RSAKeyConfigProperties rsaKeyProp) {
+        this.authenticationManager = authenticationManager;
+        this.jwtToken = jwtToken;
+        this.rsaKeyProp = rsaKeyProp;
+    }
 
     public String authenticate(String username, String password) {
         // User authentication

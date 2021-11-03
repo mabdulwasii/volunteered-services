@@ -1,6 +1,5 @@
 package org.volunteered.apps.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,17 +11,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.volunteered.apps.auth.security.AuthenticationFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AuthenticationFilter authenticationFilter;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,8 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Exit function
         http.logout().logoutUrl("/logout");
-        // Add JWT filter
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.volunteered.apps.auth.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -35,11 +34,6 @@ public class User implements Serializable {
     @Size(min = 60, max = 60)
     @Column(name = "password", length = 60, nullable = false)
     private String password;
-
-    @Email
-    @Size(min = 5, max = 254)
-    @Column(length = 254) //unique = true
-    private String email;
 
     @NotNull
     @Column(nullable = false)
@@ -75,14 +69,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public boolean isStatus() {
         return status;
     }
@@ -105,7 +91,6 @@ public class User implements Serializable {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
                 ", status=" + status +
                 ", authorities=" + authorities +
                 '}';
