@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.volunteered.apps.auth.config.RSAKeyConfigProperties;
 import org.volunteered.apps.auth.dto.Jwt;
+import org.volunteered.apps.auth.dto.LoginDetails;
 import org.volunteered.apps.auth.security.jwt.JWTUtils;
 import org.volunteered.apps.auth.security.service.UserDetailsImpl;
 import org.volunteered.apps.auth.service.AuthService;
@@ -36,10 +37,10 @@ public class AuthServiceImpl implements AuthService {
         this.rsaKeyProp = rsaKeyProp;
     }
 
-    public Jwt authenticate(String username, String password) {
+    public Jwt authenticate(LoginDetails loginDetails) {
         Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
         } catch (BadCredentialsException e) {
             e.printStackTrace();
             throw new RuntimeException("Bad Credentials");
