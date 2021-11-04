@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.config;
+package org.volunteered.apps.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.volunteered.apps.auth.security.DomainUserDetailsService;
+import org.volunteered.apps.auth.security.service.DomainUserDetailsService;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

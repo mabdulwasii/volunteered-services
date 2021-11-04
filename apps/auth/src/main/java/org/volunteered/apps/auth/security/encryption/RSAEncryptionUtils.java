@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.security;
+package org.volunteered.apps.auth.security.encryption;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

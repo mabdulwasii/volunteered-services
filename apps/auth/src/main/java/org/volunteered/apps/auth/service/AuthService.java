@@ -1,5 +1,7 @@
 package org.volunteered.apps.auth.service;
 
+import org.volunteered.apps.auth.dto.Jwt;
+
 public interface AuthService {
-    String authenticate(String username, String password);
+    Jwt authenticate(String username, String password);
 }

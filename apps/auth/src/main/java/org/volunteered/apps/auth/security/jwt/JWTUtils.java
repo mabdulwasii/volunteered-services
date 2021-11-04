@@ -4,15 +4,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.volunteered.apps.auth.security.service.UserDetailsImpl;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
 
 @Component
-public class JWTToken {
+public class JWTUtils {
 
 
     @Value("${token.header}")
@@ -31,7 +31,7 @@ public class JWTToken {
      * @param userDetails user
      * @return token token
      */
-    public String generateToken(UserDetails userDetails, PrivateKey privateKey) {
+    public String generateToken(UserDetailsImpl userDetails, PrivateKey privateKey) {
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("sub", userDetails.getUsername());
         return generateToken(claims, privateKey);
