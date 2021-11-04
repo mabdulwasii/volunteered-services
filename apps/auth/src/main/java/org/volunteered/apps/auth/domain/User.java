@@ -41,7 +41,7 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "name"))
+            inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 
     public Long getId() {

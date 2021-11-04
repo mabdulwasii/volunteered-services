@@ -14,7 +14,7 @@ import org.volunteered.apps.auth.security.jwt.JWTToken;
 import java.security.PrivateKey;
 
 @Service
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -24,7 +24,7 @@ public class AuthService {
 
     private final RSAKeyConfigProperties rsaKeyProp;
 
-    public AuthService(AuthenticationManager authenticationManager, JWTToken jwtToken, RSAKeyConfigProperties rsaKeyProp) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, JWTToken jwtToken, RSAKeyConfigProperties rsaKeyProp) {
         this.authenticationManager = authenticationManager;
         this.jwtToken = jwtToken;
         this.rsaKeyProp = rsaKeyProp;
@@ -44,7 +44,6 @@ public class AuthService {
         UserDetails loginUser = (UserDetails) authentication.getPrincipal();
         // Generating Token
         PrivateKey privateKey = rsaKeyProp.getPrivateKey();
-        logger.info("privateKey for generate ===> " + privateKey + "END");
         return jwtToken.generateToken(loginUser, privateKey);
     }
 }

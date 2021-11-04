@@ -16,7 +16,7 @@ CREATE TABLE user
 CREATE TABLE authority
 (
     authority_id INT AUTO_INCREMENT PRIMARY KEY,
-    name         VARCHAR(50) UNIQUE NOT NULL
+    name         VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE user_authority
@@ -31,9 +31,9 @@ VALUES (1, 'admin@example.com', '$2a$04$Ot6tX0QK8xzo/xW5A/J3F.QZDS7eio095dN5IoQj
        (2, 'user@example.com', '$2a$04$Ot6tX0QK8xzo/xW5A/J3F.QZDS7eio095dN5IoQjWJDOySs42f1S.', true);
 
 INSERT INTO authority (authority_id, name)
-VALUES (1, 'ADMIN'),
-       (2, 'USER');
+VALUES (1, 'ROLE_ADMIN'),
+       (2, 'ROLE_USER');
 
-INSERT INTO user_authority (id, user_id)
+INSERT INTO user_authority (user_id, authority_id)
 VALUES (1, 1),
        (2, 2);

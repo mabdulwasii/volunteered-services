@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.KeyFactory;
@@ -15,7 +14,6 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 import java.util.Base64;
 
 public class RSAEncryptionUtils {
@@ -43,7 +41,7 @@ public class RSAEncryptionUtils {
      */
     public static PublicKey getPublicKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
-        logger.info("Public bytes  ===> " + Arrays.toString(bytes));
+        logger.info("Public bytes  ===> " + new String(bytes));
         return getPublicKey(bytes);
     }
 
@@ -56,7 +54,7 @@ public class RSAEncryptionUtils {
      */
     public static PrivateKey getPrivateKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
-        logger.info("Public bytes  ===> " + Arrays.toString(bytes));
+        logger.info("Private bytes  ===> " + new String(bytes));
         return getPrivateKey(bytes);
     }
 
@@ -92,17 +90,6 @@ public class RSAEncryptionUtils {
 
     private static byte[] readFile(String filename) throws IOException {
         return Files.readAllBytes(new File(filename).getAbsoluteFile().toPath());
-    }
-
-    private byte[] loadKeyFile(String path) throws IOException {
-        // ReadKey.
-        File filePublicKey = new File(path);
-        FileInputStream fis = new FileInputStream(path);
-        byte[] encodedKey = new byte[(int) filePublicKey.length()];
-        fis.read(encodedKey);
-        fis.close();
-
-        return encodedKey;
     }
 
 }
