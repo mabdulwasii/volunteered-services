@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.volunteered.apps.auth.security.service.UserDetailsImpl;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -14,12 +13,14 @@ import java.util.*;
 @Component
 public class JWTUtils {
 
-
     @Value("${token.header}")
     private String header;
 
     @Value("${token.expiration}")
     private long expiration;
+
+    @Value("${token.refreshExpiration}")
+    private long refreshExpiration;
 
     private static String createJTI() {
         return new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes()));
@@ -43,15 +44,16 @@ public class JWTUtils {
      * @param token token
      * @return user name
      */
-    public String getUsernameFromToken(String token, PublicKey publicKey) {
+    public Optional<String> getUsernameFromToken(String token, PublicKey publicKey) {
         String username;
         try {
-            Claims claims = getClaimsFromToken(token, publicKey);
-            username = claims.getSubject();
+            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
+
+            username = optionalClaimsFromToken.map(Claims::getSubject).orElse(null);
         } catch (Exception e) {
             username = null;
         }
-        return username;
+        return Optional.ofNullable(username);
     }
 
     /**
@@ -62,12 +64,17 @@ public class JWTUtils {
      */
     public Boolean isTokenExpired(String token, PublicKey publicKey) {
         try {
-            Claims claims = getClaimsFromToken(token, publicKey);
-            Date expiration = claims.getExpiration();
-            return expiration.before(new Date());
+            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
+
+            if (optionalClaimsFromToken.isPresent()) {
+                var expiration = optionalClaimsFromToken.get().getExpiration();
+                return expiration.before(new Date());
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+        return false;
     }
 
     /**
@@ -79,9 +86,10 @@ public class JWTUtils {
     public String refreshToken(String token, PublicKey publicKey, PrivateKey privateKey) {
         String refreshedToken;
         try {
-            Claims claims = getClaimsFromToken(token, publicKey);
-            refreshedToken = generateToken(claims, privateKey);
+            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
+            refreshedToken = optionalClaimsFromToken.map(claims -> generateToken(claims, privateKey)).orElse(null);
         } catch (Exception e) {
+            e.printStackTrace();
             refreshedToken = null;
         }
         return refreshedToken;
@@ -94,7 +102,7 @@ public class JWTUtils {
      * @return token token
      */
     private String generateToken(Map<String, Object> claims, PrivateKey privateKey) {
-        Date date = new Date(System.currentTimeMillis());
+        Date date = new Date();
         return Jwts.builder().setClaims(claims)
                 .setId(createJTI())
                 .setIssuedAt(date)
@@ -109,20 +117,23 @@ public class JWTUtils {
      * @param token token
      * @return Data declaration
      */
-    private Claims getClaimsFromToken(String token, PublicKey publicKey) {
+    private Optional<Claims> getClaimsFromToken(String token, PublicKey publicKey) {
         Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             claims = null;
         }
-        return claims;
+        return Optional.ofNullable(claims);
     }
 
     public String getHeader() {
         return header;
     }
 
+    public long getRefreshExpiration() {
+        return refreshExpiration;
+    }
 
     @Override
     public String toString() {

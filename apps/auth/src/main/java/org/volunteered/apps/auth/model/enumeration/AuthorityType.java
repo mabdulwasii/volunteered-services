@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.domain.enumeration;
+package org.volunteered.apps.auth.model.enumeration;
 
 public enum AuthorityType {
     ROLE_USER,

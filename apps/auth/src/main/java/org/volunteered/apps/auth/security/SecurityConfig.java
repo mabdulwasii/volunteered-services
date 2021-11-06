@@ -1,7 +1,6 @@
 package org.volunteered.apps.auth.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Solution unable to inject authentication manager directly
      *
-     * @return
+     * @return PasswordEncoder
      * @throws Exception
      */
     @Bean
@@ -41,29 +40,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // token based distributed authentication, so no session is required
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                // CRSF is disabled. Because the session is not used, cross site csrf attack defense is disabled. Otherwise, the login cannot succeed
+                .csrf().disable()
                 // Configure permissions
                 .authorizeRequests()
                 // Login login CaptchaImage allows anonymous access
-                .antMatchers("/login/**/**").anonymous()
-                .antMatchers("/h2-console").anonymous()
-                // Static resource release
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/*.html",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                ).permitAll()
+                .antMatchers("/signin").permitAll()
+                .antMatchers("/signup").permitAll()
+                .antMatchers("/refresh_token").permitAll()
                 // Except for all the above requests, authentication is required
                 .anyRequest().authenticated()
                 .and()
                 // Allows cross domain access, equivalent to corsConfigurationSource of config class
                 .cors()
-                .and()
-                // CRSF is disabled. Because the session is not used, cross site csrf attack defense is disabled. Otherwise, the login cannot succeed
-                .csrf().disable();
+                .and();
 
         // Exit function
         http.logout().logoutUrl("/logout");

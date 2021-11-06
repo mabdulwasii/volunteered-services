@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.domain;
+package org.volunteered.apps.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,23 +20,28 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-    @Column(name = "user_id")
+    @Column(name = "id")
     private Long id;
-
     @NotNull
-    @Size(min = 5, max = 15)
-    @Column(length = 50, unique = true, nullable = false)
+    @Size(min = 5, max = 200)
+    @Column(length = 200, unique = true, nullable = false)
     private String username;
-
     @JsonIgnore
     @NotNull
-    @Size(min = 60, max = 60)
-    @Column(name = "password", length = 60, nullable = false)
+    @Size(min = 60, max = 256)
+    @Column(name = "password", length = 256, nullable = false)
     private String password;
-
     @NotNull
     @Column(nullable = false)
-    private boolean status = true;
+    private boolean activated = true;
+
+    public User() {
+    }
+
+    public User(@NotNull @Size(min = 5, max = 200) String username, @NotNull @Size(min = 60, max = 256) String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_authority",
@@ -68,12 +73,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isActivated() {
+        return activated;
     }
 
-    public void setStatus(boolean activated) {
-        this.status = activated;
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     public Set<Authority> getAuthorities() {
@@ -90,7 +95,7 @@ public class User implements Serializable {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", status=" + status +
+                ", status=" + activated +
                 ", authorities=" + authorities +
                 '}';
     }

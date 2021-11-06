@@ -1,8 +1,8 @@
-package org.volunteered.apps.auth.domain;
+package org.volunteered.apps.auth.model;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.volunteered.apps.auth.domain.enumeration.AuthorityType;
+import org.volunteered.apps.auth.model.enumeration.AuthorityType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +16,7 @@ public class Authority implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "authority_id")
+    @Column(name = "id")
     private int id;
 
     @Enumerated(EnumType.STRING)

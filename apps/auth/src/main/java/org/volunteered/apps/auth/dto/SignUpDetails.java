@@ -1,23 +1,28 @@
 package org.volunteered.apps.auth.dto;
 
-public class LoginDetails {
-
+public class SignUpDetails {
     private String username;
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
+    private String confirmPassword;
 
     public String getPassword() {
         return password;
     }
 
+    public String getConfirmPassword() {
+        return this.confirmPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public String toString() {
-        return "LoginDetails{" +
+        return "UserInfo{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
                 '}';
     }
 }

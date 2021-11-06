@@ -3,7 +3,9 @@ package org.volunteered.apps.auth.dto;
 import java.util.List;
 
 public class Jwt {
-    private String token;
+    private String accessToken;
+
+    private String refreshToken;
 
     private String type = "Bearer";
 
@@ -13,19 +15,20 @@ public class Jwt {
 
     private List<String> roles;
 
-    public Jwt(String token, Long id, String username, List<String> roles) {
-        this.token = token;
+    public Jwt(String accessToken, String refreshToken, Long id, String username, List<String> roles) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.id = id;
         this.username = username;
         this.roles = roles;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public String getType() {
@@ -58,5 +61,13 @@ public class Jwt {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

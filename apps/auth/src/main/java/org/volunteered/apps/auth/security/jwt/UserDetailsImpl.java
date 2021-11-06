@@ -1,10 +1,10 @@
-package org.volunteered.apps.auth.security.service;
+package org.volunteered.apps.auth.security.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.volunteered.apps.auth.domain.User;
+import org.volunteered.apps.auth.model.User;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.security;
+package org.volunteered.apps.auth.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

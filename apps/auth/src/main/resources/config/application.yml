@@ -46,4 +46,5 @@ rsa:
 
 token:
   header: 'Authorization'
-  expiration: 3200
+  expiration: 3600
+  refreshExpiration: 10000000
