@@ -52,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signin").permitAll()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/refresh_token").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 // Except for all the above requests, authentication is required
                 .anyRequest().authenticated()
                 .and()

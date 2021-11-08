@@ -1,9 +1,19 @@
 package org.volunteered.apps.auth.dto;
 
+import javax.validation.constraints.Email;
+
 public class SignUpDetails {
-    private String username;
-    private String password;
-    private String confirmPassword;
+
+    @Email(message = "Invalid email")
+    private final String username;
+    private final String password;
+    private final String confirmPassword;
+
+    public SignUpDetails(@Email(message = "Invalid email") String username, String password, String confirmPassword) {
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
 
     public String getPassword() {
         return password;

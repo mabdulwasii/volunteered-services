@@ -6,6 +6,7 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -89,7 +90,8 @@ public class RSAEncryptionUtils {
     }
 
     private static byte[] readFile(String filename) throws IOException {
-        return Files.readAllBytes(new File(filename).getAbsoluteFile().toPath());
+        var s = Files.readString(new File(filename).getAbsoluteFile().toPath(), StandardCharsets.UTF_8);
+        return s.getBytes(StandardCharsets.UTF_8);
     }
 
 }

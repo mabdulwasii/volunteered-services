@@ -27,7 +27,7 @@ spring:
       path: '/h2-console'
       settings:
         trace: true
-        web-allow-others: false
+        web-allow-others: true
 
 
 
@@ -41,7 +41,7 @@ logging:
 rsa:
   key:
     privateKeyFile: 'src/main/resources/private_key.key'
-    publicKeyFile: 'src/main/resources/public_key.pub'
+    publicKeyFile: 'src/main/resources/public_key.pem'
 
 
 token:

@@ -26,7 +26,9 @@ public class AuthController {
                     .badRequest()
                     .body(new ApiResponse("Error: Username taken. Please input another username"));
         }
-        return ResponseEntity.ok(authService.register(userInfo));
+
+
+        return ResponseEntity.ok().body(authService.register(userInfo));
     }
 
     @PostMapping({"/signin"})

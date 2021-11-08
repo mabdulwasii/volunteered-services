@@ -18,19 +18,21 @@ import java.util.Set;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Size(min = 5, max = 200)
     @Column(length = 200, unique = true, nullable = false)
     private String username;
+
     @JsonIgnore
     @NotNull
-    @Size(min = 60, max = 256)
+    @Size(min = 1, max = 256)
     @Column(name = "password", length = 256, nullable = false)
     private String password;
+
+
     @NotNull
     @Column(nullable = false)
     private boolean activated = true;
@@ -38,7 +40,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(@NotNull @Size(min = 5, max = 200) String username, @NotNull @Size(min = 60, max = 256) String password) {
+    public User(@NotNull @Size(min = 5, max = 200) String username, @NotNull @Size(min = 1, max = 256) String password) {
         this.username = username;
         this.password = password;
     }
@@ -95,7 +97,7 @@ public class User implements Serializable {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", status=" + activated +
+                ", activated=" + activated +
                 ", authorities=" + authorities +
                 '}';
     }

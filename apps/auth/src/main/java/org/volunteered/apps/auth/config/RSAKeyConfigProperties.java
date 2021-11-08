@@ -36,7 +36,6 @@ public class RSAKeyConfigProperties {
         logger.info("This.privateKeyFile " + privateKeyFile);
         logger.info("This.publicKeyFile " + publicKeyFile);
 
-
         //Todo read from file
         this.publicKey = RSAEncryptionUtils.getPublicKey(publicKeyFile);
         this.privateKey = RSAEncryptionUtils.getPrivateKey(privateKeyFile);

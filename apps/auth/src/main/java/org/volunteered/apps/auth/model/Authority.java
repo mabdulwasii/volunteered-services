@@ -14,6 +14,14 @@ public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public Authority() {
+    }
+
+    public Authority(int id, AuthorityType name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
