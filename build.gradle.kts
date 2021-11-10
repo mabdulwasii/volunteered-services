@@ -1,3 +1,9 @@
+plugins {
+    base
+    idea
+    kotlin("jvm")
+}
+
 version = "0.0.1-SNAPSHOT"
 
 val excludedProjects = setOf("apps", "libs")
