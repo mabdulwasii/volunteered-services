@@ -28,3 +28,5 @@ include("libs:grpc")
 findProject(":libs:grpc")?.name = "grpc"
 include("libs:proto")
 findProject(":libs:proto")?.name = "proto"
+include("apps:user")
+findProject(":apps:user")?.name = "user"

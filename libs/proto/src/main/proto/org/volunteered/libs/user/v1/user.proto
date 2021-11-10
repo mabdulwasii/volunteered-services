@@ -14,13 +14,18 @@ import "validate/validate.proto";
 import "org/volunteered/libs/common/v1/common.proto";
 
 service UserService {
-  rpc Get(GetRequest) returns (GetResponse);
-  rpc List(ListRequest) returns (ListResponse);
-  rpc Count(google.protobuf.Empty) returns (google.protobuf.UInt32Value);
-  rpc Search(SearchRequest) returns (stream SearchResponse);
-  rpc Create(CreateRequest) returns (google.protobuf.StringValue);
-  rpc Update(UpdateRequest) returns (google.protobuf.Empty);
-  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+  rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc Get(GetRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc Update(UpdateUserRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc Delete(DeleteUserRequest) returns (google.protobuf.Empty);
+}
+
+message CreateUserRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string phone = 3;
+  string email = 4;
+  string country = 5;
 }
 
 message GetRequest {
@@ -28,42 +33,12 @@ message GetRequest {
   [(validate.rules).string = {min_len: 0}];
 }
 
-message GetResponse {
-  org.volunteered.libs.common.v1.User user = 1;
-}
-
-message ListRequest {
-  int32 page = 1;
-  int32 page_size = 2;
-  google.protobuf.Any filter = 3;
-  repeated string sort_param = 4;
-}
-
-message ListResponse {
-  map<string, org.volunteered.libs.common.v1.User> results = 1;
-  google.protobuf.Int64Value count = 2;
-}
-
-message SearchRequest {
-  google.protobuf.Any filter = 3;
-  google.protobuf.FieldMask field_mask = 2;
-}
-
-message SearchResponse {
+message UpdateUserRequest {
   google.protobuf.StringValue id = 1;
   org.volunteered.libs.common.v1.User user = 2;
 }
 
-message CreateRequest {
-  org.volunteered.libs.common.v1.User user = 1;
-}
-
-message UpdateRequest {
-  google.protobuf.StringValue id = 1;
-  org.volunteered.libs.common.v1.User user = 2;
-}
-
-message DeleteRequest {
+message DeleteUserRequest {
   google.protobuf.StringValue id = 1
   [(validate.rules).string = {min_len: 0}];
 }

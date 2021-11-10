@@ -7,6 +7,7 @@ plugins {
 version = "0.0.1-SNAPSHOT"
 
 val excludedProjects = setOf("apps", "libs")
+val grpcProjects = setOf("user")
 
 allprojects {
     repositories {
@@ -27,6 +28,10 @@ subprojects {
         }
 
         apply {
+            if (path.startsWith(":apps") && (name in grpcProjects)) {
+                plugin("application")
+            }
+
             if (path.startsWith(":libs")) {
                 plugin("java-library")
             }
