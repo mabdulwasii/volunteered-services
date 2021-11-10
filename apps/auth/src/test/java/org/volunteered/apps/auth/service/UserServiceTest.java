@@ -1,6 +1,7 @@
 package org.volunteered.apps.auth.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,7 @@ import org.volunteered.apps.auth.repository.UserRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = AuthApplication.class)
@@ -33,6 +33,7 @@ class UserServiceTest {
     public static final String username = "dola@example.com";
     public static final String PASSWORD = "admin";
     public static final String ENCRYPTED_PASSWORD = "^&**#GEHE&**(((";
+
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final AuthorityRepository authorityRepository = mock(AuthorityRepository.class);
@@ -44,12 +45,25 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldCreateUser() {
+    @DisplayName("Should not create user if passwords mismatch")
+    void shouldNotCreateUserIfPasswordMisMatch() {
+        var signUpDetails = new SignUpDetails(username, PASSWORD, "383838");
+
+        var OptionalUser = userService.createUser(signUpDetails);
+
+        assertFalse(OptionalUser.isPresent(), "User created successfully");
+
+    }
+
+    @Test
+    @DisplayName("Should create user if passwords match")
+    void shouldCreateUserIfPasswordMatch() {
 
         var user = new User(USER_ID, username, PASSWORD, true);
         var role_user = new Authority(10, AuthorityType.ROLE_USER);
         var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
 
+        when(userRepository.existsByUsername(username)).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn(ENCRYPTED_PASSWORD);
         when(authorityRepository.findByName(any())).thenReturn(Optional.of(role_user));
         when(userRepository.save(any())).thenReturn(user);

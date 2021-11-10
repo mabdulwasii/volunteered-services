@@ -64,20 +64,24 @@ public class AuthServiceImpl implements AuthService {
         // Generating Token
         PrivateKey privateKey = rsaKeyProp.getPrivateKey();
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (authentication != null) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
-        String jwt = jwtUtils.generateToken(loginUser, privateKey);
+            UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+            String jwt = jwtUtils.generateToken(loginUser, privateKey);
 
-        List<String> authorities = loginUser.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+            List<String> authorities = loginUser.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
 
-        var optionalRefreshToken = refreshTokenService.createRefreshToken(loginUser.getId());
+            var optionalRefreshToken = refreshTokenService.createRefreshToken(loginUser.getId());
 
-        String refreshToken = optionalRefreshToken.map(RefreshToken::getToken).orElse("");
+            String refreshToken = optionalRefreshToken.map(RefreshToken::getToken).orElse("");
 
-        return new Jwt(jwt, refreshToken, loginUser.getId(), loginUser.getUsername(), authorities);
+            return new Jwt(jwt, refreshToken, loginUser.getId(), loginUser.getUsername(), authorities);
+        } else {
+            throw new RuntimeException("Invalid Login Details");
+        }
     }
 
     public TokenRefreshResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {

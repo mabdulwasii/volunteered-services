@@ -27,7 +27,6 @@ public class AuthController {
                     .body(new ApiResponse("Error: Username taken. Please input another username"));
         }
 
-
         var register = authService.register(userInfo);
         return ResponseEntity.ok().body(register);
     }

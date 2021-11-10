@@ -33,8 +33,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         var byId = userRepository.findById(userId);
 
-        System.out.println("byId  ++ " + byId);
-
         if (byId.isPresent()) {
             refreshToken = new RefreshToken();
             refreshToken.setUser(byId.get());
@@ -42,8 +40,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             refreshToken.setToken(UUID.randomUUID().toString());
 
             refreshToken = refreshTokenRepository.save(refreshToken);
-
-            System.out.println("RefreshToken  ++ " + refreshToken);
         }
 
         return Optional.ofNullable(refreshToken);
@@ -56,8 +52,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken refreshToken) {
-
-        System.out.println("refresh token " + refreshToken);
 
         if (refreshToken.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(refreshToken);
