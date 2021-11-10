@@ -106,10 +106,7 @@ class RefreshTokenServiceTest {
         var user = new User(USER_ID, username, PASSWORD, true);
         var refreshToken = new RefreshToken(1L, user, REFRESH_TOKEN, Instant.now().minus(Duration.ofDays(1)));
 
-        assertThrows(TokenRefreshExpiredException.class, () -> {
-            refreshTokenService.verifyExpiration(refreshToken);
-        });
-
+        assertThrows(TokenRefreshExpiredException.class, () -> refreshTokenService.verifyExpiration(refreshToken));
 
     }
 
