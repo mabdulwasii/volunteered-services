@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.volunteered.apps.auth.config.RSAKeyConfigProperties;
 import org.volunteered.apps.auth.dto.*;
 import org.volunteered.apps.auth.model.RefreshToken;
+import org.volunteered.apps.auth.security.exception.SignUpException;
 import org.volunteered.apps.auth.security.exception.TokenRefreshExpiredException;
 import org.volunteered.apps.auth.security.jwt.JWTUtils;
 import org.volunteered.apps.auth.security.jwt.UserDetailsImpl;
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         this.rsaKeyProp = rsaKeyProp;
     }
 
-    public Jwt authenticate(LoginDetails loginDetails) {
+    public Jwt authenticate(LoginDetails loginDetails) throws Exception {
 
         Authentication authentication;
 
@@ -54,10 +55,10 @@ public class AuthServiceImpl implements AuthService {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
         } catch (BadCredentialsException e) {
             e.printStackTrace();
-            throw new RuntimeException("Bad Credentials");
+            throw new BadCredentialsException("Bad Credentials");
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("User authentication failed");
+            throw new Exception("User authentication failed");
         }
 
         // Generating Token
@@ -86,7 +87,12 @@ public class AuthServiceImpl implements AuthService {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
+                    String token = null;
+                    try {
+                        token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return new TokenRefreshResponse(token, requestRefreshToken);
                 })
                 .orElseThrow(() -> new TokenRefreshExpiredException(requestRefreshToken,
@@ -98,6 +104,6 @@ public class AuthServiceImpl implements AuthService {
 
         var userOptional = userService.createUser(signUpDetails);
 
-        return userOptional.map(user -> new ApiResponse("User created successfully")).orElseGet(() -> new ApiResponse("Error: User creation failed"));
+        return userOptional.map(user -> new ApiResponse("User created successfully")).orElseThrow(() -> new SignUpException("Error: User creation failed"));
     }
 }

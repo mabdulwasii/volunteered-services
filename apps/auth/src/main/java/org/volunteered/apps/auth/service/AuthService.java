@@ -4,7 +4,7 @@ import org.volunteered.apps.auth.dto.*;
 
 public interface AuthService {
 
-    Jwt authenticate(LoginDetails loginDetails);
+    Jwt authenticate(LoginDetails loginDetails) throws Exception;
 
     TokenRefreshResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 

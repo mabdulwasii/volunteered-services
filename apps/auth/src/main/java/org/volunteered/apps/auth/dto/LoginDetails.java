@@ -2,8 +2,13 @@ package org.volunteered.apps.auth.dto;
 
 public class LoginDetails {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
+
+    public LoginDetails(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
         return username;

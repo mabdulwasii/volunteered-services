@@ -67,7 +67,7 @@ public class RSAEncryptionUtils {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */
-    private static PublicKey getPublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static PublicKey getPublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalArgumentException {
         bytes = Base64.getDecoder().decode(bytes);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
         KeyFactory factory = KeyFactory.getInstance(ENCRYPT_ALGORITHM);

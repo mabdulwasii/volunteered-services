@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
 
             System.out.println("user ===> " + user);
 
-
             savedUser = userRepository.save(user);
 
             System.out.println("Saved user ===> " + savedUser);

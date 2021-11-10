@@ -7,6 +7,16 @@ import java.time.Instant;
 @Table(name = "refresh_token")
 public class RefreshToken {
 
+    public RefreshToken(long id, User user, String token, Instant expiryDate) {
+        this.id = id;
+        this.user = user;
+        this.token = token;
+        this.expiryDate = expiryDate;
+    }
+
+    public RefreshToken() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

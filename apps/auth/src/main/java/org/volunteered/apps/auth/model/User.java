@@ -45,6 +45,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public User(Long id, @NotNull @Size(min = 5, max = 200) String username, @NotNull @Size(min = 1, max = 256) String password, @NotNull boolean activated) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.activated = activated;
+    }
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id"),

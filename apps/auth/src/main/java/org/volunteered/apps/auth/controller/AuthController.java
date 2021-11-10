@@ -28,12 +28,12 @@ public class AuthController {
         }
 
 
-        return ResponseEntity.ok().body(authService.register(userInfo));
+        var register = authService.register(userInfo);
+        return ResponseEntity.ok().body(register);
     }
 
     @PostMapping({"/signin"})
-    public ResponseEntity<?> signin(@RequestBody LoginDetails loginDetails) {
-
+    public ResponseEntity<?> signin(@RequestBody LoginDetails loginDetails) throws Exception {
         Jwt token = authService.authenticate(loginDetails);
         return ResponseEntity.ok(token);
     }

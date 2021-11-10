@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.volunteered.apps.auth.security.encryption.RSAEncryptionUtils;
 import org.volunteered.apps.auth.service.AuthService;
 
-import javax.annotation.PostConstruct;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -30,7 +29,6 @@ public class RSAKeyConfigProperties {
 
     private PrivateKey privateKey;
 
-    @PostConstruct
     public void loadRSAKey() throws Exception {
 
         logger.info("This.privateKeyFile " + privateKeyFile);
@@ -44,11 +42,12 @@ public class RSAKeyConfigProperties {
     }
 
 
-    public PublicKey getPublicKey() {
+    public PublicKey getPublicKey() throws Exception {
         return publicKey;
     }
 
-    public PrivateKey getPrivateKey() {
+    public PrivateKey getPrivateKey() throws Exception {
+        loadRSAKey();
         return privateKey;
     }
 }

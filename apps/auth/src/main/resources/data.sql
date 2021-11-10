@@ -1,9 +1,9 @@
 -- Test
 
+DROP TABLE IF EXISTS refresh_token;
 DROP TABLE IF EXISTS user_authority;
 DROP TABLE IF EXISTS authority;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS refresh_token;
+DROP TABLE IF EXISTS USER;
 
 CREATE TABLE user
 (
