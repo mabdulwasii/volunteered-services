@@ -30,7 +30,6 @@ message GetRequest {
 
 message GetResponse {
   org.volunteered.libs.common.v1.User user = 1;
-//  micro.apps.proto.common.v1.Person account = 1;
 }
 
 message ListRequest {

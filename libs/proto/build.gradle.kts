@@ -45,7 +45,7 @@ sourceSets {
     main {
         proto {
             // In addition to the default 'src/main/proto'
-            srcDir("third_party_proto")
+            srcDir("src/main/third_party_proto")
         }
     }
 }
