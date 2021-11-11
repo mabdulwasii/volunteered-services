@@ -4,7 +4,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.volunteered.apps.auth.dto.*;
+import org.volunteered.apps.auth.dto.ApiResponse;
+import org.volunteered.apps.auth.dto.Jwt;
+import org.volunteered.apps.auth.dto.LoginDetails;
+import org.volunteered.apps.auth.dto.RefreshTokenRequest;
+import org.volunteered.apps.auth.dto.RefreshTokenResponse;
+import org.volunteered.apps.auth.dto.SignUpDetails;
 import org.volunteered.apps.auth.repository.UserRepository;
 import org.volunteered.apps.auth.service.AuthService;
 
@@ -39,8 +44,8 @@ public class AuthController {
 
     @PostMapping({"/refresh_token"})
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        TokenRefreshResponse tokenRefreshResponse = authService.refreshToken(refreshTokenRequest);
-        return ResponseEntity.ok(tokenRefreshResponse);
+        RefreshTokenResponse refreshTokenResponse = authService.refreshToken(refreshTokenRequest);
+        return ResponseEntity.ok(refreshTokenResponse);
     }
 
 }

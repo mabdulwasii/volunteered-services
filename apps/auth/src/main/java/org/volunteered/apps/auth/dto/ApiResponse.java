@@ -2,7 +2,7 @@ package org.volunteered.apps.auth.dto;
 
 public class ApiResponse {
 
-    private String message;
+    private final String message;
 
     public ApiResponse(String message) {
         this.message = message;
@@ -11,11 +11,7 @@ public class ApiResponse {
     public String getMessage() {
         return message;
     }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
+    
     @Override
     public String toString() {
         return "ApiResponse{" +

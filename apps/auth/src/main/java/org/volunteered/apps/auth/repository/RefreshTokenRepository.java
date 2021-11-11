@@ -7,7 +7,6 @@ import org.volunteered.apps.auth.model.RefreshToken;
 import java.util.Optional;
 
 @Repository
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
-
-    Optional<RefreshToken> findByToken(String token);
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
+	Optional<RefreshToken> findByToken(String token);
 }

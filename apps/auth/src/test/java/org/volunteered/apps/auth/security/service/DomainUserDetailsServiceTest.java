@@ -12,21 +12,20 @@ import org.volunteered.apps.auth.security.exception.UserNotActivatedException;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
 @SpringBootTest(classes = AuthApplication.class)
 class DomainUserDetailsServiceTest {
-
-    public static final String ACCESS_TOKEN = "$%^&&***";
-    public static final String REFRESH_TOKEN = "436%%#&*#373883";
+    
     public static final long USER_ID = 3L;
     public static final String username = "dola@example.com";
     public static final String PASSWORD = "admin";
-    public static final String ENCRYPTED_PASSWORD = "^&**#GEHE&**(((";
-
+    
     private final UserRepository userRepository = mock(UserRepository.class);
 
     private DomainUserDetailsService domainUserDetailsService;

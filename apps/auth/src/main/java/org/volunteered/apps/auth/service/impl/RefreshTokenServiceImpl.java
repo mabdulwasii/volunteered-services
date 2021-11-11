@@ -1,4 +1,4 @@
-package org.volunteered.apps.auth.service.Impl;
+package org.volunteered.apps.auth.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.volunteered.apps.auth.model.RefreshToken;
@@ -30,15 +30,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public Optional<RefreshToken> createRefreshToken(Long userId) {
 
         RefreshToken refreshToken = null;
-
-        var byId = userRepository.findById(userId);
-
-        if (byId.isPresent()) {
+    
+        var optionalUser = userRepository.findById(userId);
+    
+        if (optionalUser.isPresent()) {
             refreshToken = new RefreshToken();
-            refreshToken.setUser(byId.get());
+            refreshToken.setUser(optionalUser.get());
             refreshToken.setExpiryDate(Instant.now().plusMillis(jwtUtils.getRefreshExpiration()));
             refreshToken.setToken(UUID.randomUUID().toString());
-
+        
             refreshToken = refreshTokenRepository.save(refreshToken);
         }
 

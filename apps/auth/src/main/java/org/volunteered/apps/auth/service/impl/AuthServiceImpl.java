@@ -1,7 +1,5 @@
-package org.volunteered.apps.auth.service.Impl;
+package org.volunteered.apps.auth.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,7 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.volunteered.apps.auth.config.RSAKeyConfigProperties;
-import org.volunteered.apps.auth.dto.*;
+import org.volunteered.apps.auth.dto.ApiResponse;
+import org.volunteered.apps.auth.dto.Jwt;
+import org.volunteered.apps.auth.dto.LoginDetails;
+import org.volunteered.apps.auth.dto.RefreshTokenRequest;
+import org.volunteered.apps.auth.dto.RefreshTokenResponse;
+import org.volunteered.apps.auth.dto.SignUpDetails;
 import org.volunteered.apps.auth.model.RefreshToken;
 import org.volunteered.apps.auth.security.exception.SignUpException;
 import org.volunteered.apps.auth.security.exception.TokenRefreshExpiredException;
@@ -27,28 +30,27 @@ import java.util.stream.Collectors;
 import static org.volunteered.apps.auth.security.jwt.UserDetailsImpl.build;
 
 @Service
-public class AuthServiceImpl implements AuthService {
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-
+public class AuthServiceImpl implements AuthService{
+    
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final UserService userService;
-
+    
     private final JWTUtils jwtUtils;
-
+    
     private final RSAKeyConfigProperties rsaKeyProp;
-
+    
     public AuthServiceImpl(AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService, UserService userService, JWTUtils jwtUtils, RSAKeyConfigProperties rsaKeyProp) {
+        
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
         this.userService = userService;
         this.jwtUtils = jwtUtils;
         this.rsaKeyProp = rsaKeyProp;
     }
-
+    
     public Jwt authenticate(LoginDetails loginDetails) throws Exception {
-
+        
         Authentication authentication;
 
         try {
@@ -83,21 +85,18 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Invalid Login Details");
         }
     }
-
-    public TokenRefreshResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String requestRefreshToken = refreshTokenRequest.getRefreshToken();
-
-        return refreshTokenService.findByToken(requestRefreshToken)
-                .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUser)
-                .map(user -> {
+        
+        return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser).map(user -> {
                     String token = null;
                     try {
                         token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return new TokenRefreshResponse(token, requestRefreshToken);
+                    return new RefreshTokenResponse(token, requestRefreshToken);
                 })
                 .orElseThrow(() -> new TokenRefreshExpiredException(requestRefreshToken,
                         "Error: Invalid refresh token!"));

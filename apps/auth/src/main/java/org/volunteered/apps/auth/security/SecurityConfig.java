@@ -29,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Solution unable to inject authentication manager directly
      *
      * @return PasswordEncoder
-     * @throws Exception
      */
     @Bean
     @Override
@@ -48,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 // Configure permissions
                 .authorizeRequests()
-                // Login login CaptchaImage allows anonymous access
+                // Login CaptchaImage allows anonymous access
                 .antMatchers("/signin").permitAll()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/refresh_token").permitAll()

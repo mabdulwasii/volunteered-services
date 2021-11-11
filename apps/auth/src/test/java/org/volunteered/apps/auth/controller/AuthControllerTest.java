@@ -3,7 +3,6 @@ package org.volunteered.apps.auth.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.volunteered.apps.auth.AuthApplication;
-import org.volunteered.apps.auth.dto.*;
+import org.volunteered.apps.auth.dto.ApiResponse;
+import org.volunteered.apps.auth.dto.Jwt;
+import org.volunteered.apps.auth.dto.LoginDetails;
+import org.volunteered.apps.auth.dto.RefreshTokenRequest;
+import org.volunteered.apps.auth.dto.RefreshTokenResponse;
+import org.volunteered.apps.auth.dto.SignUpDetails;
 import org.volunteered.apps.auth.repository.UserRepository;
 import org.volunteered.apps.auth.service.AuthService;
 
@@ -24,7 +28,9 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AuthApplication.class)
 @AutoConfigureMockMvc
@@ -45,12 +51,7 @@ class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    void setUp() {
-
-    }
-
+    
     @Test
     @DisplayName("Should signup if username does not exist")
     void shouldSignupWithValidUsername() throws Exception {
@@ -92,21 +93,16 @@ class AuthControllerTest {
     @Test
     @DisplayName("Should not signup if email is invalid")
     void shouldNotSignupIfEmailIsInvalid() {
-
+    
         var signUpDetails = new SignUpDetails("try.com", "1234567890", "1234567890");
-
+    
         when(authService.register(signUpDetails)).thenThrow(RuntimeException.class);
-
+    
         //execute the post request
-
-        Assertions.assertThrows(AssertionError.class, () -> {
-            mockMvc.perform(post("/signup")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(signUpDetails)))
-
-                    .andExpect(status().is5xxServerError())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        });
+    
+        Assertions.assertThrows(AssertionError.class, () -> mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_JSON).content(asJsonString(signUpDetails)))
+            
+                .andExpect(status().is5xxServerError()).andExpect(content().contentType(MediaType.APPLICATION_JSON)));
     }
 
     @Test
@@ -127,9 +123,9 @@ class AuthControllerTest {
     @Test
     @DisplayName("Should refresh token if token is valid")
     void shouldRefreshTokenIfCodeIsValid() throws Exception {
-
+    
         var refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
-        var tokenRefreshResponse = new TokenRefreshResponse(ACCESS_TOKEN, REFRESH_TOKEN);
+        var tokenRefreshResponse = new RefreshTokenResponse(ACCESS_TOKEN, REFRESH_TOKEN);
 
         when(authService.refreshToken(any())).thenReturn(tokenRefreshResponse);
 

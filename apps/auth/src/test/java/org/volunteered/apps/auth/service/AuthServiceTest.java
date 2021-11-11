@@ -1,6 +1,5 @@
 package org.volunteered.apps.auth.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.volunteered.apps.auth.AuthApplication;
 import org.volunteered.apps.auth.config.RSAKeyConfigProperties;
 import org.volunteered.apps.auth.dto.RefreshTokenRequest;
+import org.volunteered.apps.auth.dto.RefreshTokenResponse;
 import org.volunteered.apps.auth.dto.SignUpDetails;
-import org.volunteered.apps.auth.dto.TokenRefreshResponse;
 import org.volunteered.apps.auth.model.RefreshToken;
 import org.volunteered.apps.auth.model.User;
 import org.volunteered.apps.auth.security.exception.SignUpException;
@@ -23,7 +22,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -55,22 +56,18 @@ class AuthServiceTest {
 
     @MockBean
     private RSAKeyConfigProperties rsaKeyProp;
-
-    @BeforeEach
-    void setUp() {
-    }
-
+    
     @Test
     @DisplayName("should Register new user")
-    void shouldRegisterNewUser() throws Exception {
-
+    void shouldRegisterNewUser() {
+        
         var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
         var user = new User(USER_ID, signUpDetails.getUsername(), signUpDetails.getPassword(), true);
-
+        
         when(userService.createUser(signUpDetails)).thenReturn(Optional.of(user));
-
+        
         var apiResponse = authService.register(signUpDetails);
-
+        
         assertNotNull(apiResponse);
         assertEquals(apiResponse.getMessage(), "User created successfully");
     }
@@ -80,7 +77,6 @@ class AuthServiceTest {
     void shouldThrowExceptionIfUserNotSaved() {
 
         var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
-        var user = new User(USER_ID, signUpDetails.getUsername(), signUpDetails.getPassword(), true);
 
         when(userService.createUser(signUpDetails)).thenReturn(Optional.empty());
 
@@ -93,20 +89,20 @@ class AuthServiceTest {
 
         var user = new User(USER_ID, username, PASSWORD, true);
         var refreshToken = new RefreshToken(1L, user, REFRESH_TOKEN, Instant.now().plus(Duration.ofMillis(2000)));
-
+    
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
-
+    
         when(refreshTokenService.findByToken(REFRESH_TOKEN)).thenReturn(Optional.of(refreshToken));
         when(refreshTokenService.verifyExpiration(any())).thenReturn(refreshToken);
         when(jwtUtils.generateToken(any(), any())).thenReturn(ACCESS_TOKEN);
-
-
-        TokenRefreshResponse tokenRefreshResponse = authService.refreshToken(refreshTokenRequest);
-
-        assertNotNull(tokenRefreshResponse);
-        assertEquals(tokenRefreshResponse.getRefreshToken(), REFRESH_TOKEN);
-        assertEquals(tokenRefreshResponse.getTokenType(), "Bearer");
-        assertEquals(tokenRefreshResponse.getAccessToken(), ACCESS_TOKEN);
+    
+    
+        RefreshTokenResponse refreshTokenResponse = authService.refreshToken(refreshTokenRequest);
+    
+        assertNotNull(refreshTokenResponse);
+        assertEquals(refreshTokenResponse.getRefreshToken(), REFRESH_TOKEN);
+        assertEquals(refreshTokenResponse.getTokenType(), "Bearer");
+        assertEquals(refreshTokenResponse.getAccessToken(), ACCESS_TOKEN);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package org.volunteered.apps.auth.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,17 +18,20 @@ import org.volunteered.apps.auth.repository.UserRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = AuthApplication.class)
 @ExtendWith(SpringExtension.class)
 @WithMockUser
 class UserServiceTest {
-
-    public static final String ACCESS_TOKEN = "$%^&&***";
-    public static final String REFRESH_TOKEN = "436%%#&*#373883";
-    public static final long USER_ID = 3L;
+	
+	public static final long USER_ID = 3L;
     public static final String username = "dola@example.com";
     public static final String PASSWORD = "admin";
     public static final String ENCRYPTED_PASSWORD = "^&**#GEHE&**(((";
@@ -39,12 +41,8 @@ class UserServiceTest {
     private final AuthorityRepository authorityRepository = mock(AuthorityRepository.class);
     @Autowired
     private UserService userService;
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @Test
+	
+	@Test
     @DisplayName("Should not create user if passwords mismatch")
     void shouldNotCreateUserIfPasswordMisMatch() {
         var signUpDetails = new SignUpDetails(username, PASSWORD, "383838");

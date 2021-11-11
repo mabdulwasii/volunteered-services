@@ -4,7 +4,14 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.volunteered.apps.auth.model.enumeration.AuthorityType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
@@ -30,24 +37,12 @@ public class Authority implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 50)
     private AuthorityType name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public AuthorityType getName() {
+	
+	public AuthorityType getName() {
         return name;
     }
-
-    public void setName(AuthorityType name) {
-        this.name = name;
-    }
-
-    // prettier-ignore
+	
+	// prettier-ignore
     @Override
     public String toString() {
         return "Authority{" +

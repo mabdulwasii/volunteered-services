@@ -1,10 +1,18 @@
 package org.volunteered.apps.auth.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Table(name = "refresh_token")
+@Table(name = "refresh_token", indexes = @Index(columnList = "token", unique = true))
 public class RefreshToken {
 
     public RefreshToken(long id, User user, String token, Instant expiryDate) {
@@ -33,10 +41,6 @@ public class RefreshToken {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public User getUser() {

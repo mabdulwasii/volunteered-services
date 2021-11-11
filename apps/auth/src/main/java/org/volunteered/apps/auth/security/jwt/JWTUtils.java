@@ -8,7 +8,12 @@ import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class JWTUtils {
@@ -37,64 +42,7 @@ public class JWTUtils {
         claims.put("sub", userDetails.getUsername());
         return generateToken(claims, privateKey);
     }
-
-    /**
-     * Get the user name from the token
-     *
-     * @param token token
-     * @return user name
-     */
-    public Optional<String> getUsernameFromToken(String token, PublicKey publicKey) {
-        String username;
-        try {
-            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
-
-            username = optionalClaimsFromToken.map(Claims::getSubject).orElse(null);
-        } catch (Exception e) {
-            username = null;
-        }
-        return Optional.ofNullable(username);
-    }
-
-    /**
-     * Determine whether the token has expired
-     *
-     * @param token token
-     * @return Is it overdue
-     */
-    public Boolean isTokenExpired(String token, PublicKey publicKey) {
-        try {
-            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
-
-            if (optionalClaimsFromToken.isPresent()) {
-                var expiration = optionalClaimsFromToken.get().getExpiration();
-                return expiration.before(new Date());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
-    /**
-     * refresh token
-     *
-     * @param token Original token
-     * @return New token
-     */
-    public String refreshToken(String token, PublicKey publicKey, PrivateKey privateKey) {
-        String refreshedToken;
-        try {
-            var optionalClaimsFromToken = getClaimsFromToken(token, publicKey);
-            refreshedToken = optionalClaimsFromToken.map(claims -> generateToken(claims, privateKey)).orElse(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            refreshedToken = null;
-        }
-        return refreshedToken;
-    }
-
+    
     /**
      * Generate token
      *
@@ -125,10 +73,6 @@ public class JWTUtils {
             claims = null;
         }
         return Optional.ofNullable(claims);
-    }
-
-    public String getHeader() {
-        return header;
     }
 
     public long getRefreshExpiration() {

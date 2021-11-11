@@ -10,16 +10,12 @@ public class RefreshTokenRequest {
     public RefreshTokenRequest(@NotBlank(message = "Refresh token is required") String refreshToken) {
         this.refreshToken = refreshToken;
     }
-
+    
     public RefreshTokenRequest() {
     }
-
+    
     public String getRefreshToken() {
         return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 
     @Override
