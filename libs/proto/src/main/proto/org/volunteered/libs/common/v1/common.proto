@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package org.volunteered.libs.common.v1;
+
+option java_multiple_files = true;
+option java_package = "org.volunteered.libs.common.v1";
+
+message User {
+  string first_name = 1;
+  string last_name = 2;
+  string phone = 3;
+  string email = 4;
+  string country = 5;
+  string city = 6;
+  string bio = 7;
+  Gender gender = 8;
+  repeated string main_skills = 9;
+  repeated string other_skills = 10;
+  repeated string spoken_languages = 11;
+  string resume_url = 12;
+  string portfolio_url = 13;
+  string profile_photo_url = 14;
+  UserSocialMedia user_social_media = 15;
+}
+
+message UserSocialMedia {
+  string linkedin_url = 1;
+  string facebook_url = 2;
+  string twitter_url = 3;
+  string skype_url = 4;
+  string website_ur = 5;
+}
+
+enum Gender {
+  MALE = 0;
+  FEMALE = 1;
+  NON_BINARY = 2;
+}

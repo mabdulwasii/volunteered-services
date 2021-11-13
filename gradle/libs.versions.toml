@@ -1,0 +1,180 @@
+[versions]
+#
+## kotlin
+#kotlin = "1.6.0-RC"
+#spek = "2.0.11"
+#kotest = "4.6.3"
+#junit = "5.8.1"
+#serialization = "1.3.0"
+#kaml = "0.17.0"
+coroutines = "1.5.2"
+#metadata = "0.3.0"
+#turbine = "0.6.1"
+#ktlint = "0.40.0"
+#mockk = "1.12.0"
+konfig = "1.1.2"
+#markdown = "0.1.45"
+#validation = "2.0.1.Final"
+#
+## gradle
+#gradleTool = "7.3-rc-1"
+#
+## grpc
+grpc = "1.41.0"
+grpcKotlin = "1.1.0"
+protobuf = "3.18.1"
+pgv = "0.6.1"
+guava = "30.1-jre"
+sentinel = "1.8.2"
+
+# test matchers
+#hamcrest = "1.3"
+#restAssured = "4.4.0"
+
+# Jacoco
+#jacoco = "0.8.7"
+
+# logs
+kotlinLogging = "2.0.11"
+slf4j = { require = "2.0.0-alpha5" }
+# slf4j = "1.7.31"
+
+#
+## spring
+##spring = "2.5.3"
+#kotestSpring = "1.0.0"
+#springMockk = "3.0.1"
+#snakeyaml = "1.28"
+#springGrpc = "4.5.5"
+#
+[libraries]
+#
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+##commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = { strictly = "[3.8,4.0[", prefer = "3.9" } }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpcKotlin" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
+grpc-services = { module = "io.grpc:grpc-services", version.ref = "grpc" } # Optional. includes grpc-protobuf
+grpc-xds = { module = "io.grpc:grpc-xds", version.ref = "grpc" } # Optional. includes grpc-services, grpc-auth,  grpc-alts
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
+sentinel-grpc-adapter = { module = "com.alibaba.csp:sentinel-grpc-adapter", version.ref = "sentinel" }
+pgv-java-stub = { module = "io.envoyproxy.protoc-gen-validate:pgv-java-stub", version.ref = "pgv" }
+##concurrency-limits-grpc = { module="com.netflix.concurrency-limits:concurrency-limits-grpc", version.ref="netflixConcurrency" }
+#javax-validation = { module = "javax.validation:validation-api", version.ref = "validation" }
+#
+## Kotlin dependencies
+#kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+#kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+#kotlin-metadata = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "metadata" }
+#
+## Kotlin serialization dependencies
+#kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+#kotlinx-serialization-avro = { module = "com.sksamuel.avro4k:avro4k-core", version.ref = "avro4k" }
+#kotlinx-serialization-yaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
+#kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization" }
+#
+## Kotlin coroutines dependencies
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "coroutines" }
+#kotlinx-coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
+#kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "coroutines" } # for `Reactive Streams`
+#kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "coroutines" } # for `Project Reactor`
+#
+# spring dependencies
+#spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+#spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+#spring-boot-starter-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
+#spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+#spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
+#spring-boot-starter-rsocket = { module = "org.springframework.boot:spring-boot-starter-rsocket" }
+#spring-boot-reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions" }
+## Usage: developmentOnly(libs.spring.boot.devtools)
+#spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+#spring-boot-starter-validation  = { module = "org.springframework.boot:spring-boot-starter-validation" }
+## Usage: kapt(libs.spring.boot.configuration.processor)
+#spring-boot-configuration-processor  = { module = "org.springframework.boot:spring-boot-configuration-processor" }  # to validate auto-completion on configuration properties
+## Usage: kapt(libs.spring.boot.autoconfigure.processor)
+#spring-boot-autoconfigure-processor  = { module = "org.springframework.boot:spring-boot-autoconfigure-processor" }
+#spring-boot-starter-grpc  = { module = "io.github.lognet:grpc-spring-boot-starter", version.ref = "springGrpc" }
+#
+#h2 = { module = "com.h2database:h2" }
+#r2dbc-h2 = { module = "io.r2dbc:r2dbc-h2" }
+#snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+#markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }
+#javafaker = { module = "com.github.javafaker:javafaker", version.ref = "javafaker" }
+#jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+
+# Logging dependencies
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+kotlin-logging = { module = "io.github.microutils:kotlin-logging", version.ref = "kotlinLogging" }
+slf4j-jdk14 = { module = "org.slf4j:slf4j-jdk14", version.ref = "slf4j" } # runtimeOnly
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" } # runtimeOnly
+
+## Testing dependencies
+#kotest-framework-engine-jvm = { module = "io.kotest:kotest-framework-engine-jvm", version.ref = "kotest" }
+#kotest-framework-api-jvm = { module = "io.kotest:kotest-framework-api-jvm", version.ref = "kotest" }
+#kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
+#kotest-assertions-json-jvm = { module = "io.kotest:kotest-assertions-json-jvm", version.ref = "kotest" }
+#kotest-property-jvm = { module = "io.kotest:kotest-property-jvm", version.ref = "kotest" }
+#kotest-runner-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+#kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version.ref = "kotestSpring" }
+#
+#mockk-test = { module = "io.mockk:mockk", version.ref = "mockk" }
+#hamcrest-all-test = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
+#kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+#rest-assured-test = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
+#rest-assured-kotlin-test = { module = "io.rest-assured:kotlin-extensions" }
+#grpc-test = { module = "io.grpc:grpc-testing", version.ref = "grpc" }
+#spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+#spring-boot-mockk-test = { module = "com.ninja-squad:springmockk", version.ref = "springMockk" }
+#spring-boot-reactor-test = { module = "io.projectreactor:reactor-test" }
+#turbine-test = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+#
+## konf dependencies
+konf-core = { module = "com.uchuhimo:konf-core", version.ref = "konfig" }
+konf-yaml = { module = "com.uchuhimo:konf-yaml", version.ref = "konfig" }
+#
+[bundles]
+##testDependencies = ["junit-jupiter", "junit-engine"]
+#grpc = ["grpc-kotlin-stub", "grpc-protobuf", "protobuf-java"]
+#
+#testing-common = [
+#    "kotest-framework-engine-jvm",
+#    "kotest-framework-api-jvm",
+#    "kotest-assertions-core-jvm",
+#    "kotest-property-jvm",
+#    "mockk-test"
+#]
+#
+konf = ["konf-core", "konf-yaml"]
+#
+#kotlinx-serialization-all = [
+#    "kotlinx-serialization-json",
+#    "kotlinx-serialization-protobuf",
+#    "kotlinx-serialization-avro"
+#]
+#
+kotlinx-coroutines = [
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-jvm"
+]
+#
+#spring-basic = [
+#    "spring-boot-starter-webflux",
+#    # Spring Tools
+#    "spring-boot-starter-actuator",
+#    # Kotlin Serialization
+#    "kotlinx-serialization-json", # Don't include "jackson-module-kotlin" so that, it defaults to Kotlin serialization
+#    # Kotlin Coroutines
+#    "kotlinx-coroutines-core",
+#    "kotlinx-coroutines-jvm",
+#    "kotlinx-coroutines-reactor",
+#]
+#
+#spring-grpc = [
+#    "grpc-kotlin-stub",
+#    "spring-boot-starter-grpc"
+#]
+#
