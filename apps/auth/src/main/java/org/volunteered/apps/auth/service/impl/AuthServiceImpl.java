@@ -40,8 +40,11 @@ public class AuthServiceImpl implements AuthService{
     
     private final RSAKeyConfigProperties rsaKeyProp;
     
-    public AuthServiceImpl(AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService, UserService userService, JWTUtils jwtUtils, RSAKeyConfigProperties rsaKeyProp) {
-        
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           RefreshTokenService refreshTokenService,
+                           UserService userService,
+                           JWTUtils jwtUtils,
+                           RSAKeyConfigProperties rsaKeyProp) {
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
         this.userService = userService;
@@ -54,7 +57,8 @@ public class AuthServiceImpl implements AuthService{
         Authentication authentication;
 
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
+            authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
         } catch (BadCredentialsException e) {
             e.printStackTrace();
             throw new BadCredentialsException("Bad Credentials");
@@ -89,17 +93,19 @@ public class AuthServiceImpl implements AuthService{
     public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String requestRefreshToken = refreshTokenRequest.getRefreshToken();
         
-        return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser).map(user -> {
-                    String token = null;
-                    try {
-                        token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return new RefreshTokenResponse(token, requestRefreshToken);
-                })
-                .orElseThrow(() -> new TokenRefreshExpiredException(requestRefreshToken,
-                        "Error: Invalid refresh token!"));
+        return refreshTokenService.findByToken(requestRefreshToken)
+		        .map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser)
+		        .map(user -> {
+			        String token = null;
+			        try {
+				        token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
+			        } catch (Exception e) {
+				        e.printStackTrace();
+			        }
+			        return new RefreshTokenResponse(token, requestRefreshToken);
+		        })
+		        .orElseThrow(() -> new TokenRefreshExpiredException(requestRefreshToken,
+				        "Error: Invalid refresh token!"));
     }
 
     @Override
@@ -107,6 +113,8 @@ public class AuthServiceImpl implements AuthService{
 
         var userOptional = userService.createUser(signUpDetails);
 
-        return userOptional.map(user -> new ApiResponse("User created successfully")).orElseThrow(() -> new SignUpException("Error: User creation failed"));
+        return userOptional
+		        .map(user -> new ApiResponse("User created successfully"))
+		        .orElseThrow(() -> new SignUpException("Error: User creation failed"));
     }
 }
