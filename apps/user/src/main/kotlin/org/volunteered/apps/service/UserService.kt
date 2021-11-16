@@ -1,27 +1,50 @@
 package org.volunteered.apps.service
 
+import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.libs.common.v1.User
-import org.volunteered.libs.common.v1.user
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.UpdateUserRequest
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
 
-class UserService: UserServiceGrpcKt.UserServiceCoroutineImplBase() {
+@GrpcService
+class UserService(private val userDetailService: UserDetailService ): UserServiceGrpcKt.UserServiceCoroutineImplBase() {
+
     override suspend fun createUser(request: CreateUserRequest): User {
-        return user {
-            firstName = "Femi"
-            lastName = "Shobande"
-            phone = "1234"
-            email = "femi@gmail.com"
-        }
+        val email = request.email
+        val userDetails = userDetailService.findByEmail(email)
+
+        return User.newBuilder()
+            .setEmail(userDetails?.email)
+            .setFirstName(userDetails?.firstName)
+            .setLastName(userDetails?.lastName)
+            .setPhone(userDetails?.phone)
+            .setEmail(userDetails?.email)
+            .setCountry(userDetails?.country)
+            .build()
+
     }
 
     override suspend fun update(request: UpdateUserRequest): User {
-        return user {
-            firstName = "Tunji"
-            lastName = "Moronkola"
-            phone = "1234"
-            email = "tunji@gmail.com"
-        }
+
+        val id = request.id
+        val user = request.user;
+        var userDetails = userDetailService.findByEmail(id.value)
+
+        userDetails?.phone = user.phone
+        userDetails?.email = user.email
+        userDetails?.firstName = user.firstName
+        userDetails?.lastName = user.lastName
+
+        userDetails = userDetails?.let { userDetailService.save(it) }
+
+        return User.newBuilder()
+            .setEmail(userDetails?.email)
+            .setFirstName(userDetails?.firstName)
+            .setLastName(userDetails?.lastName)
+            .setPhone(userDetails?.phone)
+            .setEmail(userDetails?.email)
+            .setCountry(userDetails?.country)
+            .build()
+
     }
 }
