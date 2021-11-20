@@ -2,10 +2,8 @@ package org.volunteered.apps.service
 
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.entity.Gender
-import org.volunteered.apps.entity.UserSocialMedia
 import org.volunteered.libs.common.v1.User
 import org.volunteered.libs.common.v1.user
-import org.volunteered.libs.common.v1.userSocialMedia
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.GetRequest
 import org.volunteered.libs.user.v1.UpdateUserRequest
@@ -42,7 +40,7 @@ class UserService(private val userDetailService: UserDetailService ): UserServic
 
         val email = request.email
         val user = request.user;
-        var userDetails = userDetailService.findByEmail(email.value)
+        var userDetails = userDetailService.findByEmail(email)
 
         userDetails?.phone = user.phone
         userDetails?.email = user.email
