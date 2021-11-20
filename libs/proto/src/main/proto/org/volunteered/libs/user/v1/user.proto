@@ -29,16 +29,16 @@ message CreateUserRequest {
 }
 
 message GetRequest {
-  google.protobuf.StringValue id = 1
+  string email = 1
   [(validate.rules).string = {min_len: 0}];
 }
 
 message UpdateUserRequest {
-  google.protobuf.StringValue id = 1;
+  string email = 1;
   org.volunteered.libs.common.v1.User user = 2;
 }
 
 message DeleteUserRequest {
-  google.protobuf.StringValue id = 1
+  string id = 1
   [(validate.rules).string = {min_len: 0}];
 }
