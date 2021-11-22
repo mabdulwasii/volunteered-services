@@ -4,6 +4,13 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring") version "1.5.31"
     kotlin("plugin.jpa") version "1.5.31"
+    kotlin("plugin.allopen") version "1.4.32"
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+    annotation("javax.persistence.MappedSuperclass")
 }
 
 version = "0.0.1-SNAPSHOT"
