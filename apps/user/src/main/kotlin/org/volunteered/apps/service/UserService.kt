@@ -67,7 +67,7 @@ class UserService(private val userDetailsService: UserDetailsService,
     override suspend fun update(request: UpdateUserRequest): User {
 
         val user = request.user
-        var email = request.email
+        val email = request.email
 
         val userDetails = userDetailsService.findByEmail(email)
 
