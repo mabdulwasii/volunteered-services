@@ -47,12 +47,12 @@ class UserDetails (
 @Entity
 @Table(name = "user_social_media")
 class UserSocialMedia (
-    @Id @GeneratedValue var id: Long? = null,
     var linkedinUrl : String? = null,
     var facebookUrl : String? = null,
     var twitterUrl : String? = null,
     var skypeUrl : String? = null,
     var websiteUrl : String? = null,
+    @Id @GeneratedValue var id: Long? = null,
 )
 
 
@@ -67,8 +67,8 @@ class Skill (
 @Entity
 @Table(name = "language")
 class Language (
-    @Id @GeneratedValue var id: Long,
     @NotNull var name : String,
+    @Id @GeneratedValue var id: Long? = null,
 )
 
 enum class Gender{

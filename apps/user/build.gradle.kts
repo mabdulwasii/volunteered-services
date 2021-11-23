@@ -60,6 +60,9 @@ dependencies {
 
 }
 
-application {
-    mainClass.set("org.volunteered.apps.UserApplicationKt")
+tasks.test {
+    useJUnitPlatform()
+
+    maxHeapSize = "1G"
 }
+
