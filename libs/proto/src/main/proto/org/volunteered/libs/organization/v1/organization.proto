@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package org.volunteered.libs.organization.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "OrganizationServiceProto";
+option java_package = "org.volunteered.libs.organization.v1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
+import "validate/validate.proto";
+import "org/volunteered/libs/common/v1/common.proto";
+
+service OrganizationService {
+  rpc CreateOrganization(CreateOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
+  rpc GetOrganization(GetOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
+  rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
+  rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
+}
+
+message CreateOrganizationRequest {
+  string name = 1;
+  string email = 2;
+  string bio = 3;
+  string city = 4;
+  string country = 5;
+}
+
+message GetOrganizationRequest {
+  int32 id = 1;
+}
+
+message UpdateOrganizationRequest {
+  int32 id = 1;
+  org.volunteered.libs.common.v1.Organization organization = 2;
+}
+
+message DeleteOrganizationRequest {
+  int32 id = 1;
+}
