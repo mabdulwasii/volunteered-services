@@ -31,7 +31,7 @@ message GetUserRequest {
 
 message UpdateUserRequest {
   int32 id = 1;
-  org.volunteered.libs.common.v1.User user = 2;
+  optional org.volunteered.libs.common.v1.User user = 2;
 }
 
 message DeleteUserRequest {

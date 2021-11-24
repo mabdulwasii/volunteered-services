@@ -43,10 +43,10 @@ dependencies {
     implementation(libs.sentinel.grpc.adapter)
     // implementation(libs.concurrency.limits.grpc)
 
-//    implementation(libs.slf4j.api)
-//    implementation(libs.kotlin.logging)
-//    implementation(libs.slf4j.jdk14)
-//    implementation(libs.slf4j.simple)
+    implementation(libs.slf4j.api)
+    implementation(libs.kotlin.logging)
+    implementation(libs.slf4j.jdk14)
+    implementation(libs.slf4j.simple)
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("net.devh:grpc-spring-boot-starter:2.12.0.RELEASE")
