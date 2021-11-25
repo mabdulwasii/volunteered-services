@@ -1,6 +1,7 @@
 package org.volunteered.apps.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.volunteered.apps.entity.enumeraion.Country
 import org.volunteered.apps.entity.enumeraion.Gender
 import javax.persistence.*
 import javax.validation.constraints.Email
@@ -32,7 +33,8 @@ class UserDetails(
     var email: String? = null,
 
     @Size(max = 2)
-    var country: String,
+    @Enumerated
+    var country: Country? = null,
 
     var city: String? = null,
 

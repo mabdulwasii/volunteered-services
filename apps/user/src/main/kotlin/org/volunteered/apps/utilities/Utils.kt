@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component
 import org.volunteered.apps.entity.Language
 import org.volunteered.apps.entity.Skill
 import org.volunteered.apps.entity.UserDetails
+import org.volunteered.apps.entity.enumeraion.Country
 import org.volunteered.apps.entity.enumeraion.Gender
 import org.volunteered.apps.service.LanguageService
 import org.volunteered.apps.service.SkillService
@@ -24,7 +25,7 @@ class Utils(
             lastName = request.lastName,
             phone = request.phone,
             email = request.email,
-            country = request.country
+            country = Country.valueOf(request.country)
         )
         return userDetails
     }
@@ -73,7 +74,7 @@ class Utils(
         return mainLanguages
     }
 
-    fun buildUserDetailsWithUserUpdateRequest(
+    fun buildUserDetailsFromUserUpdateRequest(
         user: User,
         userDetails: UserDetails?,
         mainSkills: HashSet<Skill>,
@@ -85,7 +86,7 @@ class Utils(
         user.lastName?.let { userDetails?.lastName = user.lastName }
         user.phone?.let { userDetails?.phone = user.phone }
         user.email?.let { userDetails?.email = user.email }
-        user.country?.let { userDetails?.country = user.country }
+        user.country?.let { userDetails?.country = Country.valueOf(user.country) }
         user.city?.let { userDetails?.city = user.city }
         user.bio?.let { userDetails?.bio = user.bio }
         user.gender?.name?.let { userDetails?.gender = Gender.valueOf(user.gender.name) }

@@ -48,7 +48,7 @@ class UserGrpcService(
             val spokenLanguages = utils.convertStringToLanguageSet(user.spokenLanguagesList.toList())
 
             userDetails =
-                utils.buildUserDetailsWithUserUpdateRequest(user, userDetails, mainSkills, otherSkills, spokenLanguages)
+                utils.buildUserDetailsFromUserUpdateRequest(user, userDetails, mainSkills, otherSkills, spokenLanguages)
 
             val updatedUserDetails = userDetails?.let { userDetailsService.save(it) }
 
