@@ -30,6 +30,7 @@ class Utils(
     }
 
     fun convertUserDetailsToUser(userDetails: UserDetails?) = user {
+        userDetails?.id
         userDetails?.firstName
         userDetails?.lastName
         userDetails?.phone

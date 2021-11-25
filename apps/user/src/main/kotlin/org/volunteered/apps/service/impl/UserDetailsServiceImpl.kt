@@ -1,5 +1,6 @@
 package org.volunteered.apps.service.impl
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.volunteered.apps.entity.UserDetails
 import org.volunteered.apps.repository.UserDetailsRepository
@@ -20,8 +21,12 @@ class UserDetailsServiceImpl(private val userDetailsRepository: UserDetailsRepos
         return userDetailsRepository.existsByEmail(email)
     }
 
-    override fun deleteById(id: Int) {
-        userDetailsRepository.deleteById(id.toLong())
+    override fun deleteById(id: Long) {
+        userDetailsRepository.deleteById(id)
+    }
+
+    override fun findById(id: Long): UserDetails? {
+        return userDetailsRepository.findByIdOrNull(id)
     }
 
     override fun existsById(id: Long): Boolean {

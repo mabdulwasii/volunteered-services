@@ -7,7 +7,8 @@ interface UserDetailsService {
     fun save(userDetails: UserDetails): UserDetails?
     fun existsByEmail(email: String): Boolean
     fun existsById(id: Long): Boolean
-    fun deleteById(id: Int)
+    fun deleteById(id: Long)
+    fun findById(id: Long): UserDetails?
 }
 
 

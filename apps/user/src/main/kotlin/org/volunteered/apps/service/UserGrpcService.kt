@@ -2,9 +2,10 @@ package org.volunteered.apps.service
 
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
+import org.volunteered.apps.service.exception.UserAlreadyExistException
+import org.volunteered.apps.service.exception.UserNotExistException
 import org.volunteered.apps.utilities.Utils
 import org.volunteered.libs.common.v1.User
-import org.volunteered.libs.common.v1.user
 import org.volunteered.libs.user.v1.*
 
 @GrpcService
@@ -28,19 +29,17 @@ class UserGrpcService(
             return utils.convertUserDetailsToUser(savedUserDetails)
         }
 
-        return user { }
+        throw UserAlreadyExistException("User already exists")
     }
 
     override suspend fun updateUser(request: UpdateUserRequest): User {
 
         val user = request.user
+        val id = request.id
 
-        val email = user.email
-        val existsByEmail = userDetailsService.existsByEmail(email)
+        var userDetails = userDetailsService.findById(id)
 
-        if (existsByEmail) {
-
-            var userDetails = userDetailsService.findByEmail(email)
+        if (userDetails != null) {
 
             val mainSkills = utils.convertStringToSkillSet(user.mainSkillsList.toList())
 
@@ -56,12 +55,12 @@ class UserGrpcService(
             return utils.convertUserDetailsToUser(updatedUserDetails)
         }
 
-        return User.getDefaultInstance()
+        throw UserNotExistException("Invalid user")
     }
 
     override suspend fun getUser(request: GetUserRequest): User {
-        val email = request.email
-        val userDetails = userDetailsService.findByEmail(email)
+        val id = request.id
+        val userDetails = userDetailsService.findById(id)
 
         return utils.convertUserDetailsToUser(userDetails)
     }

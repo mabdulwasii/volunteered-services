@@ -8,21 +8,22 @@ option java_package = "org.volunteered.libs.common.v1";
 import "validate/validate.proto";
 
 message User {
-  string first_name = 1;
-  string last_name = 2;
-  string phone = 3;
-  string email = 4 [(validate.rules).string.email = true];
-  string country = 5;
-  optional string city = 6;
-  optional string bio = 7;
-  optional Gender gender = 8;
-  repeated string main_skills = 9;
-  repeated string other_skills = 10;
-  repeated string spoken_languages = 11;
-  optional string cv = 12;
-  optional string portfolio = 13;
-  optional string profile_photo = 14;
-  optional WebsiteAndSocialMediaUrls web_and_social_urls = 15;
+  int64 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+  string email = 5 [(validate.rules).string.email = true];
+  string country = 6;
+  optional string city = 7;
+  optional string bio = 8;
+  optional Gender gender = 9;
+  repeated string main_skills = 10;
+  repeated string other_skills = 11;
+  repeated string spoken_languages = 12;
+  optional string cv = 13;
+  optional string portfolio = 14;
+  optional string profile_photo = 15;
+  optional WebsiteAndSocialMediaUrls web_and_social_urls = 16;
 }
 
 message Organization {
