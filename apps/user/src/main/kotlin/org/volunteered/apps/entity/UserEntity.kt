@@ -1,40 +1,44 @@
 package org.volunteered.apps.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.volunteered.apps.entity.enumeraion.Country
-import org.volunteered.apps.entity.enumeraion.Gender
-import javax.persistence.*
+import org.volunteered.libs.common.v1.Gender
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Enumerated
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.Index
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
+import javax.persistence.Table
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "user", indexes = [Index(columnList = "email", unique = true)])
-class UserDetails(
-
+class UserEntity(
     @Id
     @GeneratedValue
     var id: Long? = null,
 
     @NotNull
     @Column(name = "first_name")
-    var firstName: String? = null,
+    var firstName: String,
 
     @NotNull
     @Column(name = "last_name")
-    var lastName: String? = null,
+    var lastName: String,
 
     @NotNull
-    @Column(name = "phone")
-    var phone: String? = null,
+    var phone: String,
 
     @Email
-    @Column(name = "email")
-    var email: String? = null,
+    var email: String,
 
     @Size(max = 2)
-    @Enumerated
-    var country: Country? = null,
+    var country: String,
 
     var city: String? = null,
 
@@ -59,31 +63,21 @@ class UserDetails(
     @JoinTable(name = "user_language")
     var spokenLanguages: Set<Language> = HashSet(),
 
-    @Column(name = "cv")
     var cv: String? = null,
 
-    @Column(name = "portfolio")
     var portfolio: String? = null,
 
-    @Column(name = "profile_photo")
     var profilePhoto: String? = null,
 
-    @Column(name = "website")
     var website: String? = null,
 
-    @Column(name = "linkedin")
     var linkedin: String? = null,
 
-    @Column(name = "facebook")
     var facebook: String? = null,
 
-    @Column(name = "twitter")
     var twitter: String? = null,
 
-    @Column(name = "skype")
     var skype: String? = null,
 
-    @Column(name = "github")
     var github: String? = null
-
 )

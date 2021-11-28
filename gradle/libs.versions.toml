@@ -100,7 +100,7 @@ spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-
 #spring-boot-autoconfigure-processor  = { module = "org.springframework.boot:spring-boot-autoconfigure-processor" }
 grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "springGrpc" }
 #
-#h2 = { module = "com.h2database:h2" }
+h2 = { module = "com.h2database:h2" }
 #r2dbc-h2 = { module = "io.r2dbc:r2dbc-h2" }
 #snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 #markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }

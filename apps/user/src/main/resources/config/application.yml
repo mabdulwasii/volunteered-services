@@ -15,7 +15,7 @@ grpc:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:userdetails
+    url: jdbc:h2:mem:user
     username: sa
     password:
     driverClassName: org.h2.Driver

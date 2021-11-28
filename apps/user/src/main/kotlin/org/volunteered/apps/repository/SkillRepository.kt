@@ -6,6 +6,5 @@ import org.volunteered.apps.entity.Skill
 
 @Repository
 interface SkillRepository : JpaRepository<Skill, Long> {
-    fun findByName(name: String): Skill?
     fun findByNameIn(names: List<String>): List<Skill>
 }

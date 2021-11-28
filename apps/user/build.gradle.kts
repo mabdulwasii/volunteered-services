@@ -29,6 +29,8 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.javax.validation)
 
+    runtimeOnly(libs.h2)
+
     testImplementation(libs.spring.boot.starter.test)
 }
 

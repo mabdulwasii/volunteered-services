@@ -6,6 +6,5 @@ import org.volunteered.apps.entity.Language
 
 @Repository
 interface LanguageRepository : JpaRepository<Language, Long> {
-    fun findByName(name: String): Language?
     fun findByNameIn(names: List<String>): List<Language>
 }

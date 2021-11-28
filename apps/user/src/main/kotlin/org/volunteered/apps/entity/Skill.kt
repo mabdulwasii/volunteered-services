@@ -9,12 +9,10 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "skill")
 class Skill(
-
     @Id
     @GeneratedValue
     var id: Long? = null,
 
     @NotNull
     var name: String
-
 )

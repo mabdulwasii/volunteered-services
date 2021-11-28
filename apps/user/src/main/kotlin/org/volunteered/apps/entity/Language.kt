@@ -9,13 +9,11 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "language")
 class Language(
-
     @Id
     @GeneratedValue
     var id: Long? = null,
 
     @NotNull
     var name: String
-
 )
 
