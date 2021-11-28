@@ -46,3 +46,7 @@ subprojects {
         }
     }
 }
+
+gradle.buildFinished {
+    project.buildDir.deleteRecursively()
+}
