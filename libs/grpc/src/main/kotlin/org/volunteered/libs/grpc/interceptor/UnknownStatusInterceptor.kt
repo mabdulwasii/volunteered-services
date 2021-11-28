@@ -1,4 +1,4 @@
-package org.volunteered.libs.service.interceptors
+package org.volunteered.libs.grpc.interceptor
 
 import io.grpc.ForwardingServerCall
 import io.grpc.Metadata
