@@ -8,13 +8,13 @@ option java_package = "org.volunteered.libs.user.v1";
 
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
-import "org/volunteered/libs/common/v1/common.proto";
+import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service UserService {
-  rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.common.v1.User);
-  rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.common.v1.User);
-  rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.common.v1.User);
-  rpc UpdateUser(org.volunteered.libs.common.v1.User) returns (org.volunteered.libs.common.v1.User);
+  rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.proto.common.v1.User);
+  rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.proto.common.v1.User);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.proto.common.v1.User);
+  rpc UpdateUser(org.volunteered.libs.proto.common.v1.User) returns (org.volunteered.libs.proto.common.v1.User);
   rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
 }
 
