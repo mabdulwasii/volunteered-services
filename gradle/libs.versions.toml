@@ -176,6 +176,7 @@ kotlinx-coroutines = [
 #
 spring-grpc = [
     "grpc-kotlin-stub",
+    "protobuf-kotlin",
     "grpc-spring-boot-starter"
 ]
 
