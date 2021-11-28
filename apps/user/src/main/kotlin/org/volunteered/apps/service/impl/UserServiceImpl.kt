@@ -65,6 +65,7 @@ class UserServiceImpl(
 
             DtoTransformer.buildUserEntityFromUserDto(request, it)
             val updatedUserEntity = userRepository.save(it)
+
             return DtoTransformer.transformUserEntityToUserDto(updatedUserEntity)
         } ?: throw UserDoesNotExistException("Invalid user")
     }
@@ -74,4 +75,3 @@ class UserServiceImpl(
         return Empty.getDefaultInstance()
     }
 }
-

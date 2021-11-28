@@ -11,9 +11,9 @@ message User {
   int64 id = 1;
   string first_name = 2;
   string last_name = 3;
-  string phone = 4;
-  string email = 5 [(validate.rules).string.email = true];
-  string country = 6 [(validate.rules).string = {len: 2}];
+  string email = 4 [(validate.rules).string.email = true];
+  string country = 5 [(validate.rules).string = {len: 2}];
+  string phone = 6;
   string city = 7;
   string bio = 8;
   Gender gender = 9;

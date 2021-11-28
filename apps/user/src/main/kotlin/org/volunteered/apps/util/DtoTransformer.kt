@@ -13,7 +13,6 @@ class DtoTransformer {
             return UserEntity(
                 firstName = request.firstName,
                 lastName = request.lastName,
-                phone = request.phone,
                 email = request.email,
                 country = request.country
             )
@@ -23,10 +22,10 @@ class DtoTransformer {
             id = userEntity.id!!
             firstName = userEntity.firstName
             lastName = userEntity.lastName
-            phone = userEntity.phone
             email = userEntity.email
             country = userEntity.country
 
+            userEntity.phone?.let { phone = it }
             userEntity.city?.let { city = it }
             userEntity.bio?.let { bio = it }
             userEntity.gender?.let { gender = it }
@@ -52,9 +51,9 @@ class DtoTransformer {
         fun buildUserEntityFromUserDto(user: User, userEntity: UserEntity) {
             user.firstName.whenNotEmpty { userEntity.firstName = it }
             user.lastName.whenNotEmpty { userEntity.lastName = it }
-            user.phone.whenNotEmpty { userEntity.phone = it }
             user.email.whenNotEmpty { userEntity.email = it }
             user.country.whenNotEmpty { userEntity.country = it }
+            user.phone.whenNotEmpty { userEntity.phone = it }
             user.city.whenNotEmpty { userEntity.city = it }
             user.bio.whenNotEmpty { userEntity.bio = it }
             userEntity.gender = user.gender
