@@ -24,7 +24,7 @@ class UserServiceImpl(
     private val skillRepository: SkillRepository,
     private val languageRepository: LanguageRepository
 ) : UserService {
-    override fun createUser(request: CreateUserRequest): User {
+    override suspend fun createUser(request: CreateUserRequest): User {
         if (userRepository.existsByEmail(request.email)) {
             throw UserAlreadyExistsException("User already exists")
         }
@@ -35,14 +35,14 @@ class UserServiceImpl(
         return DtoTransformer.transformUserEntityToUserDto(createdUserEntity)
     }
 
-    override fun getUserById(request: GetUserByIdRequest): User {
+    override suspend fun getUserById(request: GetUserByIdRequest): User {
         val userEntity = userRepository.findByIdOrNull(request.id)
 
         return userEntity?.let { DtoTransformer.transformUserEntityToUserDto(it) }
             ?: throw UserDoesNotExistException("User does not exist")
     }
 
-    override fun getUserByEmail(request: GetUserByEmailRequest): User {
+    override suspend fun getUserByEmail(request: GetUserByEmailRequest): User {
         val userEntity = userRepository.findByEmail(request.email)
 
         return userEntity?.let { DtoTransformer.transformUserEntityToUserDto(it) }
@@ -50,7 +50,7 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun updateUser(request: User): User {
+    override suspend fun updateUser(request: User): User {
         val userEntity = userRepository.findByIdOrNull(request.id)
 
         return userEntity?.let {
@@ -71,7 +71,7 @@ class UserServiceImpl(
         } ?: throw UserDoesNotExistException("Invalid user")
     }
 
-    override fun deleteUser(request: DeleteUserRequest): Empty {
+    override suspend fun deleteUser(request: DeleteUserRequest): Empty {
         userRepository.deleteById(request.id)
         return Empty.getDefaultInstance()
     }

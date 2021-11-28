@@ -8,9 +8,9 @@ import org.volunteered.libs.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.user.v1.GetUserByIdRequest
 
 interface UserService {
-    fun createUser(request: CreateUserRequest): User
-    fun getUserById(request: GetUserByIdRequest): User
-    fun getUserByEmail(request: GetUserByEmailRequest): User
-    fun updateUser(request: User): User
-    fun deleteUser(request: DeleteUserRequest): Empty
+    suspend fun createUser(request: CreateUserRequest): User
+    suspend fun getUserById(request: GetUserByIdRequest): User
+    suspend fun getUserByEmail(request: GetUserByEmailRequest): User
+    suspend fun updateUser(request: User): User
+    suspend fun deleteUser(request: DeleteUserRequest): Empty
 }
