@@ -21,7 +21,6 @@ service UserService {
 message CreateUserRequest {
   string first_name = 1;
   string last_name = 2;
-  string phone = 3;
   string email = 4;
   string country = 5 [(validate.rules).string = {len: 2}];
 }

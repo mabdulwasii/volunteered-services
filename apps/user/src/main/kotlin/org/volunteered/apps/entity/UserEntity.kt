@@ -13,7 +13,6 @@ import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.Table
 import javax.validation.constraints.Email
-import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
@@ -23,22 +22,19 @@ class UserEntity(
     @GeneratedValue
     var id: Long? = null,
 
-    @NotNull
     @Column(name = "first_name")
     var firstName: String,
 
-    @NotNull
     @Column(name = "last_name")
     var lastName: String,
-
-    @NotNull
-    var phone: String,
 
     @Email
     var email: String,
 
     @Size(max = 2)
     var country: String,
+
+    var phone: String? = null,
 
     var city: String? = null,
 
