@@ -18,6 +18,7 @@ version = "0.0.1-SNAPSHOT"
 dependencies {
     implementation(kotlin("stdlib"))
 
+    implementation(project(":libs:core"))
     implementation(project(":libs:grpc"))
     implementation(project(":libs:proto"))
 
