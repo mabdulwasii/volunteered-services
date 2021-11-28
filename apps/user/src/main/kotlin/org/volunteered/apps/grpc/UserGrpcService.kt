@@ -2,8 +2,8 @@ package org.volunteered.apps.grpc
 
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
-import org.volunteered.apps.service.UserService
 import org.volunteered.apps.exception.InvalidCountryCodeException
+import org.volunteered.apps.service.UserService
 import org.volunteered.libs.common.v1.User
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.DeleteUserRequest

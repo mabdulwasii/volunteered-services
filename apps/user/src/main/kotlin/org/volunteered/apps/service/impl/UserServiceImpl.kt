@@ -4,11 +4,11 @@ import com.google.protobuf.Empty
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.volunteered.apps.exception.UserAlreadyExistsException
+import org.volunteered.apps.exception.UserDoesNotExistException
 import org.volunteered.apps.repository.LanguageRepository
 import org.volunteered.apps.repository.SkillRepository
 import org.volunteered.apps.repository.UserRepository
-import org.volunteered.apps.exception.UserAlreadyExistsException
-import org.volunteered.apps.exception.UserDoesNotExistException
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.libs.common.v1.User
 import org.volunteered.libs.extension.whenNotEmpty
