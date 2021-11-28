@@ -13,26 +13,27 @@ import "org/volunteered/libs/common/v1/common.proto";
 
 service OrganizationService {
   rpc CreateOrganization(CreateOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
-  rpc GetOrganization(GetOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
-  rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
+  rpc CreateOrganizationSubsidiary(CreateOrganizationSubsidiaryRequest) returns (org.volunteered.libs.common.v1.OrganizationSubsidiary);
+  rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.common.v1.Organization);
+  rpc UpdateOrganization(org.volunteered.libs.common.v1.Organization) returns (org.volunteered.libs.common.v1.Organization);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
 }
 
 message CreateOrganizationRequest {
   string name = 1;
-  string email = 2;
+  string email = 2 [(validate.rules).string.email = true];
   string bio = 3;
   string city = 4;
   string country = 5 [(validate.rules).string = {len: 2}];
 }
 
-message GetOrganizationRequest {
-  int64 id = 1;
+message CreateOrganizationSubsidiaryRequest {
+  int64 organization_id = 1;
+  org.volunteered.libs.common.v1.OrganizationSubsidiary subsidiary = 2;
 }
 
-message UpdateOrganizationRequest {
+message GetOrganizationRequest {
   int64 id = 1;
-  org.volunteered.libs.common.v1.Organization organization = 2;
 }
 
 message DeleteOrganizationRequest {
