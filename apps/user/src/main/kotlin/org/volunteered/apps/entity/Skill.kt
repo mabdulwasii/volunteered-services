@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull
 class Skill(
     @Id
     @GeneratedValue
-    var id: Long? = null,
+    var id: Int? = null,
 
     @NotNull
     var name: String

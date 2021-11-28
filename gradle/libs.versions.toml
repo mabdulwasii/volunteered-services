@@ -46,6 +46,9 @@ slf4j = { require = "2.0.0-alpha5" }
 #springMockk = "3.0.1"
 #snakeyaml = "1.28"
 springGrpc = "2.12.0.RELEASE"
+
+## data
+flyway = "8.1.0"
 #
 [libraries]
 #
@@ -102,6 +105,8 @@ grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", versi
 #
 h2 = { module = "com.h2database:h2" }
 #r2dbc-h2 = { module = "io.r2dbc:r2dbc-h2" }
+hibernate-spatial = { module = "org.hibernate:hibernate-spatial" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 #snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 #markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }
 #javafaker = { module = "com.github.javafaker:javafaker", version.ref = "javafaker" }

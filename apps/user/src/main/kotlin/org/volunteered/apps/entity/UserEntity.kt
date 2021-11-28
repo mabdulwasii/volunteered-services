@@ -1,6 +1,5 @@
 package org.volunteered.apps.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.volunteered.libs.proto.common.v1.Gender
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -9,6 +8,7 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.Index
+import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.Table
@@ -16,7 +16,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 
 @Entity
-@Table(name = "user", indexes = [Index(columnList = "email", unique = true)])
+@Table(name = "user", indexes = [Index(name = "index_email", columnList = "email", unique = true)])
 class UserEntity(
     @Id
     @GeneratedValue
@@ -44,19 +44,28 @@ class UserEntity(
     @Enumerated
     var gender: Gender? = null,
 
-    @JsonIgnore
-    @ManyToMany(targetEntity = Skill::class, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_main_skill")
+    @ManyToMany(targetEntity = Skill::class, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_main_skill",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "skill_id")]
+    )
     var mainSkills: Set<Skill> = HashSet(),
 
-    @JsonIgnore
-    @ManyToMany(targetEntity = Skill::class, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_other_skill")
+    @ManyToMany(targetEntity = Skill::class, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_other_skill",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "skill_id")]
+    )
     var otherSkills: Set<Skill> = HashSet(),
 
-    @JsonIgnore
-    @ManyToMany(targetEntity = Language::class, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_language")
+    @ManyToMany(targetEntity = Language::class, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_language",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "language_id")]
+    )
     var spokenLanguages: Set<Language> = HashSet(),
 
     var cv: String? = null,

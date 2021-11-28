@@ -24,8 +24,8 @@ dependencies {
 
     implementation(libs.bundles.spring.grpc)
 
+    implementation(libs.flyway.core)
     implementation(libs.spring.boot.starter.data.jpa)
-    implementation(libs.jackson.module.kotlin)
     implementation(libs.kotlin.reflect)
     implementation(libs.javax.validation)
 
