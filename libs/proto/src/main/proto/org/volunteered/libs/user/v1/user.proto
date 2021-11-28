@@ -12,8 +12,9 @@ import "org/volunteered/libs/common/v1/common.proto";
 
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.common.v1.User);
-  rpc GetUser(GetUserRequest) returns (org.volunteered.libs.common.v1.User);
-  rpc UpdateUser(UpdateUserRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.common.v1.User);
+  rpc UpdateUser(org.volunteered.libs.common.v1.User) returns (org.volunteered.libs.common.v1.User);
   rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
 }
 
@@ -25,13 +26,12 @@ message CreateUserRequest {
   string country = 5 [(validate.rules).string = {len: 2}];
 }
 
-message GetUserRequest {
-  int64 id = 1 [(validate.rules).string.email = true];
+message GetUserByIdRequest {
+  int64 id = 1;
 }
 
-message UpdateUserRequest {
-  int64 id = 1;
-  optional org.volunteered.libs.common.v1.User user = 2;
+message GetUserByEmailRequest {
+  string email = 1 [(validate.rules).string.email = true];
 }
 
 message DeleteUserRequest {

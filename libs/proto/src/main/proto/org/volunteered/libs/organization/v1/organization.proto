@@ -23,18 +23,18 @@ message CreateOrganizationRequest {
   string email = 2;
   string bio = 3;
   string city = 4;
-  string country = 5;
+  string country = 5 [(validate.rules).string = {len: 2}];
 }
 
 message GetOrganizationRequest {
-  int32 id = 1;
+  int64 id = 1;
 }
 
 message UpdateOrganizationRequest {
-  int32 id = 1;
+  int64 id = 1;
   org.volunteered.libs.common.v1.Organization organization = 2;
 }
 
 message DeleteOrganizationRequest {
-  int32 id = 1;
+  int64 id = 1;
 }

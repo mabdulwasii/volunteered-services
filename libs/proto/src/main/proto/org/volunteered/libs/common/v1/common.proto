@@ -13,55 +13,56 @@ message User {
   string last_name = 3;
   string phone = 4;
   string email = 5 [(validate.rules).string.email = true];
-  string country = 6;
-  optional string city = 7;
-  optional string bio = 8;
-  optional Gender gender = 9;
+  string country = 6 [(validate.rules).string = {len: 2}];
+  string city = 7;
+  string bio = 8;
+  Gender gender = 9;
   repeated string main_skills = 10;
   repeated string other_skills = 11;
   repeated string spoken_languages = 12;
-  optional string cv = 13;
-  optional string portfolio = 14;
-  optional string profile_photo = 15;
-  optional WebsiteAndSocialMediaUrls web_and_social_urls = 16;
+  string cv = 13;
+  string portfolio = 14;
+  string profile_photo = 15;
+  WebsiteAndSocialMediaUrls web_and_social_urls = 16;
 }
 
 message Organization {
   string name = 1;
   string email = 2;
   string bio = 3;
-  optional string logo = 4;
+  string logo = 4;
   repeated string phone = 5;
-  optional WebsiteAndSocialMediaUrls web_and_social_urls = 6;
+  WebsiteAndSocialMediaUrls web_and_social_urls = 6;
   OrganizationSubsidiary hq = 7;
-  optional uint32 founded = 8;
-  optional string industry = 9;
-  optional string founder = 10;
-  optional uint32 number_of_employees = 11;
+  int32 founded = 8;
+  string industry = 9;
+  string founder = 10;
+  int32 number_of_employees = 11;
   repeated string benefits = 12;
 }
 
 message OrganizationSubsidiary {
   string city = 1;
-  string country = 2;
-  optional string name = 3;
-  optional Location location = 4;
-  optional string description = 5;
+  string country = 2 [(validate.rules).string = {len: 2}];
+  string name = 3;
+  Location location = 4;
+  string description = 5;
 }
 
 enum Gender {
-  MALE = 0;
-  FEMALE = 1;
-  NON_BINARY = 2;
+  UNSPECIFIED = 0;
+  MALE = 1;
+  FEMALE = 2;
+  NON_BINARY = 3;
 }
 
 message WebsiteAndSocialMediaUrls {
-  optional string website = 1;
-  optional string linkedin = 2;
-  optional string facebook = 3;
-  optional string twitter = 4;
-  optional string skype = 5;
-  optional string github = 6;
+  string website = 1;
+  string linkedin = 2;
+  string facebook = 3;
+  string twitter = 4;
+  string skype = 5;
+  string github = 6;
 }
 
 message Location {
