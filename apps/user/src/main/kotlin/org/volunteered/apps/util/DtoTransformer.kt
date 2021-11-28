@@ -1,10 +1,10 @@
 package org.volunteered.apps.util
 
 import org.volunteered.apps.entity.UserEntity
-import org.volunteered.libs.common.v1.User
-import org.volunteered.libs.common.v1.user
-import org.volunteered.libs.common.v1.websiteAndSocialMediaUrls
-import org.volunteered.libs.extension.whenNotEmpty
+import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.User
+import org.volunteered.libs.proto.common.v1.user
+import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.user.v1.CreateUserRequest
 
 class DtoTransformer {

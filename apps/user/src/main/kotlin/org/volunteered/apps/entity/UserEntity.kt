@@ -1,7 +1,7 @@
 package org.volunteered.apps.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.volunteered.libs.common.v1.Gender
+import org.volunteered.libs.proto.common.v1.Gender
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated

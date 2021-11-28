@@ -1,4 +1,4 @@
-package org.volunteered.libs.util
+package org.volunteered.libs.core.util
 
 import java.util.Locale
 

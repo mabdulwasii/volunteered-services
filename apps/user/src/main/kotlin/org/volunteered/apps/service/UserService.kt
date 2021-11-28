@@ -1,7 +1,7 @@
 package org.volunteered.apps.service
 
 import com.google.protobuf.Empty
-import org.volunteered.libs.common.v1.User
+import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.DeleteUserRequest
 import org.volunteered.libs.user.v1.GetUserByEmailRequest

@@ -1,3 +1,3 @@
-package org.volunteered.apps.exception
+package org.volunteered.libs.core.exception
 
 class InvalidCountryCodeException(override val message: String) : RuntimeException(message)

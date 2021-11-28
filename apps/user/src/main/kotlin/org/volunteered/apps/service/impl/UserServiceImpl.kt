@@ -9,9 +9,10 @@ import org.volunteered.apps.exception.UserDoesNotExistException
 import org.volunteered.apps.repository.LanguageRepository
 import org.volunteered.apps.repository.SkillRepository
 import org.volunteered.apps.repository.UserRepository
+import org.volunteered.apps.service.UserService
 import org.volunteered.apps.util.DtoTransformer
-import org.volunteered.libs.common.v1.User
-import org.volunteered.libs.extension.whenNotEmpty
+import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.DeleteUserRequest
 import org.volunteered.libs.user.v1.GetUserByEmailRequest
@@ -22,7 +23,7 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val skillRepository: SkillRepository,
     private val languageRepository: LanguageRepository
-) : org.volunteered.apps.service.UserService {
+) : UserService {
     override fun createUser(request: CreateUserRequest): User {
         if (userRepository.existsByEmail(request.email)) {
             throw UserAlreadyExistsException("User already exists")
