@@ -26,11 +26,16 @@ pluginManagement {
 }
 
 rootProject.name = "volunteered-server"
-include("apps:auth")
-findProject(":apps:auth")?.name = "auth"
+
+
 include("libs:grpc")
 findProject(":libs:grpc")?.name = "grpc"
 include("libs:proto")
 findProject(":libs:proto")?.name = "proto"
+include("libs:core")
+findProject(":libs:core")?.name = "core"
+
+include("apps:auth")
+findProject(":apps:auth")?.name = "auth"
 include("apps:user")
 findProject(":apps:user")?.name = "user"
