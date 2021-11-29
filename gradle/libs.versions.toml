@@ -45,7 +45,7 @@ slf4j = { require = "2.0.0-alpha5" }
 #kotestSpring = "1.0.0"
 #springMockk = "3.0.1"
 #snakeyaml = "1.28"
-springGrpc = "2.12.0.RELEASE"
+springGrpc = "2.13.0.RELEASE"
 
 ## data
 flyway = "8.1.0"
@@ -102,6 +102,7 @@ spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-
 ## Usage: kapt(libs.spring.boot.autoconfigure.processor)
 #spring-boot-autoconfigure-processor  = { module = "org.springframework.boot:spring-boot-autoconfigure-processor" }
 grpc-spring-boot-starter = { module = "net.devh:grpc-spring-boot-starter", version.ref = "springGrpc" }
+grpc-client-spring-boot-starter = { module = "net.devh:grpc-client-spring-boot-starter", version.ref = "springGrpc" }
 #
 h2 = { module = "com.h2database:h2" }
 #r2dbc-h2 = { module = "io.r2dbc:r2dbc-h2" }
