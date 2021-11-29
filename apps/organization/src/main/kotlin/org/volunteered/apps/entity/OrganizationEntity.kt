@@ -63,7 +63,7 @@ class OrganizationEntity(
     @Column(name = "number_of_employees")
     var numberOfEmployees: Int? = null,
 
-    @ManyToMany(targetEntity = Benefit::class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Benefit::class, fetch = FetchType.EAGER)
     @JoinTable(name = "organization_benefit")
     var benefits: Set<Benefit> = HashSet()
 )
