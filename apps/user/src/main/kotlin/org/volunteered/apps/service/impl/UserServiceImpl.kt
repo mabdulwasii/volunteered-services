@@ -1,6 +1,8 @@
 package org.volunteered.apps.service.impl
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
+import com.google.protobuf.boolValue
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,6 +17,7 @@ import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.DeleteUserRequest
+import org.volunteered.libs.user.v1.ExistsByIdRequest
 import org.volunteered.libs.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.user.v1.GetUserByIdRequest
 
@@ -33,6 +36,12 @@ class UserServiceImpl(
         val createdUserEntity = userRepository.save(userEntity)
 
         return DtoTransformer.transformUserEntityToUserDto(createdUserEntity)
+    }
+
+    override suspend fun existsById(request: ExistsByIdRequest): BoolValue {
+        return boolValue {
+           value =  userRepository.existsById(request.id)
+        }
     }
 
     override suspend fun getUserById(request: GetUserByIdRequest): User {

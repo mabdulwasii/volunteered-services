@@ -1,5 +1,6 @@
 package org.volunteered.apps.grpc
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.UserService
@@ -9,6 +10,7 @@ import org.volunteered.libs.core.util.IsoUtil
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.user.v1.CreateUserRequest
 import org.volunteered.libs.user.v1.DeleteUserRequest
+import org.volunteered.libs.user.v1.ExistsByIdRequest
 import org.volunteered.libs.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.user.v1.GetUserByIdRequest
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
@@ -20,6 +22,10 @@ class UserGrpcService(private val userService: UserService) : UserServiceGrpcKt.
             throw InvalidCountryCodeException("Invalid country code ${request.country}")
 
         return userService.createUser(request)
+    }
+
+    override suspend fun existsById(request: ExistsByIdRequest): BoolValue {
+        return userService.existsById(request)
     }
 
     override suspend fun getUserById(request: GetUserByIdRequest): User {
