@@ -31,7 +31,7 @@ class OrganizationSubsidiary(
     @Size(max = 2)
     var country: String,
 
-    var phones: Set<String> = HashSet(),
+    var phone: String? = null,
 
     var description: String? = null,
 )

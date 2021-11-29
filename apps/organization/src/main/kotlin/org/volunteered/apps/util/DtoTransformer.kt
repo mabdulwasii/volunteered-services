@@ -32,12 +32,12 @@ class DtoTransformer {
                 organizationEntity.hq.email?.let { email = it }
                 city = organizationEntity.hq.city
                 country = organizationEntity.hq.country
-                phones.addAll(organizationEntity.hq.phones)
+                organizationEntity.hq.phone?.let { phone = it }
                 organizationEntity.hq.description?.let { description = it }
             }
 
             organizationEntity.logo?.let { logo = it }
-            phones.addAll(organizationEntity.phones)
+            organizationEntity.phone?.let { phone = it }
 
             webAndSocialUrls = websiteAndSocialMediaUrls {
                 organizationEntity.website?.let { website = it }

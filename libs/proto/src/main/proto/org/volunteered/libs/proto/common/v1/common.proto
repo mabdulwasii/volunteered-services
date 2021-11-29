@@ -33,7 +33,7 @@ message Organization {
   string bio = 4;
   OrganizationSubsidiary hq = 5;
   string logo = 6;
-  repeated string phones = 7;
+  string phone = 7;
   WebsiteAndSocialMediaUrls web_and_social_urls = 8;
   int32 founded = 9;
   string industry = 10;
@@ -47,7 +47,7 @@ message OrganizationSubsidiary {
   string email = 2 [(validate.rules).string.email = true];
   string city = 3;
   string country = 4 [(validate.rules).string = {len: 2}];
-  repeated string phones = 5;
+  string phone = 5;
   string description = 7;
 }
 

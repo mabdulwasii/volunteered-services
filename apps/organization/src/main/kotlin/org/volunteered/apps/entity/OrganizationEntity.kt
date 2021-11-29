@@ -40,7 +40,7 @@ class OrganizationEntity(
 
     var logo: String? = null,
 
-    var phones: Set<String> = HashSet(),
+    var phone: String? = null,
 
     var website: String? = null,
 
