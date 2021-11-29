@@ -1,7 +1,7 @@
 package org.volunteered.apps.util
 
 import org.volunteered.apps.entity.OrganizationEntity
-import org.volunteered.apps.entity.OrganizationSubsidiary
+import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
@@ -14,7 +14,7 @@ class DtoTransformer {
                 name = request.name,
                 email = request.email,
                 bio = request.bio,
-                hq = OrganizationSubsidiary(
+                hq = OrganizationSubsidiaryEntity(
                     city = request.city,
                     country = request.country
                 )

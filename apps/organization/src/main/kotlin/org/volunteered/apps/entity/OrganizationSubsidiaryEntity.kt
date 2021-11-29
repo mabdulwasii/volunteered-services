@@ -16,7 +16,7 @@ import javax.validation.constraints.Size
         Index(name = "index_name", columnList = "name", unique = true)
     ]
 )
-class OrganizationSubsidiary(
+class OrganizationSubsidiaryEntity(
     @Id
     @GeneratedValue
     var id: Long? = null,

@@ -35,8 +35,8 @@ class OrganizationEntity(
     @Size(max = 2000)
     var bio: String,
 
-    @OneToOne(targetEntity = OrganizationSubsidiary::class)
-    var hq: OrganizationSubsidiary,
+    @OneToOne(targetEntity = OrganizationSubsidiaryEntity::class)
+    var hq: OrganizationSubsidiaryEntity,
 
     var logo: String? = null,
 
