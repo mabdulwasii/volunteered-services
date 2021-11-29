@@ -31,10 +31,10 @@ message Organization {
   string name = 2;
   string email = 3 [(validate.rules).string.email = true];
   string bio = 4;
-  string logo = 5;
-  repeated string phones = 6;
-  WebsiteAndSocialMediaUrls web_and_social_urls = 7;
-  OrganizationSubsidiary hq = 8;
+  OrganizationSubsidiary hq = 5;
+  string logo = 6;
+  repeated string phones = 7;
+  WebsiteAndSocialMediaUrls web_and_social_urls = 8;
   int32 founded = 9;
   string industry = 10;
   string founder = 11;
@@ -43,11 +43,12 @@ message Organization {
 }
 
 message OrganizationSubsidiary {
-  string city = 1;
-  string country = 2 [(validate.rules).string = {len: 2}];
-  string name = 3;
-  Location location = 4;
-  string description = 5;
+  string name = 1;
+  string email = 2 [(validate.rules).string.email = true];
+  string city = 3;
+  string country = 4 [(validate.rules).string = {len: 2}];
+  repeated string phones = 5;
+  string description = 7;
 }
 
 enum Gender {

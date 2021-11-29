@@ -30,6 +30,7 @@ rootProject.name = "volunteered-services"
 include(
     ":apps:auth",
     ":apps:user",
+    ":apps:organization",
 
     ":libs:core",
     ":libs:grpc",
