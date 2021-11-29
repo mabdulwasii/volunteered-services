@@ -1,9 +1,12 @@
 package org.volunteered.apps.entity
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.Index
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.validation.constraints.Email
 import javax.validation.constraints.Size
@@ -34,4 +37,8 @@ class OrganizationSubsidiaryEntity(
     var phone: String? = null,
 
     var description: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    var parent: OrganizationEntity
 )

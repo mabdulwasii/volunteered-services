@@ -43,11 +43,12 @@ message Organization {
 }
 
 message OrganizationSubsidiary {
-  string name = 1;
-  string email = 2 [(validate.rules).string.email = true];
-  string city = 3;
-  string country = 4 [(validate.rules).string = {len: 2}];
-  string phone = 5;
+  int64 id = 1;
+  string name = 2;
+  string email = 3 [(validate.rules).string.email = true];
+  string city = 4;
+  string country = 5 [(validate.rules).string = {len: 2}];
+  string phone = 6;
   string description = 7;
 }
 

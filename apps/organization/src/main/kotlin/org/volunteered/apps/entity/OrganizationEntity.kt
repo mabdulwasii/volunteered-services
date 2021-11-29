@@ -1,5 +1,6 @@
 package org.volunteered.apps.entity
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -8,6 +9,7 @@ import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.validation.constraints.Email
@@ -35,8 +37,11 @@ class OrganizationEntity(
     @Size(max = 2000)
     var bio: String,
 
-    @OneToOne(targetEntity = OrganizationSubsidiaryEntity::class)
-    var hq: OrganizationSubsidiaryEntity,
+    @OneToOne(targetEntity = OrganizationSubsidiaryEntity::class, cascade = [CascadeType.ALL])
+    var hq: OrganizationSubsidiaryEntity? = null,
+
+    @OneToMany(targetEntity = OrganizationSubsidiaryEntity::class, fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var subsidiaries: Set<OrganizationSubsidiaryEntity> = HashSet(),
 
     var logo: String? = null,
 

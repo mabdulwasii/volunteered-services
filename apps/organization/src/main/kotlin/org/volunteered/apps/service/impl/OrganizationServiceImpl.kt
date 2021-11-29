@@ -3,6 +3,7 @@ package org.volunteered.apps.service.impl
 import com.google.protobuf.Empty
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
 import org.volunteered.apps.exception.CreatorDoesNotExistException
 import org.volunteered.apps.exception.OrganizationAlreadyExistsException
 import org.volunteered.apps.exception.OrganizationDoesNotExistException
@@ -27,27 +28,39 @@ class OrganizationServiceImpl(
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
 ) : OrganizationService {
     override suspend fun createOrganization(request: CreateOrganizationRequest): Organization {
-        val creatorExists = userServiceStub.existsById(
-            existsByIdRequest { id = request.creatorId }
-        ).value
-        if (!creatorExists)
-            throw CreatorDoesNotExistException("Creator does not exist")
+        ensureCreatorExists(request.creatorId)
 
         if (organizationRepository.existsByEmail(request.email))
             throw OrganizationAlreadyExistsException("Organization already exists")
 
         val organizationEntity = DtoTransformer.transformCreateOrganizationRequestToOrganizationEntity(request)
-        organizationSubsidiaryRepository.save(organizationEntity.hq)
+        val hq = OrganizationSubsidiaryEntity(
+            city = request.city,
+            country = request.country,
+            parent = organizationEntity
+        )
+        organizationEntity.hq = hq
+
         val createdOrganizationEntity = organizationRepository.save(organizationEntity)
+        organizationSubsidiaryRepository.save(hq)
 
         return DtoTransformer.transformOrganizationEntityToOrganizationDto(createdOrganizationEntity)
     }
 
     override suspend fun createOrganizationSubsidiary(request: CreateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
-//        if (!organizationRepository.existsById(request.organizationId))
-//            throw OrganizationDoesNotExistException("Organization does not exist")
+        ensureCreatorExists(request.creatorId)
 
-        TODO("Not yet implemented")
+        val organizationEntity = organizationRepository.findByIdOrNull(request.organizationId)
+
+        organizationEntity?.let {
+            val organizationSubsidiaryEntity = DtoTransformer.transformCreateOrganizationSubsidiaryRequestToOrganizationSubsidiaryEntity(
+                request,
+                organizationEntity
+            )
+            val createdOrganizationSubsidiary = organizationSubsidiaryRepository.save(organizationSubsidiaryEntity)
+
+            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(createdOrganizationSubsidiary)
+        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     override suspend fun getOrganizationById(request: GetOrganizationRequest): Organization {
@@ -62,6 +75,16 @@ class OrganizationServiceImpl(
     }
 
     override suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty {
-        TODO("Not yet implemented")
+        organizationRepository.deleteById(request.id)
+        return Empty.getDefaultInstance()
+    }
+
+    private suspend fun ensureCreatorExists(creatorId: Long) {
+        val creatorExists = userServiceStub.existsById(
+            existsByIdRequest { id = creatorId }
+        ).value
+
+        if (!creatorExists)
+            throw CreatorDoesNotExistException("Creator does not exist")
     }
 }
