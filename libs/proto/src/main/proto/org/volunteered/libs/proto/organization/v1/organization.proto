@@ -15,8 +15,11 @@ service OrganizationService {
   rpc CreateOrganization(CreateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc CreateOrganizationSubsidiary(CreateOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
+  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(org.volunteered.libs.proto.common.v1.Organization) returns (org.volunteered.libs.proto.common.v1.Organization);
+  rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
+  rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
 }
 
 message CreateOrganizationRequest {
@@ -39,5 +42,13 @@ message GetOrganizationRequest {
 }
 
 message DeleteOrganizationRequest {
+  int64 id = 1;
+}
+
+message GetOrganizationSubsidiaryRequest {
+  int64 id = 1;
+}
+
+message DeleteOrganizationSubsidiaryRequest {
   int64 id = 1;
 }
