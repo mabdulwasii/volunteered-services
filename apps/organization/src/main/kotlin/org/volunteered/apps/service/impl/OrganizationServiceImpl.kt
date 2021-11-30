@@ -7,14 +7,13 @@ import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
 import org.volunteered.apps.exception.CreatorDoesNotExistException
 import org.volunteered.apps.exception.OrganizationAlreadyExistsException
 import org.volunteered.apps.exception.OrganizationDoesNotExistException
+import org.volunteered.apps.repository.BenefitRepository
 import org.volunteered.apps.repository.OrganizationRepository
 import org.volunteered.apps.repository.OrganizationSubsidiaryRepository
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.util.DtoTransformer
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
+import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
@@ -24,6 +23,7 @@ import org.volunteered.libs.user.v1.existsByIdRequest
 class OrganizationServiceImpl(
     private val organizationRepository: OrganizationRepository,
     private val organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
+    private val benefitRepository: BenefitRepository,
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
 ) : OrganizationService {
@@ -45,6 +45,10 @@ class OrganizationServiceImpl(
         organizationSubsidiaryRepository.save(hq)
 
         return DtoTransformer.transformOrganizationEntityToOrganizationDto(createdOrganizationEntity)
+    }
+
+    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+        TODO("Not yet implemented")
     }
 
     override suspend fun createOrganizationSubsidiary(request: CreateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
@@ -71,12 +75,35 @@ class OrganizationServiceImpl(
     }
 
     override suspend fun updateOrganization(request: Organization): Organization {
-        TODO("Not yet implemented")
+        val organizationEntity = organizationRepository.findByIdOrNull(request.id)
+        organizationEntity?.let {
+            request.benefitsList.whenNotEmpty { benefit ->
+                it.benefits = benefitRepository.findByNameIn(benefit).toSet()
+            }
+
+            DtoTransformer.buildOrganizationEntityFromOrganizationDto(request, it)
+            val updatedOrganizationEntity = organizationRepository.save(it)
+
+            return DtoTransformer.transformOrganizationEntityToOrganizationDto(updatedOrganizationEntity)
+        }?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     override suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty {
         organizationRepository.deleteById(request.id)
         return Empty.getDefaultInstance()
+    }
+
+    override suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty {
+        organizationSubsidiaryRepository.deleteById(request.id)
+        return Empty.getDefaultInstance()
+    }
+
+    override suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary {
+        val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
+
+        return organizationSubsidiaryEntity?.let {
+            DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it) }
+            ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {

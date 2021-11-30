@@ -2,8 +2,11 @@ package org.volunteered.apps.util
 
 import org.volunteered.apps.entity.OrganizationEntity
 import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
+import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.core.extension.whenNotZero
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
@@ -78,6 +81,30 @@ class DtoTransformer {
             country = organizationSubsidiaryEntity.country
             organizationSubsidiaryEntity.phone?.let { phone = it }
             organizationSubsidiaryEntity.description?.let { description = it }
+        }
+
+        fun buildOrganizationEntityFromOrganizationDto(organization: Organization, organizationEntity: OrganizationEntity) {
+            organization.name.whenNotEmpty { organizationEntity.name = it }
+            organization.email.whenNotEmpty { organizationEntity.email = it }
+            organization.bio.whenNotEmpty { organizationEntity.bio = it }
+            organization.logo.whenNotEmpty { organizationEntity.logo = it }
+            organization.phone.whenNotEmpty { organizationEntity.phone = it }
+            organization.webAndSocialUrls.website.whenNotEmpty { organizationEntity.website = it }
+            organization.webAndSocialUrls.linkedin.whenNotEmpty { organizationEntity.linkedin = it }
+            organization.webAndSocialUrls.facebook.whenNotEmpty { organizationEntity.facebook = it }
+            organization.webAndSocialUrls.twitter.whenNotEmpty { organizationEntity.twitter = it }
+            organization.webAndSocialUrls.skype.whenNotEmpty { organizationEntity.skype = it }
+            organization.webAndSocialUrls.github.whenNotEmpty { organizationEntity.github = it }
+            organization.founded.whenNotZero { organizationEntity.founded = it }
+            organization.industry.whenNotEmpty { organizationEntity.industry = it }
+            organization.founder.whenNotEmpty { organizationEntity.founder = it }
+            organization.numberOfEmployees.whenNotZero { organizationEntity.numberOfEmployees = it }
+            organization.hq.name.whenNotEmpty { organizationEntity.hq?.name = it }
+            organization.hq.email.whenNotEmpty { organizationEntity.hq?.email = it }
+            organization.hq.city.whenNotEmpty { organizationEntity.hq?.city = it }
+            organization.hq.country.whenNotEmpty { organizationEntity.hq?.country = it }
+            organization.hq.phone.whenNotEmpty { organizationEntity.hq?.phone = it }
+            organization.hq.description.whenNotEmpty { organizationEntity.hq?.description = it }
         }
     }
 }
