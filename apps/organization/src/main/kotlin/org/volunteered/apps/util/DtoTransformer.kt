@@ -6,10 +6,7 @@ import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.core.extension.whenNotZero
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.proto.common.v1.Organization
-import org.volunteered.libs.proto.common.v1.organization
-import org.volunteered.libs.proto.common.v1.organizationSubsidiary
-import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
+import org.volunteered.libs.proto.common.v1.*
 
 class DtoTransformer {
     companion object {
@@ -105,6 +102,18 @@ class DtoTransformer {
             organization.hq.country.whenNotEmpty { organizationEntity.hq?.country = it }
             organization.hq.phone.whenNotEmpty { organizationEntity.hq?.phone = it }
             organization.hq.description.whenNotEmpty { organizationEntity.hq?.description = it }
+        }
+
+        fun buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(
+            organizationSubsidiary: OrganizationSubsidiary,
+            organizationSubsidiaryEntity: OrganizationSubsidiaryEntity
+        ) {
+            organizationSubsidiary.name.whenNotEmpty { organizationSubsidiaryEntity.name = it }
+            organizationSubsidiary.email.whenNotEmpty { organizationSubsidiaryEntity.email = it }
+            organizationSubsidiary.city.whenNotEmpty { organizationSubsidiaryEntity.city = it }
+            organizationSubsidiary.country.whenNotEmpty { organizationSubsidiaryEntity.country = it }
+            organizationSubsidiary.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
+            organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
         }
     }
 }
