@@ -27,6 +27,7 @@ import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.user.v1.existsByIdRequest
 
+@Suppress("NAME_SHADOWING")
 @Service
 class OrganizationServiceImpl(
     private val organizationRepository: OrganizationRepository,
@@ -130,9 +131,15 @@ class OrganizationServiceImpl(
 
     override suspend fun updateOrganizationHq(request: UpdateOrganizationHqRequest): Organization {
         val organizationHqEntity = organizationSubsidiaryRepository.findByIdOrNull(request.hqId)
-        organizationHqEntity?.let {
-
-        }?:throw OrganizationDoesNotExistException("Organization Subsidiary does not exist"
+        organizationHqEntity?.let { organizationHqEntity ->
+            val organizationId = request.organizationId
+            val organizationEntity = organizationRepository.findByIdOrNull(organizationId)
+            organizationEntity?.let { organizationEntity ->
+                organizationEntity.hq = organizationHqEntity
+                val updatedOrganizationEntity = organizationRepository.save(organizationEntity)
+                return DtoTransformer.transformOrganizationEntityToOrganizationDto(updatedOrganizationEntity)
+            }
+        }?:throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
