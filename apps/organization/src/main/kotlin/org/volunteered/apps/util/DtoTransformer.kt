@@ -2,8 +2,8 @@ package org.volunteered.apps.util
 
 import org.volunteered.apps.entity.OrganizationEntity
 import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
+import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
-import org.volunteered.libs.core.extension.whenNotZero
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.common.v1.*
@@ -92,10 +92,10 @@ class DtoTransformer {
             organization.webAndSocialUrls.twitter.whenNotEmpty { organizationEntity.twitter = it }
             organization.webAndSocialUrls.skype.whenNotEmpty { organizationEntity.skype = it }
             organization.webAndSocialUrls.github.whenNotEmpty { organizationEntity.github = it }
-            organization.founded.whenNotZero { organizationEntity.founded = it }
+            organization.founded.whenGreaterThanZero { organizationEntity.founded = it }
             organization.industry.whenNotEmpty { organizationEntity.industry = it }
             organization.founder.whenNotEmpty { organizationEntity.founder = it }
-            organization.numberOfEmployees.whenNotZero { organizationEntity.numberOfEmployees = it }
+            organization.numberOfEmployees.whenGreaterThanZero { organizationEntity.numberOfEmployees = it }
             organization.hq.name.whenNotEmpty { organizationEntity.hq?.name = it }
             organization.hq.email.whenNotEmpty { organizationEntity.hq?.email = it }
             organization.hq.city.whenNotEmpty { organizationEntity.hq?.city = it }
