@@ -13,11 +13,13 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service OrganizationService {
   rpc CreateOrganization(CreateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
-  rpc CreateOrganizationSubsidiary(CreateOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+  rpc CreateOrganizationSubsidiary(CreateOrganizationSubsidiaryRequest)
+      returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
-  rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+  rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary)
+      returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
 }
@@ -59,12 +61,12 @@ message UpdateOrganizationRequest {
   string name = 2;
   string email = 3 [(validate.rules).string.email = true];
   string bio = 4;
-  string logo = 6;
-  string phone = 7;
-  org.volunteered.libs.proto.common.v1.WebsiteAndSocialMediaUrls web_and_social_urls = 8;
-  int32 founded = 9;
-  string industry = 10;
-  string founder = 11;
-  int32 number_of_employees = 12;
-  repeated string benefits = 13;
+  string logo = 5;
+  string phone = 6;
+  org.volunteered.libs.proto.common.v1.WebsiteAndSocialMediaUrls web_and_social_urls = 7;
+  int32 founded = 8;
+  string industry = 9;
+  string founder = 10;
+  int32 number_of_employees = 11;
+  repeated string benefits = 12;
 }
