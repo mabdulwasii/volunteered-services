@@ -44,6 +44,7 @@ class DtoTransformer {
             bio = organizationEntity.bio
 
             hq = organizationSubsidiary {
+                organizationEntity.hq?.id?.let { id = it }
                 organizationEntity.hq?.name?.let { name = it }
                 organizationEntity.hq?.email?.let { email = it }
                 organizationEntity.hq?.let { city = it.city }
