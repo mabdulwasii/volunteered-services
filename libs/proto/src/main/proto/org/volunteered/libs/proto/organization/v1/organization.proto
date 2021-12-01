@@ -58,17 +58,18 @@ message DeleteOrganizationSubsidiaryRequest {
 
 message UpdateOrganizationRequest {
   int64 id = 1;
-  string name = 2;
-  string email = 3 [(validate.rules).string.email = true];
-  string bio = 4;
-  string logo = 5;
-  string phone = 6;
-  org.volunteered.libs.proto.common.v1.WebsiteAndSocialMediaUrls web_and_social_urls = 7;
-  int32 founded = 8;
-  string industry = 9;
-  string founder = 10;
-  int32 number_of_employees = 11;
-  repeated string benefits = 12;
+  int64 hq_id = 2;
+  string name = 3;
+  string email = 4 [(validate.rules).string.email = true];
+  string bio = 5;
+  string logo = 6;
+  string phone = 7;
+  org.volunteered.libs.proto.common.v1.WebsiteAndSocialMediaUrls web_and_social_urls = 8;
+  int32 founded = 9;
+  string industry = 10;
+  string founder = 11;
+  int32 number_of_employees = 12;
+  repeated string benefits = 13;
 }
 
 message UpdateOrganizationHqRequest {
