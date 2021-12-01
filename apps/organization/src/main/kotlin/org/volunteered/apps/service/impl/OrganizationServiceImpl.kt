@@ -84,8 +84,8 @@ class OrganizationServiceImpl(
     override suspend fun updateOrganization(request: Organization): Organization {
         val organizationEntity = organizationRepository.findByIdOrNull(request.id)
         organizationEntity?.let {
-            request.benefitsList.whenNotEmpty { benefit ->
-                it.benefits = benefitRepository.findByNameIn(benefit).toSet()
+            request.benefitsList.whenNotEmpty { benefits ->
+                it.benefits = benefitRepository.findByNameIn(benefits).toSet()
             }
 
             DtoTransformer.buildOrganizationEntityFromOrganizationDto(request, it)
