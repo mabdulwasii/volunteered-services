@@ -30,7 +30,10 @@ class OrganizationServiceConfiguration {
         @Suppress("SpringJavaInjectionPointsAutowiringInspection") @Autowired
         userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub
     ): OrganizationService {
-        return OrganizationServiceImpl(organizationRepository, organizationSubsidiaryRepository, benefitRepository,
+        return OrganizationServiceImpl(
+            organizationRepository,
+            organizationSubsidiaryRepository,
+            benefitRepository,
             userServiceCoroutineStub)
     }
 }
