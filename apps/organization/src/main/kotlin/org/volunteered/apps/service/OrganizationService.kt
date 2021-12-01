@@ -9,7 +9,7 @@ interface OrganizationService {
     suspend fun createOrganization(request: CreateOrganizationRequest): Organization
     suspend fun createOrganizationSubsidiary(request: CreateOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun getOrganizationById(request: GetOrganizationRequest): Organization
-    suspend fun updateOrganization(request: Organization): Organization
+    suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization
     suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty
     suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary

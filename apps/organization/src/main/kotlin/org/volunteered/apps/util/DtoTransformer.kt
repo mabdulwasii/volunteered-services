@@ -6,7 +6,11 @@ import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.proto.common.v1.*
+import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.common.v1.organization
+import org.volunteered.libs.proto.common.v1.organizationSubsidiary
+import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 
 class DtoTransformer {
     companion object {
@@ -80,28 +84,25 @@ class DtoTransformer {
             organizationSubsidiaryEntity.description?.let { description = it }
         }
 
-        fun buildOrganizationEntityFromOrganizationDto(organization: Organization, organizationEntity: OrganizationEntity) {
-            organization.name.whenNotEmpty { organizationEntity.name = it }
-            organization.email.whenNotEmpty { organizationEntity.email = it }
-            organization.bio.whenNotEmpty { organizationEntity.bio = it }
-            organization.logo.whenNotEmpty { organizationEntity.logo = it }
-            organization.phone.whenNotEmpty { organizationEntity.phone = it }
-            organization.webAndSocialUrls.website.whenNotEmpty { organizationEntity.website = it }
-            organization.webAndSocialUrls.linkedin.whenNotEmpty { organizationEntity.linkedin = it }
-            organization.webAndSocialUrls.facebook.whenNotEmpty { organizationEntity.facebook = it }
-            organization.webAndSocialUrls.twitter.whenNotEmpty { organizationEntity.twitter = it }
-            organization.webAndSocialUrls.skype.whenNotEmpty { organizationEntity.skype = it }
-            organization.webAndSocialUrls.github.whenNotEmpty { organizationEntity.github = it }
-            organization.founded.whenGreaterThanZero { organizationEntity.founded = it }
-            organization.industry.whenNotEmpty { organizationEntity.industry = it }
-            organization.founder.whenNotEmpty { organizationEntity.founder = it }
-            organization.numberOfEmployees.whenGreaterThanZero { organizationEntity.numberOfEmployees = it }
-            organization.hq.name.whenNotEmpty { organizationEntity.hq?.name = it }
-            organization.hq.email.whenNotEmpty { organizationEntity.hq?.email = it }
-            organization.hq.city.whenNotEmpty { organizationEntity.hq?.city = it }
-            organization.hq.country.whenNotEmpty { organizationEntity.hq?.country = it }
-            organization.hq.phone.whenNotEmpty { organizationEntity.hq?.phone = it }
-            organization.hq.description.whenNotEmpty { organizationEntity.hq?.description = it }
+        fun buildOrganizationEntityFromOrganizationDto(
+            updateOrganizationRequest: UpdateOrganizationRequest,
+            organizationEntity: OrganizationEntity)
+        {
+            updateOrganizationRequest.name.whenNotEmpty { organizationEntity.name = it }
+            updateOrganizationRequest.email.whenNotEmpty { organizationEntity.email = it }
+            updateOrganizationRequest.bio.whenNotEmpty { organizationEntity.bio = it }
+            updateOrganizationRequest.logo.whenNotEmpty { organizationEntity.logo = it }
+            updateOrganizationRequest.phone.whenNotEmpty { organizationEntity.phone = it }
+            updateOrganizationRequest.webAndSocialUrls.website.whenNotEmpty { organizationEntity.website = it }
+            updateOrganizationRequest.webAndSocialUrls.linkedin.whenNotEmpty { organizationEntity.linkedin = it }
+            updateOrganizationRequest.webAndSocialUrls.facebook.whenNotEmpty { organizationEntity.facebook = it }
+            updateOrganizationRequest.webAndSocialUrls.twitter.whenNotEmpty { organizationEntity.twitter = it }
+            updateOrganizationRequest.webAndSocialUrls.skype.whenNotEmpty { organizationEntity.skype = it }
+            updateOrganizationRequest.webAndSocialUrls.github.whenNotEmpty { organizationEntity.github = it }
+            updateOrganizationRequest.founded.whenGreaterThanZero { organizationEntity.founded = it }
+            updateOrganizationRequest.industry.whenNotEmpty { organizationEntity.industry = it }
+            updateOrganizationRequest.founder.whenNotEmpty { organizationEntity.founder = it }
+            updateOrganizationRequest.numberOfEmployees.whenGreaterThanZero { organizationEntity.numberOfEmployees = it }
         }
 
         fun buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(

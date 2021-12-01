@@ -81,7 +81,7 @@ class OrganizationServiceImpl(
             ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
-    override suspend fun updateOrganization(request: Organization): Organization {
+    override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {
         val organizationEntity = organizationRepository.findByIdOrNull(request.id)
         organizationEntity?.let {
             request.benefitsList.whenNotEmpty { benefits ->

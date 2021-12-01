@@ -31,10 +31,7 @@ class OrganizationGrpcService(
         return organizationService.getOrganizationById(request)
     }
 
-    override suspend fun updateOrganization(request: Organization): Organization {
-        if (!IsoUtil.isValidISOCountry(request.hq.country))
-            throw InvalidCountryCodeException("Invalid country code ${request.hq.country}")
-
+    override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {
         return organizationService.updateOrganization(request)
     }
 
