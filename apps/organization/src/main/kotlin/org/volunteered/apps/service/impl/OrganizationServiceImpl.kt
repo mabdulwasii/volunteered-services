@@ -14,14 +14,7 @@ import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.UpdateOrganizationHqRequest
-import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
@@ -127,19 +120,6 @@ class OrganizationServiceImpl(
         return organizationSubsidiaryEntity?.let {
             DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it) }
             ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
-    }
-
-    override suspend fun updateOrganizationHq(request: UpdateOrganizationHqRequest): Organization {
-        val organizationHqEntity = organizationSubsidiaryRepository.findByIdOrNull(request.hqId)
-        organizationHqEntity?.let { organizationHqEntity ->
-            val organizationId = request.organizationId
-            val organizationEntity = organizationRepository.findByIdOrNull(organizationId)
-            organizationEntity?.let { organizationEntity ->
-                organizationEntity.hq = organizationHqEntity
-                val updatedOrganizationEntity = organizationRepository.save(organizationEntity)
-                return DtoTransformer.transformOrganizationEntityToOrganizationDto(updatedOrganizationEntity)
-            }
-        }?:throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {

@@ -5,15 +5,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.util.IsoUtil
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.OrganizationServiceGrpcKt
-import org.volunteered.libs.organization.v1.UpdateOrganizationHqRequest
-import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 
@@ -57,10 +49,6 @@ class OrganizationGrpcService(
 
     override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
         return organizationService.updateOrganizationSubsidiary(request)
-    }
-
-    override suspend fun updateOrganizationHq(request: UpdateOrganizationHqRequest): Organization {
-        return organizationService.updateOrganizationHq(request)
     }
 
 }

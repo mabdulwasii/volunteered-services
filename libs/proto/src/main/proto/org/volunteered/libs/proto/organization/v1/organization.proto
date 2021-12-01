@@ -22,7 +22,6 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
-  rpc UpdateOrganizationHq(UpdateOrganizationHqRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
 }
 
 message CreateOrganizationRequest {
@@ -70,9 +69,4 @@ message UpdateOrganizationRequest {
   string founder = 11;
   int32 number_of_employees = 12;
   repeated string benefits = 13;
-}
-
-message UpdateOrganizationHqRequest {
-  int64 organization_id = 1;
-  int64 hq_id = 2;
 }
