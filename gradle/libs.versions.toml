@@ -11,7 +11,7 @@ coroutines = "1.5.2"
 #metadata = "0.3.0"
 #turbine = "0.6.1"
 #ktlint = "0.40.0"
-#mockk = "1.12.0"
+mockk = "1.12.0"
 konfig = "1.1.2"
 #markdown = "0.1.45"
 validation = "2.0.1.Final"
@@ -127,7 +127,7 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" } # ru
 #kotest-runner-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 #kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version.ref = "kotestSpring" }
 #
-#mockk-test = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-test = { module = "io.mockk:mockk", version.ref = "mockk" }
 #hamcrest-all-test = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
 #kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 #rest-assured-test = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
