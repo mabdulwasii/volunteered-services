@@ -37,15 +37,13 @@ dependencies {
     testImplementation(libs.mockk.test)
 }
 
-tasks.named<Test>("test") {
+tasks.withType<Test> {
     useJUnitPlatform()
     testLogging.showStackTraces = true
 }
-
-kotlin {
-    jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget ="11"
     }
 }
-
 

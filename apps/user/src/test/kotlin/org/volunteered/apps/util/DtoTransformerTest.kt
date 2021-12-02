@@ -3,7 +3,6 @@ package org.volunteered.apps.util
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,18 +14,6 @@ import org.volunteered.libs.user.v1.createUserRequest
 
 @SpringBootTest
 internal class DtoTransformerTest {
-    val DEFAULT_FIRST_NAME = "Babel"
-    val DEFAULT_LAST_NAME = "Wright"
-    val DEFAULT_EMAIL = "admin@example.com"
-    val DEFAULT_COUNTRY = "NG"
-    val DEFAULT_ID = 1L
-    val CV = "cv"
-    val BIO = "my bio"
-
-    @BeforeEach
-    fun setUp() {
-    }
-
     @Test
     fun `should transform createUserRequest to UserEntity`(): Unit = runBlocking {
         val createUserRequest = createUserRequest {
@@ -159,5 +146,14 @@ internal class DtoTransformerTest {
         assertEquals(DEFAULT_COUNTRY, userEntity.country)
         assertEquals(BIO, userEntity.bio)
         assertEquals(CV, userEntity.cv)
+    }
+    companion object {
+        const val DEFAULT_FIRST_NAME = "Babel"
+        const val DEFAULT_LAST_NAME = "Wright"
+        const val DEFAULT_EMAIL = "admin@example.com"
+        const val DEFAULT_COUNTRY = "NG"
+        const val DEFAULT_ID = 1L
+        const val CV = "cv"
+        const val BIO = "my bio"
     }
 }
