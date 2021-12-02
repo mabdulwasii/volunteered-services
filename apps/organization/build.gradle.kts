@@ -32,8 +32,14 @@ dependencies {
     runtimeOnly(libs.h2)
 
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.mockk.test)
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget ="11"
+    }
 }
