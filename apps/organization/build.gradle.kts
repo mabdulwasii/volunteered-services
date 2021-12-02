@@ -28,6 +28,8 @@ dependencies {
     implementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.kotlin.reflect)
     implementation(libs.javax.validation)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.jvm)
 
     runtimeOnly(libs.h2)
 
