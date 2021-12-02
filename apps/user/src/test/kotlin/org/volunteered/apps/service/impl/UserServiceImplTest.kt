@@ -35,24 +35,23 @@ internal class UserServiceImplTest() {
     private val languageRepository = mockk<LanguageRepository>()
     private val service = UserServiceImpl(userRepository, skillRepository, languageRepository)
 
-    companion object{
-        const val DEFAULT_FIRST_NAME = "Babel"
-        const val DEFAULT_LAST_NAME = "Wright"
-        const val DEFAULT_EMAIL = "admin@example.com"
-        const val DEFAULT_COUNTRY = "NG"
-        const val INVALID_ID = 999L
-        const val DEFAULT_ID = 1L
+    val DEFAULT_FIRST_NAME = "Babel"
+    val DEFAULT_LAST_NAME = "Wright"
+    val DEFAULT_EMAIL = "admin@example.com"
+    val DEFAULT_COUNTRY = "NG"
+    val INVALID_ID = 999L
+    val DEFAULT_ID = 1L
 
-        val javaSkill = Skill(1, "Java")
-        val kotlinSkill = Skill(1, "Kotlin")
-        val readingSkill = Skill(1, "Reading")
-        val english = Language(1, "English")
-        val french = Language(1, "French")
+    final val javaSkill = Skill(1, "Java")
+    final val kotlinSkill = Skill(1, "Kotlin")
+    final val readingSkill = Skill(1, "Reading")
+    final val english = Language(1, "English")
+    final val french = Language(1, "French")
 
-        val mainSkills = setOf(javaSkill, kotlinSkill)
-        val otherSkills = setOf(readingSkill)
-        val spokenLanguages = setOf(english, french)
-    }
+    val mainSkills = setOf(javaSkill, kotlinSkill)
+    val otherSkills = setOf(readingSkill)
+    val spokenLanguages = setOf(english, french)
+
 
     @BeforeEach
     fun setUp() {
