@@ -1,6 +1,5 @@
 package org.volunteered.apps.util
 
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
@@ -15,7 +14,7 @@ import org.volunteered.libs.user.v1.createUserRequest
 @SpringBootTest
 internal class DtoTransformerTest {
     @Test
-    fun `should transform createUserRequest to UserEntity`(): Unit = runBlocking {
+    fun `should transform createUserRequest to UserEntity`(){
         val createUserRequest = createUserRequest {
             firstName = DEFAULT_FIRST_NAME
             lastName = DEFAULT_LAST_NAME
@@ -33,7 +32,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should transform User entity to user dto`(): Unit = runBlocking {
+    fun `should transform User entity to user dto`() {
         val userEntity = UserEntity(
             id = DEFAULT_ID,
             firstName = DEFAULT_FIRST_NAME,
@@ -52,7 +51,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should throw exception if userEntity id is null`(): Unit = runBlocking {
+    fun `should throw exception if userEntity id is null`() {
         val userEntity = UserEntity(
             firstName = DEFAULT_FIRST_NAME,
             lastName = DEFAULT_LAST_NAME,
@@ -64,7 +63,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should build user entity from user dto`(): Unit = runBlocking {
+    fun `should build user entity from user dto`() {
         val userEntity = UserEntity(
             id = DEFAULT_ID,
             firstName = DEFAULT_FIRST_NAME,
@@ -118,7 +117,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should update user entity field from user dto if value is set`(): Unit = runBlocking {
+    fun `should update user entity field from user dto if value is set`() {
         val userEntity = UserEntity(
             id = DEFAULT_ID,
             firstName = DEFAULT_FIRST_NAME,
