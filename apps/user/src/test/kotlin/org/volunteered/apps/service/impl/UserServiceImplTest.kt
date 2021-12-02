@@ -28,36 +28,26 @@ import org.volunteered.libs.user.v1.getUserByEmailRequest
 import org.volunteered.libs.user.v1.getUserByIdRequest
 
 @SpringBootTest
-internal class UserServiceImplTest() {
-
+internal class UserServiceImplTest {
     private val userRepository = mockk<UserRepository>()
     private val skillRepository = mockk<SkillRepository>()
     private val languageRepository = mockk<LanguageRepository>()
     private val service = UserServiceImpl(userRepository, skillRepository, languageRepository)
 
-    val DEFAULT_FIRST_NAME = "Babel"
-    val DEFAULT_LAST_NAME = "Wright"
-    val DEFAULT_EMAIL = "admin@example.com"
-    val DEFAULT_COUNTRY = "NG"
-    val INVALID_ID = 999L
-    val DEFAULT_ID = 1L
-
-    final val javaSkill = Skill(1, "Java")
-    final val kotlinSkill = Skill(1, "Kotlin")
-    final val readingSkill = Skill(1, "Reading")
-    final val english = Language(1, "English")
-    final val french = Language(1, "French")
+    private val javaSkill = Skill(1, "Java")
+    private val kotlinSkill = Skill(1, "Kotlin")
+    private val readingSkill = Skill(1, "Reading")
+    private val english = Language(1, "English")
+    private val french = Language(1, "French")
 
     val mainSkills = setOf(javaSkill, kotlinSkill)
     val otherSkills = setOf(readingSkill)
     val spokenLanguages = setOf(english, french)
 
-
     @BeforeEach
     fun setUp() {
         clearMocks(userRepository, skillRepository, languageRepository)
     }
-
 
     @Test
     fun `should not create user if email exists`(): Unit = runBlocking{
@@ -72,7 +62,6 @@ internal class UserServiceImplTest() {
         assertThrows<UserAlreadyExistsException> {
             service.createUser(request)
         }
-
     }
 
     @Test
@@ -239,5 +228,13 @@ internal class UserServiceImplTest() {
 
         assertNotNull(result)
         assertEquals(result, Empty.getDefaultInstance())
+    }
+    companion object {
+        const val DEFAULT_FIRST_NAME = "Babel"
+        const val DEFAULT_LAST_NAME = "Wright"
+        const val DEFAULT_EMAIL = "admin@example.com"
+        const val DEFAULT_COUNTRY = "NG"
+        const val INVALID_ID = 999L
+        const val DEFAULT_ID = 1L
     }
 }
