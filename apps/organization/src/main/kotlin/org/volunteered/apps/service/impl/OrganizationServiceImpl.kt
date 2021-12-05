@@ -57,7 +57,7 @@ class OrganizationServiceImpl(
             val updatedOrganizationSubsidiaryEntity = organizationSubsidiaryRepository.save(it)
 
             return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(updatedOrganizationSubsidiaryEntity)
-        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
+        } ?: throw OrganizationDoesNotExistException("Organization subsidiary does not exist")
     }
 
     override suspend fun createOrganizationSubsidiary(request: CreateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
