@@ -3,6 +3,7 @@ package org.volunteered.apps.service.impl
 import com.google.protobuf.Empty
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
 import org.volunteered.apps.exception.CreatorDoesNotExistException
 import org.volunteered.apps.exception.OrganizationAlreadyExistsException
@@ -20,7 +21,6 @@ import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.user.v1.existsByIdRequest
 
-@Suppress("NAME_SHADOWING")
 @Service
 class OrganizationServiceImpl(
     private val organizationRepository: OrganizationRepository,
@@ -49,15 +49,15 @@ class OrganizationServiceImpl(
         return DtoTransformer.transformOrganizationEntityToOrganizationDto(createdOrganizationEntity)
     }
 
+    @Transactional
     override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
         organizationSubsidiaryEntity?.let {
-
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)
             val updatedOrganizationSubsidiaryEntity = organizationSubsidiaryRepository.save(it)
 
             return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(updatedOrganizationSubsidiaryEntity)
-        }?: throw OrganizationDoesNotExistException("Organization does not exist")
+        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     override suspend fun createOrganizationSubsidiary(request: CreateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
@@ -83,6 +83,7 @@ class OrganizationServiceImpl(
             ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
+    @Transactional
     override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {
         val organizationEntity = organizationRepository.findByIdOrNull(request.id)
         organizationEntity?.let {
@@ -94,14 +95,14 @@ class OrganizationServiceImpl(
                 val organizationHqEntity = organizationSubsidiaryRepository.findByIdOrNull(hqId)
                 organizationHqEntity?.let { organizationHqEntity ->
                     it.hq = organizationHqEntity
-                }
+                } ?: throw OrganizationDoesNotExistException("Organization hq does not exist")
             }
 
             DtoTransformer.buildOrganizationEntityFromOrganizationDto(request, it)
             val updatedOrganizationEntity = organizationRepository.save(it)
 
             return DtoTransformer.transformOrganizationEntityToOrganizationDto(updatedOrganizationEntity)
-        }?: throw OrganizationDoesNotExistException("Organization does not exist")
+        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     override suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty {
@@ -118,8 +119,8 @@ class OrganizationServiceImpl(
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
 
         return organizationSubsidiaryEntity?.let {
-            DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it) }
-            ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
+            DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it)
+        } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {

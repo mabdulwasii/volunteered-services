@@ -87,8 +87,7 @@ class DtoTransformer {
 
         fun buildOrganizationEntityFromOrganizationDto(
             updateOrganizationRequest: UpdateOrganizationRequest,
-            organizationEntity: OrganizationEntity)
-        {
+            organizationEntity: OrganizationEntity) {
             updateOrganizationRequest.name.whenNotEmpty { organizationEntity.name = it }
             updateOrganizationRequest.email.whenNotEmpty { organizationEntity.email = it }
             updateOrganizationRequest.bio.whenNotEmpty { organizationEntity.bio = it }
