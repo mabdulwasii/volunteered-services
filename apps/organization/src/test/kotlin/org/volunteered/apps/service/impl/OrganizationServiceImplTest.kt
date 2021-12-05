@@ -28,7 +28,6 @@ import org.volunteered.libs.user.v1.existsByIdRequest
 
 @SpringBootTest
 internal class OrganizationServiceImplTest {
-
     private val organizationRepository = mockk<OrganizationRepository>()
     private val organizationSubsidiaryRepository = mockk<OrganizationSubsidiaryRepository>()
     private val benefitRepository = mockk<BenefitRepository>()
