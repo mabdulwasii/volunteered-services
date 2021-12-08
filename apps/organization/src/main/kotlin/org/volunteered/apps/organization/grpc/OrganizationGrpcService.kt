@@ -57,4 +57,8 @@ class OrganizationGrpcService(
     override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
         return organizationService.updateOrganizationSubsidiary(request)
     }
+
+    override suspend fun getOrganizationByName(request: GetOrganizationByNameRequest): Organization {
+        return organizationService.getOrganizationByName(request)
+    }
 }

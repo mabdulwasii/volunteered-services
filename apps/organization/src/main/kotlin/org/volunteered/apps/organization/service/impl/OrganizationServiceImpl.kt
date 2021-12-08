@@ -127,6 +127,14 @@ class OrganizationServiceImpl(
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
+    override suspend fun getOrganizationByName(request: GetOrganizationByNameRequest): Organization {
+        val organizationEntity = organizationRepository.findByName(request.name)
+
+        organizationEntity?.let {
+            return DtoTransformer.transformOrganizationEntityToOrganizationDto(organizationEntity)
+        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
+    }
+
     private suspend fun ensureCreatorExists(creatorId: Long) {
         val creatorExists = userServiceStub.existsById(
             existsByIdRequest { id = creatorId }

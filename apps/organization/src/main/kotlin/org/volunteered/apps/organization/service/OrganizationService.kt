@@ -20,4 +20,5 @@ interface OrganizationService {
     suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
+    suspend fun getOrganizationByName(request: GetOrganizationByNameRequest): Organization
 }
