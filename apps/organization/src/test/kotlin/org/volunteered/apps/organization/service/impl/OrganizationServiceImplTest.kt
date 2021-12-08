@@ -392,6 +392,65 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
+    fun `should search organization by Name`() : Unit = runBlocking {
+        val request = getOrganizationByNameRequest{
+            name = DEFAULT_ORG_NAME
+        }
+        val  organizationEntity = OrganizationEntity(
+            id = DEFAULT_ID,
+            name = request.name,
+            email = DEFAULT_EMAIL,
+            phone = DEFAULT_ORG_PHONE,
+            bio =  BIO
+        )
+
+        every { organizationRepository.findByName(request.name) } returns organizationEntity
+
+        val retrievedOrganization = service.getOrganizationByName(request)
+
+        assertNotNull(retrievedOrganization)
+        assertEquals(request.name, retrievedOrganization.name)
+        assertEquals(organizationEntity.bio, retrievedOrganization.bio)
+        assertEquals(organizationEntity.name, retrievedOrganization.name)
+        assertEquals(organizationEntity.email, retrievedOrganization.email)
+        assertEquals(organizationEntity.phone, retrievedOrganization.phone)
+    }
+
+    @Test
+    fun `should not get organization by name if name is invalid`() : Unit = runBlocking {
+        val request = getOrganizationByNameRequest{
+            name = INVALID_ORG_NAME
+        }
+
+        every { organizationRepository.findByName(request.name) } returns null
+
+        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationByName(request)}
+    }
+
+    @Test
+    fun `should not get organization by Id if Id is invalid`() : Unit = runBlocking {
+        val request = getOrganizationRequest{
+            id = INVALID_ID
+        }
+
+        every { organizationRepository.findByIdOrNull(request.id) } returns null
+
+        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationById(request)}
+    }
+
+    @Test
+    fun `should not get organization subsidiary by Id if Id is Invalid`() : Unit = runBlocking {
+        val request = getOrganizationSubsidiaryRequest{
+            id = DEFAULT_SUBSIDIARY_ID
+        }
+
+        every { organizationSubsidiaryRepository.findByIdOrNull(request.id) } returns null
+
+        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationSubsidiaryById(request)}
+    }
+
+
+    @Test
     fun `should update organization subsidiary`(): Unit = runBlocking {
         val request = organizationSubsidiary {
             id = DEFAULT_SUBSIDIARY_ID
@@ -452,6 +511,7 @@ internal class OrganizationServiceImplTest {
 
     companion object {
         const val DEFAULT_ORG_NAME = "Wright Enterprise"
+        const val INVALID_ORG_NAME = "Invalid name"
         const val DEFAULT_SUBSIDIARY_NAME = "Wright Subsidiary"
         const val DEFAULT_EMAIL = "admin@wright.com"
         const val DEFAULT_SUBSIDIARY_EMAIL = "subsidiary@wright.com"
@@ -463,6 +523,7 @@ internal class OrganizationServiceImplTest {
         const val DEFAULT_ORG_PHONE = "+146784844744"
         const val DEFAULT_SUBSIDIARY_DESCRIPTION = "Subidiary"
         const val DEFAULT_ID = 1L
+        const val INVALID_ID = 222L
         const val DEFAULT_SUBSIDIARY_ID = 21L
         const val DEFAULT_WEBSITE = "website url"
         const val DEFAULT_LINKEDIN = "linkedin url"
