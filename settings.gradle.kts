@@ -8,7 +8,7 @@ pluginManagement {
 //    enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
     plugins {
-        val kotlinVersion = "1.5.31"
+        val kotlinVersion = "1.6.0"
 
         kotlin("jvm") version kotlinVersion
 
@@ -16,7 +16,7 @@ pluginManagement {
         kotlin("plugin.jpa") version kotlinVersion apply false
         kotlin("plugin.allopen") version "1.4.32" apply false
 
-        id("org.jetbrains.kotlin.jvm") version "1.5.31" apply false
+        id("org.jetbrains.kotlin.jvm") version "1.6.0" apply false
 
         id("org.springframework.boot") version "2.5.6" apply false
         id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
