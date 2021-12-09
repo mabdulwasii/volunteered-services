@@ -29,12 +29,12 @@ import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.user.v1.existsByIdRequest
 
+@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 class OrganizationServiceImpl(
     private val organizationRepository: OrganizationRepository,
     private val organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
     private val benefitRepository: BenefitRepository,
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
 ) : OrganizationService {
     override suspend fun createOrganization(request: CreateOrganizationRequest): Organization {
