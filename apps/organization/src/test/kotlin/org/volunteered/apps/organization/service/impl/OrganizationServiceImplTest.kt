@@ -21,6 +21,7 @@ import org.volunteered.apps.organization.exception.OrganizationDoesNotExistExcep
 import org.volunteered.apps.organization.repository.BenefitRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
+import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
@@ -28,9 +29,9 @@ import org.volunteered.libs.proto.organization.v1.deleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.deleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @SpringBootTest
 internal class OrganizationServiceImplTest {
@@ -62,7 +63,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(id { id = DEFAULT_ID }) }
         } returns boolValue { value = false }
 
         assertThrows<CreatorDoesNotExistException> { service.createOrganization(request) }
@@ -80,7 +81,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(id { id = DEFAULT_ID }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns true
 
@@ -112,7 +113,7 @@ internal class OrganizationServiceImplTest {
         organizationEntity.hq = organizationSubsidiaryEntity
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns false
         every { organizationRepository.save(any()) } returns organizationEntity
@@ -160,7 +161,7 @@ internal class OrganizationServiceImplTest {
         )
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns organizationEntity
         every { organizationSubsidiaryRepository.save(any()) } returns organizationSubsidiaryEntity
@@ -193,7 +194,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = false }
 
         assertThrows<CreatorDoesNotExistException> { service.createOrganizationSubsidiary(request) }
@@ -215,7 +216,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
 
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns null
@@ -393,7 +394,7 @@ internal class OrganizationServiceImplTest {
 
     @Test
     fun `should search organization by Name`() : Unit = runBlocking {
-        val request = getOrganizationByNameRequest{
+        val request = searchOrganizationByNameRequest{
             name = DEFAULT_ORG_NAME
         }
         val  organizationEntity = OrganizationEntity(
@@ -404,27 +405,28 @@ internal class OrganizationServiceImplTest {
             bio =  BIO
         )
 
-        every { organizationRepository.findByName(request.name) } returns organizationEntity
+        every { organizationRepository.findByNameLike(request.name) } returns listOf(organizationEntity)
 
-        val retrievedOrganization = service.getOrganizationByName(request)
+        val retrievedOrganizations = service.searchOrganizationByName(request)
 
-        assertNotNull(retrievedOrganization)
-        assertEquals(request.name, retrievedOrganization.name)
-        assertEquals(organizationEntity.bio, retrievedOrganization.bio)
-        assertEquals(organizationEntity.name, retrievedOrganization.name)
-        assertEquals(organizationEntity.email, retrievedOrganization.email)
-        assertEquals(organizationEntity.phone, retrievedOrganization.phone)
+        assertNotNull(retrievedOrganizations)
+        assertEquals(1, retrievedOrganizations.organizationsCount)
+        val organization = retrievedOrganizations.getOrganizations(0)
+        assertEquals(organizationEntity.bio, organization.bio)
+        assertEquals(organizationEntity.name, organization.name)
+        assertEquals(organizationEntity.email, organization.email)
+        assertEquals(organizationEntity.phone, organization.phone)
     }
 
     @Test
     fun `should not get organization by name if name is invalid`() : Unit = runBlocking {
-        val request = getOrganizationByNameRequest{
+        val request = searchOrganizationByNameRequest{
             name = INVALID_ORG_NAME
         }
 
-        every { organizationRepository.findByName(request.name) } returns null
+        every { organizationRepository.findByNameLike(request.name) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationByName(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.searchOrganizationByName(request)}
     }
 
     @Test
@@ -526,7 +528,6 @@ internal class OrganizationServiceImplTest {
         const val INVALID_ID = 222L
         const val DEFAULT_SUBSIDIARY_ID = 21L
         const val DEFAULT_WEBSITE = "website url"
-        const val DEFAULT_LINKEDIN = "linkedin url"
         const val BIO = "my bio"
         const val EMPTY_STRING = ""
     }

@@ -17,15 +17,17 @@ import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -127,17 +129,16 @@ class OrganizationServiceImpl(
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
-    override suspend fun getOrganizationByName(request: GetOrganizationByNameRequest): Organization {
-        val organizationEntity = organizationRepository.findByName(request.name)
-
-        organizationEntity?.let {
-            return DtoTransformer.transformOrganizationEntityToOrganizationDto(organizationEntity)
-        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
+    override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
+        val organizationEntityList = organizationRepository.findByNameLike(request.name)
+        organizationEntityList?.let {
+            return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
+        }?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
         val creatorExists = userServiceStub.existsById(
-            existsByIdRequest { id = creatorId }
+            id { id = creatorId }
         ).value
 
         if (!creatorExists)

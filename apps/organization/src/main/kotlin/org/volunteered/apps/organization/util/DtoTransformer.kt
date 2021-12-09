@@ -117,5 +117,17 @@ class DtoTransformer {
             organizationSubsidiary.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
             organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
         }
+
+        fun transformOrganizationEntityListToOrganizationDtoList(organizationEntityList: List<OrganizationEntity>) : SearchOrganizationByNameResponse {
+            var organizationList = mutableListOf<Organization>()
+
+            organizationEntityList.forEach {
+                val organizationDto = transformOrganizationEntityToOrganizationDto(it)
+                organizationList.add(organizationDto)
+            }
+            return searchOrganizationByNameResponse {
+                organizations.addAll(organizationList)
+            }
+        }
     }
 }
