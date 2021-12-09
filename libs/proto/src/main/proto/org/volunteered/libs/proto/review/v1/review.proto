@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package org.volunteered.libs.proto.review.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "ReviewServiceProto";
+option java_package = "org.volunteered.libs.proto.review.v1";
+
+import "google/protobuf/empty.proto";
+import "validate/validate.proto";
+import "org/volunteered/libs/proto/common/v1/common.proto";
+
+service ReviewService {
+  rpc WriteReview(WriteReviewRequest) returns (Review);
+  rpc GetOrganizationReviews(GetOrganizationReviewsRequest) returns (GetReviewsResponse);
+  rpc GetOrganizationSubsidiaryReviews(GetOrganizationSubsidiaryReviewsRequest) returns (GetReviewsResponse);
+  rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
+  rpc ReplyReview(ReplyReviewRequest) returns (ReviewReply);
+  rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
+}
+
+message WriteReviewRequest {
+  int64 user_id = 1;
+  int64 organization_subsidiary_id = 2;
+  int32 rating = 3;
+  string body = 4;
+  bool anonymous = 5;
+}
+
+message Review {
+  int64 id = 1;
+  string user_display_name = 2;
+  string user_avatar = 3;
+  int32 rating = 4;
+  string body = 5;
+  int64 helpful_count = 6;
+  string organization_subsidiary_city = 7;
+  bool verified = 8;
+}
+
+message GetOrganizationReviewsRequest {
+  int64 organization_id = 1;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
+}
+
+message GetReviewsResponse {
+  repeated Review reviews = 1;
+  org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
+}
+
+message GetOrganizationSubsidiaryReviewsRequest {
+  int64 organization_subsidiary_id = 1;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
+}
+
+message MarkReviewAsHelpfulRequest {
+  int64 user_id = 1;
+  int64 review_id = 2;
+}
+
+message ReplyReviewRequest {
+  int64 user_id = 1;
+  int64 review_id = 2;
+  string body = 3;
+  bool anonymous = 4;
+}
+
+message ReviewReply {
+  int64 id = 1;
+  int64 review_id = 2;
+  string user_display_name = 3;
+  string user_avatar = 4;
+  string body = 5;
+}
+
+message DeleteReviewRequest {
+  int64 id = 1;
+}

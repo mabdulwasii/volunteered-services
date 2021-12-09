@@ -31,6 +31,7 @@ include(
     ":apps:auth",
     ":apps:user",
     ":apps:organization",
+    ":apps:review",
 
     ":libs:core",
     ":libs:grpc",
