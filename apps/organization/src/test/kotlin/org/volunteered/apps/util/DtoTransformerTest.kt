@@ -14,6 +14,9 @@ import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 
 internal class DtoTransformerTest {
     @Test

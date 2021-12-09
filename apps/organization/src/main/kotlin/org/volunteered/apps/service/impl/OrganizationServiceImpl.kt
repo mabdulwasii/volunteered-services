@@ -99,10 +99,8 @@ class OrganizationServiceImpl(
             request.benefitsList.whenNotEmpty { benefits ->
                 it.benefits = benefitRepository.findByNameIn(benefits).toSet()
             }
-            val hqId = request.hqId
-            hqId.whenGreaterThanZero { hqId ->
-                val organizationHqEntity = organizationSubsidiaryRepository.findByIdOrNull(hqId)
-                organizationHqEntity?.let { organizationHqEntity ->
+            request.hqId.whenGreaterThanZero { hqId ->
+                organizationSubsidiaryRepository.findByIdOrNull(hqId)?.let { organizationHqEntity ->
                     it.hq = organizationHqEntity
                 } ?: throw OrganizationDoesNotExistException("Organization hq does not exist")
             }
