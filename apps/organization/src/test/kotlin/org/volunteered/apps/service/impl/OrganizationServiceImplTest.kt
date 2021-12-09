@@ -21,7 +21,14 @@ import org.volunteered.apps.exception.OrganizationDoesNotExistException
 import org.volunteered.apps.repository.BenefitRepository
 import org.volunteered.apps.repository.OrganizationRepository
 import org.volunteered.apps.repository.OrganizationSubsidiaryRepository
-import org.volunteered.libs.organization.v1.*
+import org.volunteered.libs.organization.v1.createOrganizationRequest
+import org.volunteered.libs.organization.v1.createOrganizationSubsidiaryRequest
+import org.volunteered.libs.organization.v1.deleteOrganizationRequest
+import org.volunteered.libs.organization.v1.deleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.organization.v1.getOrganizationRequest
+import org.volunteered.libs.organization.v1.getOrganizationSubsidiaryRequest
+import org.volunteered.libs.organization.v1.searchOrganizationByNameRequest
+import org.volunteered.libs.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.user.v1.existsByIdRequest
@@ -388,7 +395,7 @@ internal class OrganizationServiceImplTest {
 
     @Test
     fun `should search organization by Name`() : Unit = runBlocking {
-        val request = getOrganizationByNameRequest{
+        val request = searchOrganizationByNameRequest{
             name = DEFAULT_ORG_NAME
         }
         val  organizationEntity = OrganizationEntity(
@@ -399,27 +406,28 @@ internal class OrganizationServiceImplTest {
             bio =  BIO
         )
 
-        every { organizationRepository.findByName(request.name) } returns organizationEntity
+        every { organizationRepository.findByNameLike(request.name) } returns listOf(organizationEntity)
 
-        val retrievedOrganization = service.getOrganizationByName(request)
+        val retrievedOrganizations = service.searchOrganizationByName(request)
 
-        assertNotNull(retrievedOrganization)
-        assertEquals(request.name, retrievedOrganization.name)
-        assertEquals(organizationEntity.bio, retrievedOrganization.bio)
-        assertEquals(organizationEntity.name, retrievedOrganization.name)
-        assertEquals(organizationEntity.email, retrievedOrganization.email)
-        assertEquals(organizationEntity.phone, retrievedOrganization.phone)
+        assertNotNull(retrievedOrganizations)
+        assertEquals(1, retrievedOrganizations.organizationsCount)
+        val organization = retrievedOrganizations.getOrganizations(0)
+        assertEquals(organizationEntity.bio, organization.bio)
+        assertEquals(organizationEntity.name, organization.name)
+        assertEquals(organizationEntity.email, organization.email)
+        assertEquals(organizationEntity.phone, organization.phone)
     }
 
     @Test
     fun `should not get organization by name if name is invalid`() : Unit = runBlocking {
-        val request = getOrganizationByNameRequest{
+        val request = searchOrganizationByNameRequest{
             name = INVALID_ORG_NAME
         }
 
-        every { organizationRepository.findByName(request.name) } returns null
+        every { organizationRepository.findByNameLike(request.name) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationByName(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.searchOrganizationByName(request)}
     }
 
     @Test

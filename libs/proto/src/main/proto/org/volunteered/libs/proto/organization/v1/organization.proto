@@ -16,7 +16,7 @@ service OrganizationService {
   rpc CreateOrganizationSubsidiary(CreateOrganizationSubsidiaryRequest)
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
-  rpc GetOrganizationByName(GetOrganizationByNameRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
+  rpc SearchOrganizationByName(SearchOrganizationByNameRequest) returns (SearchOrganizationByNameResponse);
   rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary)
@@ -44,8 +44,12 @@ message GetOrganizationRequest {
   int64 id = 1;
 }
 
-message GetOrganizationByNameRequest {
+message SearchOrganizationByNameRequest {
   string name = 1;
+}
+
+message SearchOrganizationByNameResponse {
+  repeated org.volunteered.libs.proto.common.v1.Organization organizations = 1;
 }
 
 message DeleteOrganizationRequest {
