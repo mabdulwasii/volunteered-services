@@ -2,8 +2,12 @@ package org.volunteered.apps.util
 
 import org.volunteered.apps.entity.OrganizationEntity
 import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
+import org.volunteered.libs.core.extension.whenGreaterThanZero
+import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
@@ -40,6 +44,7 @@ class DtoTransformer {
             bio = organizationEntity.bio
 
             hq = organizationSubsidiary {
+                organizationEntity.hq?.id?.let { id = it }
                 organizationEntity.hq?.name?.let { name = it }
                 organizationEntity.hq?.email?.let { email = it }
                 organizationEntity.hq?.let { city = it.city }
@@ -78,6 +83,38 @@ class DtoTransformer {
             country = organizationSubsidiaryEntity.country
             organizationSubsidiaryEntity.phone?.let { phone = it }
             organizationSubsidiaryEntity.description?.let { description = it }
+        }
+
+        fun buildOrganizationEntityFromOrganizationDto(
+            updateOrganizationRequest: UpdateOrganizationRequest,
+            organizationEntity: OrganizationEntity) {
+            updateOrganizationRequest.name.whenNotEmpty { organizationEntity.name = it }
+            updateOrganizationRequest.email.whenNotEmpty { organizationEntity.email = it }
+            updateOrganizationRequest.bio.whenNotEmpty { organizationEntity.bio = it }
+            updateOrganizationRequest.logo.whenNotEmpty { organizationEntity.logo = it }
+            updateOrganizationRequest.phone.whenNotEmpty { organizationEntity.phone = it }
+            updateOrganizationRequest.webAndSocialUrls.website.whenNotEmpty { organizationEntity.website = it }
+            updateOrganizationRequest.webAndSocialUrls.linkedin.whenNotEmpty { organizationEntity.linkedin = it }
+            updateOrganizationRequest.webAndSocialUrls.facebook.whenNotEmpty { organizationEntity.facebook = it }
+            updateOrganizationRequest.webAndSocialUrls.twitter.whenNotEmpty { organizationEntity.twitter = it }
+            updateOrganizationRequest.webAndSocialUrls.skype.whenNotEmpty { organizationEntity.skype = it }
+            updateOrganizationRequest.webAndSocialUrls.github.whenNotEmpty { organizationEntity.github = it }
+            updateOrganizationRequest.founded.whenGreaterThanZero { organizationEntity.founded = it }
+            updateOrganizationRequest.industry.whenNotEmpty { organizationEntity.industry = it }
+            updateOrganizationRequest.founder.whenNotEmpty { organizationEntity.founder = it }
+            updateOrganizationRequest.numberOfEmployees.whenGreaterThanZero { organizationEntity.numberOfEmployees = it }
+        }
+
+        fun buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(
+            organizationSubsidiary: OrganizationSubsidiary,
+            organizationSubsidiaryEntity: OrganizationSubsidiaryEntity
+        ) {
+            organizationSubsidiary.name.whenNotEmpty { organizationSubsidiaryEntity.name = it }
+            organizationSubsidiary.email.whenNotEmpty { organizationSubsidiaryEntity.email = it }
+            organizationSubsidiary.city.whenNotEmpty { organizationSubsidiaryEntity.city = it }
+            organizationSubsidiary.country.whenNotEmpty { organizationSubsidiaryEntity.country = it }
+            organizationSubsidiary.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
+            organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
         }
     }
 }

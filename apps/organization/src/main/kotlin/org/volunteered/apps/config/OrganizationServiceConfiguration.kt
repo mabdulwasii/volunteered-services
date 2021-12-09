@@ -5,6 +5,7 @@ import net.devh.boot.grpc.client.inject.GrpcClientBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.volunteered.apps.repository.BenefitRepository
 import org.volunteered.apps.repository.OrganizationRepository
 import org.volunteered.apps.repository.OrganizationSubsidiaryRepository
 import org.volunteered.apps.service.OrganizationService
@@ -24,9 +25,15 @@ class OrganizationServiceConfiguration {
         organizationRepository: OrganizationRepository,
         @Autowired
         organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
+        @Autowired
+        benefitRepository: BenefitRepository,
         @Suppress("SpringJavaInjectionPointsAutowiringInspection") @Autowired
         userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub
     ): OrganizationService {
-        return OrganizationServiceImpl(organizationRepository, organizationSubsidiaryRepository, userServiceCoroutineStub)
+        return OrganizationServiceImpl(
+            organizationRepository,
+            organizationSubsidiaryRepository,
+            benefitRepository,
+            userServiceCoroutineStub)
     }
 }

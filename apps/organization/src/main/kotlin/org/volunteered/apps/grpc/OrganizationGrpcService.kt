@@ -5,11 +5,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.util.IsoUtil
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
-import org.volunteered.libs.organization.v1.OrganizationServiceGrpcKt
+import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 
@@ -35,14 +31,24 @@ class OrganizationGrpcService(
         return organizationService.getOrganizationById(request)
     }
 
-    override suspend fun updateOrganization(request: Organization): Organization {
-        if (!IsoUtil.isValidISOCountry(request.hq.country))
-            throw InvalidCountryCodeException("Invalid country code ${request.hq.country}")
-
+    override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {
         return organizationService.updateOrganization(request)
     }
 
     override suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty {
         return organizationService.deleteOrganization(request)
     }
+
+    override suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary {
+        return organizationService.getOrganizationSubsidiaryById(request)
+    }
+
+    override suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty {
+        return organizationService.deleteOrganizationSubsidiary(request)
+    }
+
+    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+        return organizationService.updateOrganizationSubsidiary(request)
+    }
+
 }

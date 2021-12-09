@@ -18,33 +18,36 @@ class DtoTransformer {
             )
         }
 
-        fun transformUserEntityToUserDto(userEntity: UserEntity) = user {
-            id = userEntity.id!!
-            firstName = userEntity.firstName
-            lastName = userEntity.lastName
-            email = userEntity.email
-            country = userEntity.country
-
-            userEntity.phone?.let { phone = it }
-            userEntity.city?.let { city = it }
-            userEntity.bio?.let { bio = it }
-            userEntity.gender?.let { gender = it }
-
-            mainSkills.addAll(userEntity.mainSkills.map { it.name })
-            otherSkills.addAll(userEntity.otherSkills.map { it.name })
-            spokenLanguages.addAll(userEntity.spokenLanguages.map { it.name })
-
-            userEntity.cv?.let { cv = it }
-            userEntity.portfolio?.let { portfolio = it }
-            userEntity.profilePhoto?.let { profilePhoto = it }
-
-            webAndSocialUrls = websiteAndSocialMediaUrls {
+        fun transformUserEntityToUserDto(userEntity: UserEntity) : User {
+            val websiteAndSocialMediaUrls =  websiteAndSocialMediaUrls {
                 userEntity.website?.let { website = it }
                 userEntity.linkedin?.let { linkedin = it }
                 userEntity.facebook?.let { facebook = it }
                 userEntity.twitter?.let { twitter = it }
                 userEntity.skype?.let { skype = it }
                 userEntity.github?.let { github = it }
+            }
+
+            return user {
+                id = userEntity.id!!
+                firstName = userEntity.firstName
+                lastName = userEntity.lastName
+                email = userEntity.email
+                country = userEntity.country
+                userEntity.phone?.let { phone = it }
+                userEntity.city?.let { city = it }
+                userEntity.bio?.let { bio = it }
+                userEntity.gender?.let { gender = it }
+
+                mainSkills.addAll(userEntity.mainSkills.map { it.name })
+                otherSkills.addAll(userEntity.otherSkills.map { it.name })
+                spokenLanguages.addAll(userEntity.spokenLanguages.map { it.name })
+
+                userEntity.cv?.let { cv = it }
+                userEntity.portfolio?.let { portfolio = it }
+                userEntity.profilePhoto?.let { profilePhoto = it }
+
+                webAndSocialUrls = websiteAndSocialMediaUrls
             }
         }
 
