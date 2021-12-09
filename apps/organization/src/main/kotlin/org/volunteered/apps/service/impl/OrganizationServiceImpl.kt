@@ -15,11 +15,17 @@ import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
-import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.user.v1.existsByIdRequest
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Service
 class OrganizationServiceImpl(
@@ -90,10 +96,8 @@ class OrganizationServiceImpl(
             request.benefitsList.whenNotEmpty { benefits ->
                 it.benefits = benefitRepository.findByNameIn(benefits).toSet()
             }
-            val hqId = request.hqId
-            hqId.whenGreaterThanZero { hqId ->
-                val organizationHqEntity = organizationSubsidiaryRepository.findByIdOrNull(hqId)
-                organizationHqEntity?.let { organizationHqEntity ->
+            request.hqId.whenGreaterThanZero { hqId ->
+                organizationSubsidiaryRepository.findByIdOrNull(hqId)?.let { organizationHqEntity ->
                     it.hq = organizationHqEntity
                 } ?: throw OrganizationDoesNotExistException("Organization hq does not exist")
             }

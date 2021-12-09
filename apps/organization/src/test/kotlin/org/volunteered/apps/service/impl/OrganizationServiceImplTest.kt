@@ -21,10 +21,16 @@ import org.volunteered.apps.exception.OrganizationDoesNotExistException
 import org.volunteered.apps.repository.BenefitRepository
 import org.volunteered.apps.repository.OrganizationRepository
 import org.volunteered.apps.repository.OrganizationSubsidiaryRepository
-import org.volunteered.libs.organization.v1.*
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.user.v1.existsByIdRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.deleteOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.deleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @SpringBootTest
 internal class OrganizationServiceImplTest {

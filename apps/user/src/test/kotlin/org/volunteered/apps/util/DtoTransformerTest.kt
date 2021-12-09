@@ -9,7 +9,7 @@ import org.volunteered.apps.entity.UserEntity
 import org.volunteered.libs.proto.common.v1.Gender
 import org.volunteered.libs.proto.common.v1.user
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
-import org.volunteered.libs.user.v1.createUserRequest
+import org.volunteered.libs.proto.user.v1.createUserRequest
 
 @SpringBootTest
 internal class DtoTransformerTest {

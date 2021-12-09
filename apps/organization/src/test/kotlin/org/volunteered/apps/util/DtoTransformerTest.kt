@@ -1,15 +1,18 @@
 package org.volunteered.apps.util
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.volunteered.apps.entity.Benefit
 import org.volunteered.apps.entity.OrganizationEntity
 import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
-import org.volunteered.libs.organization.v1.createOrganizationRequest
-import org.volunteered.libs.organization.v1.createOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
+import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 
 internal class DtoTransformerTest {
     @Test

@@ -22,10 +22,10 @@ import org.volunteered.apps.repository.SkillRepository
 import org.volunteered.apps.repository.UserRepository
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.user
-import org.volunteered.libs.user.v1.createUserRequest
-import org.volunteered.libs.user.v1.deleteUserRequest
-import org.volunteered.libs.user.v1.getUserByEmailRequest
-import org.volunteered.libs.user.v1.getUserByIdRequest
+import org.volunteered.libs.proto.user.v1.createUserRequest
+import org.volunteered.libs.proto.user.v1.deleteUserRequest
+import org.volunteered.libs.proto.user.v1.getUserByEmailRequest
+import org.volunteered.libs.proto.user.v1.getUserByIdRequest
 
 @SpringBootTest
 internal class UserServiceImplTest {
