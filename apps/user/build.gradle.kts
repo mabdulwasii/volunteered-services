@@ -1,5 +1,16 @@
 plugins {
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
     kotlin("jvm")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+    kotlin("plugin.allopen")
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+    annotation("javax.persistence.MappedSuperclass")
 }
 
 version = "0.0.1-SNAPSHOT"
@@ -7,37 +18,25 @@ version = "0.0.1-SNAPSHOT"
 dependencies {
     implementation(kotlin("stdlib"))
 
-    implementation(project(":libs:proto"))
+    implementation(project(":libs:core"))
     implementation(project(":libs:grpc"))
+    implementation(project(":libs:proto"))
 
-    // Grpc `io.grpc:grpc-all` has grpc-auth, grpc-alts, grpc-protobuf, grpc-xds ...
-    runtimeOnly(libs.grpc.netty)
-    implementation(libs.grpc.protobuf)
-    implementation(libs.grpc.kotlin.stub)
-    implementation(libs.grpc.services) // Optional. includes grpc-protobuf
-    implementation(libs.grpc.xds) // Optional. includes grpc-services, grpc-auth,  grpc-alts
-    implementation(libs.bundles.kotlinx.coroutines)
+    implementation(libs.bundles.spring.grpc)
 
-    // Protobuf - If you want to use features like protobuf JsonFormat, `protobuf-java-util` instead of `protobuf-java`
-    implementation(libs.protobuf.java)
-    implementation(libs.protobuf.kotlin)
+    implementation(libs.flyway.core)
+    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.javax.validation)
 
-    // Google
-    implementation(libs.guava)
+    runtimeOnly(libs.h2)
 
-    // Kotlin Config
-    implementation(libs.bundles.konf)
-
-    // Resilience frameworks
-    implementation(libs.sentinel.grpc.adapter)
-    // implementation(libs.concurrency.limits.grpc)
-
-    implementation(libs.slf4j.api)
-    implementation(libs.kotlin.logging)
-    implementation(libs.slf4j.jdk14)
-    implementation(libs.slf4j.simple)
+    testImplementation(libs.spring.boot.starter.test)
 }
 
-application {
-    mainClass.set("org.volunteered.apps.UserApplicationKt")
+tasks.test {
+    useJUnitPlatform()
+
+    maxHeapSize = "1G"
 }
+

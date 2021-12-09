@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package org.volunteered.libs.proto.common.v1;
+
+option java_multiple_files = true;
+option java_package = "org.volunteered.libs.proto.common.v1";
+
+import "validate/validate.proto";
+
+message User {
+  int64 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4 [(validate.rules).string.email = true];
+  string country = 5 [(validate.rules).string = {len: 2}];
+  string phone = 6;
+  string city = 7;
+  string bio = 8;
+  Gender gender = 9;
+  repeated string main_skills = 10;
+  repeated string other_skills = 11;
+  repeated string spoken_languages = 12;
+  string cv = 13;
+  string portfolio = 14;
+  string profile_photo = 15;
+  WebsiteAndSocialMediaUrls web_and_social_urls = 16;
+}
+
+message Organization {
+  int64 id = 1;
+  string name = 2;
+  string email = 3 [(validate.rules).string.email = true];
+  string bio = 4;
+  OrganizationSubsidiary hq = 5;
+  string logo = 6;
+  string phone = 7;
+  WebsiteAndSocialMediaUrls web_and_social_urls = 8;
+  int32 founded = 9;
+  string industry = 10;
+  string founder = 11;
+  int32 number_of_employees = 12;
+  repeated string benefits = 13;
+}
+
+message OrganizationSubsidiary {
+  int64 id = 1;
+  string name = 2;
+  string email = 3 [(validate.rules).string.email = true];
+  string city = 4;
+  string country = 5 [(validate.rules).string = {len: 2}];
+  string phone = 6;
+  string description = 7;
+}
+
+enum Gender {
+  UNSPECIFIED = 0;
+  MALE = 1;
+  FEMALE = 2;
+  NON_BINARY = 3;
+}
+
+message WebsiteAndSocialMediaUrls {
+  string website = 1;
+  string linkedin = 2;
+  string facebook = 3;
+  string twitter = 4;
+  string skype = 5;
+  string github = 6;
+}
+
+message Location {
+  double latitude = 1 [(validate.rules).double = { gte: -90,  lte: 90 }];
+  double longitude = 2 [(validate.rules).double = { gte: -180, lte: 180 }];
+}

@@ -12,6 +12,10 @@ pluginManagement {
 
         kotlin("jvm") version kotlinVersion
 
+        kotlin("plugin.spring") version kotlinVersion apply false
+        kotlin("plugin.jpa") version kotlinVersion apply false
+        kotlin("plugin.allopen") version "1.4.32" apply false
+
         id("org.jetbrains.kotlin.jvm") version "1.5.31" apply false
 
         id("org.springframework.boot") version "2.5.6" apply false
@@ -21,12 +25,14 @@ pluginManagement {
     }
 }
 
-rootProject.name = "volunteered-server"
-include("apps:auth")
-findProject(":apps:auth")?.name = "auth"
-include("libs:grpc")
-findProject(":libs:grpc")?.name = "grpc"
-include("libs:proto")
-findProject(":libs:proto")?.name = "proto"
-include("apps:user")
-findProject(":apps:user")?.name = "user"
+rootProject.name = "volunteered-services"
+
+include(
+    ":apps:auth",
+    ":apps:user",
+    ":apps:organization",
+
+    ":libs:core",
+    ":libs:grpc",
+    ":libs:proto"
+)
