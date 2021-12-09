@@ -28,21 +28,12 @@ dependencies {
     implementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.kotlin.reflect)
     implementation(libs.javax.validation)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.jvm)
 
     runtimeOnly(libs.h2)
 
     testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.mockk.test)
 }
 
 tasks.test {
     useJUnitPlatform()
 }
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget ="11"
-    }
-}
-

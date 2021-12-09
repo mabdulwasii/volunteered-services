@@ -1,24 +1,17 @@
-server:
-  port: 8183
-  servlet:
-    context-path: /user
-
 grpc:
   server:
     port: 9893
     reflection-service-enabled: true
     health-service-enabled: true
-    shutdown-grace-period: 5
+    shutdown-grace-period: 30
   client:
     user-service:
       address: 'static://localhost:9892'
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
       negotiationType: plaintext
 
 spring:
   datasource:
-    url: jdbc:h2:mem:user
+    url: jdbc:h2:file:./apps/organization/organization
     username: sa
     password:
     driverClassName: org.h2.Driver

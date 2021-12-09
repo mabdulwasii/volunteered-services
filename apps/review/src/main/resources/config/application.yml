@@ -1,13 +1,20 @@
 grpc:
   server:
-    port: 9892
+    port: 9894
     reflection-service-enabled: true
     health-service-enabled: true
     shutdown-grace-period: 30
+  client:
+    user-service:
+      address: 'static://localhost:9892'
+      negotiationType: plaintext
+    organization-service:
+      address: 'static://localhost:9893'
+      negotiationType: plaintext
 
 spring:
   datasource:
-    url: jdbc:h2:file:./apps/user/user
+    url: jdbc:h2:file:./apps/review/review
     username: sa
     password:
     driverClassName: org.h2.Driver

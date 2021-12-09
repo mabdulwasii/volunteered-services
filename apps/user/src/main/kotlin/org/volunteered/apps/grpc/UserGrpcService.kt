@@ -8,12 +8,12 @@ import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.core.util.IsoUtil
 import org.volunteered.libs.proto.common.v1.User
-import org.volunteered.libs.user.v1.CreateUserRequest
-import org.volunteered.libs.user.v1.DeleteUserRequest
-import org.volunteered.libs.user.v1.ExistsByIdRequest
-import org.volunteered.libs.user.v1.GetUserByEmailRequest
-import org.volunteered.libs.user.v1.GetUserByIdRequest
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.CreateUserRequest
+import org.volunteered.libs.proto.user.v1.DeleteUserRequest
+import org.volunteered.libs.proto.user.v1.ExistsByIdRequest
+import org.volunteered.libs.proto.user.v1.GetUserByEmailRequest
+import org.volunteered.libs.proto.user.v1.GetUserByIdRequest
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @GrpcService
 class UserGrpcService(private val userService: UserService) : UserServiceGrpcKt.UserServiceCoroutineImplBase() {

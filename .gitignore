@@ -34,3 +34,7 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+#H2
+*.mv.db
+*.trace.db

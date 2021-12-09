@@ -5,7 +5,7 @@ import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.user
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
-import org.volunteered.libs.user.v1.CreateUserRequest
+import org.volunteered.libs.proto.user.v1.CreateUserRequest
 
 class DtoTransformer {
     companion object {
