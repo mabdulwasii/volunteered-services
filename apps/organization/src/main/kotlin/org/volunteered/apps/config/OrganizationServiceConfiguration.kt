@@ -10,7 +10,7 @@ import org.volunteered.apps.repository.OrganizationRepository
 import org.volunteered.apps.repository.OrganizationSubsidiaryRepository
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.service.impl.OrganizationServiceImpl
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @Configuration
 @GrpcClientBean(
@@ -27,7 +27,8 @@ class OrganizationServiceConfiguration {
         organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
         @Autowired
         benefitRepository: BenefitRepository,
-        @Suppress("SpringJavaInjectionPointsAutowiringInspection") @Autowired
+        @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+        @Autowired
         userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub
     ): OrganizationService {
         return OrganizationServiceImpl(
