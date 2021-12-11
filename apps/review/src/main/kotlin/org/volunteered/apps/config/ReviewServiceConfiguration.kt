@@ -6,6 +6,7 @@ import net.devh.boot.grpc.client.inject.GrpcClientBeans
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.volunteered.apps.repository.ReviewRepository
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.service.impl.ReviewServiceImpl
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
@@ -31,8 +32,9 @@ class ReviewServiceConfiguration {
     @Bean
     fun reviewService(
         @Autowired userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub,
-        @Autowired organizationServiceCoroutineStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub
+        @Autowired organizationServiceCoroutineStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
+        @Autowired reviewRepository: ReviewRepository
     ): ReviewService {
-        return ReviewServiceImpl(userServiceCoroutineStub, organizationServiceCoroutineStub)
+        return ReviewServiceImpl(userServiceCoroutineStub, organizationServiceCoroutineStub, reviewRepository)
     }
 }
