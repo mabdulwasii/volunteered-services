@@ -17,6 +17,7 @@ import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.common.v1.existsByIdRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
@@ -27,7 +28,6 @@ import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameReques
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service

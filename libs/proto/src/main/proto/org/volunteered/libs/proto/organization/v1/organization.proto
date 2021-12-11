@@ -7,6 +7,7 @@ option java_outer_classname = "OrganizationServiceProto";
 option java_package = "org.volunteered.libs.proto.organization.v1";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 import "validate/validate.proto";
 import "org/volunteered/libs/proto/common/v1/common.proto";
 
@@ -22,6 +23,7 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
+  rpc ExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
 }
 
 message CreateOrganizationRequest {
