@@ -83,3 +83,7 @@ message PaginationResponse {
   int32 limit_per_page = 2;
   int32 page = 3;
 }
+
+message ExistsByIdRequest {
+  int64 id = 1;
+}
