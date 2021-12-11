@@ -13,7 +13,7 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.proto.common.v1.User);
-  rpc ExistsById(ExistsByIdRequest) returns (google.protobuf.BoolValue);
+  rpc ExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
   rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc UpdateUser(org.volunteered.libs.proto.common.v1.User) returns (org.volunteered.libs.proto.common.v1.User);
@@ -25,10 +25,6 @@ message CreateUserRequest {
   string last_name = 2;
   string email = 4;
   string country = 5 [(validate.rules).string = {len: 2}];
-}
-
-message ExistsByIdRequest {
-  int64 id = 1;
 }
 
 message GetUserByIdRequest {
