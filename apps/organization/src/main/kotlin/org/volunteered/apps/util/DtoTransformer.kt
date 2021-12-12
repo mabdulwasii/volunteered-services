@@ -80,6 +80,7 @@ class DtoTransformer {
             organizationSubsidiaryEntity: OrganizationSubsidiaryEntity
         ) = organizationSubsidiary {
             id = organizationSubsidiaryEntity.id!!
+            organizationId = organizationSubsidiaryEntity.parent.id!!
             organizationSubsidiaryEntity.name?.let { name = it }
             organizationSubsidiaryEntity.email?.let { email = it }
             city = organizationSubsidiaryEntity.city
