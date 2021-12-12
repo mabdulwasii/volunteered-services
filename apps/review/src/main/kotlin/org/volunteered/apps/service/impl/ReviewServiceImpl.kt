@@ -84,7 +84,8 @@ class ReviewServiceImpl(
     }
 
     override suspend fun deleteReview(request: DeleteReviewRequest): Empty {
-        TODO("Not yet implemented")
+        reviewRepository.deleteById(request.id)
+        return Empty.getDefaultInstance()
     }
 
     private suspend fun getUserById(userId: Long): User {
