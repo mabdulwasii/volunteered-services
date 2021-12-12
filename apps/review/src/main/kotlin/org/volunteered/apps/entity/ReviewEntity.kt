@@ -18,6 +18,9 @@ class ReviewEntity(
     @Column(name = "user_id")
     var userId : Long,
 
+    @Column(name = "organization_id")
+    var organizationId  : Long,
+
     @Column(name = "organization_subsidiary_id")
     var organizationSubsidiaryId  : Long,
 
