@@ -19,6 +19,7 @@ import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationSubsidiaryRequest
 
 @GrpcService
 class OrganizationGrpcService(
@@ -58,7 +59,7 @@ class OrganizationGrpcService(
         return organizationService.deleteOrganizationSubsidiary(request)
     }
 
-    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
         return organizationService.updateOrganizationSubsidiary(request)
     }
 

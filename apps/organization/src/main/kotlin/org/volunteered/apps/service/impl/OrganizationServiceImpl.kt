@@ -30,6 +30,7 @@ import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryReque
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -61,7 +62,7 @@ class OrganizationServiceImpl(
     }
 
     @Transactional
-    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
         organizationSubsidiaryEntity?.let {
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)

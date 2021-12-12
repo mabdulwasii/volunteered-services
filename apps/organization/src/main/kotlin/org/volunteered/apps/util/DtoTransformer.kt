@@ -5,7 +5,6 @@ import org.volunteered.apps.entity.OrganizationSubsidiaryEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.Organization
-import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
@@ -13,6 +12,7 @@ import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameResponse
 
 class DtoTransformer {
@@ -110,15 +110,15 @@ class DtoTransformer {
         }
 
         fun buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(
-            organizationSubsidiary: OrganizationSubsidiary,
+            updateOrganizationSubsidiaryRequest: UpdateOrganizationSubsidiaryRequest,
             organizationSubsidiaryEntity: OrganizationSubsidiaryEntity
         ) {
-            organizationSubsidiary.name.whenNotEmpty { organizationSubsidiaryEntity.name = it }
-            organizationSubsidiary.email.whenNotEmpty { organizationSubsidiaryEntity.email = it }
-            organizationSubsidiary.city.whenNotEmpty { organizationSubsidiaryEntity.city = it }
-            organizationSubsidiary.country.whenNotEmpty { organizationSubsidiaryEntity.country = it }
-            organizationSubsidiary.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
-            organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
+            updateOrganizationSubsidiaryRequest.name.whenNotEmpty { organizationSubsidiaryEntity.name = it }
+            updateOrganizationSubsidiaryRequest.email.whenNotEmpty { organizationSubsidiaryEntity.email = it }
+            updateOrganizationSubsidiaryRequest.city.whenNotEmpty { organizationSubsidiaryEntity.city = it }
+            updateOrganizationSubsidiaryRequest.country.whenNotEmpty { organizationSubsidiaryEntity.country = it }
+            updateOrganizationSubsidiaryRequest.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
+            updateOrganizationSubsidiaryRequest.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
         }
 
         fun transformOrganizationEntityListToOrganizationDtoList(organizationEntityList: List<OrganizationEntity>) : SearchOrganizationByNameResponse {
