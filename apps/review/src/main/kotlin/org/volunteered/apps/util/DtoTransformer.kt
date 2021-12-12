@@ -27,7 +27,8 @@ class DtoTransformer {
                 organizationSubsidiaryCity = organizationSubsidiary.city,
                 userId = user.id,
                 organizationSubsidiaryId = organizationSubsidiary.id,
-                organizationId = organizationSubsidiary.organizationId
+                organizationId = organizationSubsidiary.organizationId,
+                helpfulCount = 0
             )
         }
 
