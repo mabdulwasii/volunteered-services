@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.volunteered.apps.exception.ReviewDoesNotExistException
+import org.volunteered.apps.repository.ReplyReviewRepository
 import org.volunteered.apps.repository.ReviewRepository
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.util.DtoTransformer
@@ -29,7 +30,8 @@ import org.volunteered.libs.proto.user.v1.getUserByIdRequest
 class ReviewServiceImpl(
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
     private val organizationServiceStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val replReviewRepository: ReplyReviewRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
         val user = getUserById(request.userId)
@@ -76,11 +78,19 @@ class ReviewServiceImpl(
             it.helpfulCount =+ 1
             reviewRepository.save(it)
             return Empty.getDefaultInstance()
-        } ?: throw  ReviewDoesNotExistException("Review does not exist exception")
+        } ?: throw  ReviewDoesNotExistException("Review does not exist")
     }
 
     override suspend fun replyReview(request: ReplyReviewRequest): ReviewReply {
-        TODO("Not yet implemented")
+        val user = getUserById(request.userId)
+
+        val reviewEntity = reviewRepository.findByIdOrNull(request.reviewId)
+        reviewEntity?.let {
+            val replyReviewEntity = DtoTransformer.transformReplyReviewRequestToReplyReviewEntity(request, user, it)
+            val savedReplyReviewEntity = replReviewRepository.save(replyReviewEntity)
+
+            return DtoTransformer.transformReplyReviewEntityToReplyReviewDto(savedReplyReviewEntity)
+        } ?: throw ReviewDoesNotExistException("Review does not exist")
     }
 
     override suspend fun deleteReview(request: DeleteReviewRequest): Empty {
