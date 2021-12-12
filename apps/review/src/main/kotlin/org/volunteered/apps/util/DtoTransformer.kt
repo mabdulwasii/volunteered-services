@@ -61,8 +61,8 @@ class DtoTransformer {
                 page = paginationRequest.page
             }
             return getReviewsResponse {
-                this.reviews.addAll(reviewDtoList)
-                this.pagination = paginationResponse
+                reviews.addAll(reviewDtoList)
+                pagination = paginationResponse
             }
         }
 
