@@ -2,7 +2,9 @@ package org.volunteered.apps.service.impl
 
 import com.google.protobuf.Empty
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.volunteered.apps.exception.ReviewDoesNotExistException
 import org.volunteered.apps.repository.ReviewRepository
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.util.DtoTransformer
@@ -70,7 +72,13 @@ class ReviewServiceImpl(
     }
 
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
-        TODO("Not yet implemented")
+        val reviewId = request.reviewId
+        val retrievedReview = reviewRepository.findByIdOrNull(reviewId)
+        retrievedReview?.let {
+            it.helpfulCount =+ 1
+            reviewRepository.save(it)
+            return Empty.getDefaultInstance()
+        } ?: throw  ReviewDoesNotExistException("Review does not exist exception")
     }
 
     override suspend fun replyReview(request: ReplyReviewRequest): ReviewReply {
