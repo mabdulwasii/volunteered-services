@@ -8,11 +8,9 @@ import org.volunteered.apps.exception.ReviewDoesNotExistException
 import org.volunteered.apps.repository.ReviewRepository
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.util.DtoTransformer
-import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
-import org.volunteered.libs.proto.organization.v1.getOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
@@ -98,13 +96,6 @@ class ReviewServiceImpl(
     private suspend fun getOrganizationSubsidiaryById(organizationSubsidiaryId: Long): OrganizationSubsidiary {
         return organizationServiceStub.getOrganizationSubsidiaryById(
             getOrganizationSubsidiaryRequest { id = organizationSubsidiaryId }
-        )
-    }
-
-    private suspend fun getOrganizationSubsidiaryByOrganizationId(organizationId: Long):
-            Organization {
-        return organizationServiceStub.getOrganizationById(
-            getOrganizationRequest { id = organizationId }
         )
     }
 }
