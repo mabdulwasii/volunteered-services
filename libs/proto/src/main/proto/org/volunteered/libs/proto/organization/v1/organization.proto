@@ -23,7 +23,7 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
-  rpc ExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
+  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
 }
 
 message CreateOrganizationRequest {

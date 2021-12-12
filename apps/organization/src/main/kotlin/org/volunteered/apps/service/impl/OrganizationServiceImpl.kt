@@ -1,6 +1,8 @@
 package org.volunteered.apps.service.impl
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
+import com.google.protobuf.boolValue
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,6 +17,7 @@ import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.ExistsByIdRequest
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.existsByIdRequest
@@ -127,6 +130,12 @@ class OrganizationServiceImpl(
         return organizationSubsidiaryEntity?.let {
             DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it)
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
+    }
+
+    override suspend fun organizationSubsidiaryExistsById(request: ExistsByIdRequest): BoolValue {
+        return boolValue {
+            value =  organizationSubsidiaryRepository.existsById(request.id)
+        }
     }
 
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {

@@ -1,10 +1,12 @@
 package org.volunteered.apps.grpc
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.util.IsoUtil
+import org.volunteered.libs.proto.common.v1.ExistsByIdRequest
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
@@ -62,5 +64,9 @@ class OrganizationGrpcService(
 
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
         return organizationService.searchOrganizationByName(request)
+    }
+
+    override suspend fun organizationSubsidiaryExistsById(request: ExistsByIdRequest): BoolValue {
+        return organizationService.organizationSubsidiaryExistsById(request)
     }
 }
