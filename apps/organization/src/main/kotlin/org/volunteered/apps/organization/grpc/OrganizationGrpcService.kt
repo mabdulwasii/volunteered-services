@@ -56,7 +56,7 @@ class OrganizationGrpcService(
         return organizationService.deleteOrganizationSubsidiary(request)
     }
 
-    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
         return organizationService.updateOrganizationSubsidiary(request)
     }
 
