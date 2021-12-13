@@ -25,6 +25,7 @@ import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.getUserByIdRequest
 
+
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 class ReviewServiceImpl(
@@ -34,8 +35,9 @@ class ReviewServiceImpl(
     private val replReviewRepository: ReplyReviewRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
-        val user = getUserById(request.userId)
+        var user = getUserById(request.userId)
         val organizationSubsidiary = getOrganizationSubsidiaryById(request.organizationSubsidiaryId)
+
         val reviewEntity = DtoTransformer.transformWriteReviewRequestToReviewEntity(request, user,
             organizationSubsidiary)
 
