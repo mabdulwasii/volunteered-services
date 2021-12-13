@@ -3,6 +3,7 @@ package org.volunteered.apps.util
 import org.springframework.data.domain.Page
 import org.volunteered.apps.entity.ReplyReviewEntity
 import org.volunteered.apps.entity.ReviewEntity
+import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.PaginationRequest
 import org.volunteered.libs.proto.common.v1.User
@@ -14,6 +15,10 @@ import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.review.v1.getReviewsResponse
 import org.volunteered.libs.proto.review.v1.review
 import org.volunteered.libs.proto.review.v1.reviewReply
+import java.security.SecureRandom
+import java.security.spec.KeySpec
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 class DtoTransformer {
     companion object {
@@ -22,25 +27,33 @@ class DtoTransformer {
             user: User,
             organizationSubsidiary: OrganizationSubsidiary
         ) : ReviewEntity {
-            return ReviewEntity(
-                userDisplayName = user.firstName,
-                userAvatar = user.profilePhoto,
+
+            val reviewEntity = ReviewEntity(
                 rating = request.rating,
                 body = request.body,
                 organizationSubsidiaryCity = organizationSubsidiary.city,
-                userId = user.id,
                 organizationSubsidiaryId = organizationSubsidiary.id,
                 organizationId = organizationSubsidiary.organizationId,
-                helpfulCount = 0
+                helpfulCount = 0,
+                userId = request.userId.toString(),
+                userDisplayName = user.firstName,
+                userAvatar = user.profilePhoto
             )
+            if (request.anonymous) {
+                reviewEntity.userId = hashValue(user.id.toString())
+                user.firstName.whenNotEmpty { reviewEntity.userDisplayName = hashValue(it) }
+                user.profilePhoto.whenNotEmpty { reviewEntity.userAvatar = hashValue(it) }
+            }
+
+            return reviewEntity
         }
 
         fun transformReviewEntityToReviewDto(reviewEntity: ReviewEntity) = review {
             id = reviewEntity.id!!
-            userDisplayName = reviewEntity.userDisplayName
             organizationSubsidiaryCity = reviewEntity.organizationSubsidiaryCity
             rating = reviewEntity.rating
             body = reviewEntity.body
+            reviewEntity.userDisplayName?.let { userDisplayName = it }
             reviewEntity.userAvatar?.let { userAvatar = it }
             reviewEntity.helpfulCount?.let { helpfulCount = it }
             reviewEntity.verified?.let { verified = it }
@@ -84,5 +97,18 @@ class DtoTransformer {
             replyReviewEntity.userAvatar?.let { userAvatar = it }
             body = replyReviewEntity.body
         }
+
+        private fun hashValue(stringValue: String?): String {
+            val random = SecureRandom()
+            val salt = ByteArray(16)
+            random.nextBytes(salt)
+
+            val spec: KeySpec = PBEKeySpec(stringValue?.toCharArray(), salt, 65536, 128)
+            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+
+            val encoded = factory.generateSecret(spec).encoded
+            return String(encoded)
+        }
     }
+
 }
