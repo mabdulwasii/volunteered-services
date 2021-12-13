@@ -15,19 +15,20 @@ import org.volunteered.apps.service.OrganizationService
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.SearchOrganizationByNameRequest
-import org.volunteered.libs.organization.v1.SearchOrganizationByNameResponse
-import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.user.v1.existsByIdRequest
+import org.volunteered.libs.proto.common.v1.existsByIdRequest
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -58,7 +59,7 @@ class OrganizationServiceImpl(
     }
 
     @Transactional
-    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
         organizationSubsidiaryEntity?.let {
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)
@@ -133,9 +134,9 @@ class OrganizationServiceImpl(
 
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
         val organizationEntityList = organizationRepository.findByNameLike(request.name)
-        organizationEntityList?.let {
+        organizationEntityList.let {
             return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
-        }?: throw OrganizationDoesNotExistException("Organization does not exist")
+        }
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {

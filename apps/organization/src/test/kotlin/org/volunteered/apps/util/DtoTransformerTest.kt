@@ -13,6 +13,7 @@ import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.updateOrganizationSubsidiaryRequest
 
 internal class DtoTransformerTest {
     @Test
@@ -235,7 +236,7 @@ internal class DtoTransformerTest {
             )
         )
 
-        val organizationSubsidiary = organizationSubsidiary {
+        val updateOrganizationSubsidiaryRequest = updateOrganizationSubsidiaryRequest {
             name = EMPTY_STRING
             email = EMPTY_STRING
             city = "Abuja"
@@ -244,14 +245,14 @@ internal class DtoTransformerTest {
             description = DEFAULT_SUBSIDIARY_DESCRIPTION
         }
 
-        DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(organizationSubsidiary, organizationSubsidiaryEntity)
+        DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(updateOrganizationSubsidiaryRequest, organizationSubsidiaryEntity)
 
-        assertNotEquals(organizationSubsidiary.name, organizationSubsidiaryEntity.name)
-        assertNotEquals(organizationSubsidiary.email, organizationSubsidiaryEntity.email)
-        assertEquals(organizationSubsidiary.city, organizationSubsidiaryEntity.city)
-        assertEquals(organizationSubsidiary.country, organizationSubsidiaryEntity.country)
-        assertEquals(organizationSubsidiary.phone, organizationSubsidiaryEntity.phone)
-        assertEquals(organizationSubsidiary.description, organizationSubsidiaryEntity.description)
+        assertNotEquals(updateOrganizationSubsidiaryRequest.name, organizationSubsidiaryEntity.name)
+        assertNotEquals(updateOrganizationSubsidiaryRequest.email, organizationSubsidiaryEntity.email)
+        assertEquals(updateOrganizationSubsidiaryRequest.city, organizationSubsidiaryEntity.city)
+        assertEquals(updateOrganizationSubsidiaryRequest.country, organizationSubsidiaryEntity.country)
+        assertEquals(updateOrganizationSubsidiaryRequest.phone, organizationSubsidiaryEntity.phone)
+        assertEquals(updateOrganizationSubsidiaryRequest.description, organizationSubsidiaryEntity.description)
     }
     companion object {
         const val DEFAULT_ORG_NAME = "Wright Enterprise"

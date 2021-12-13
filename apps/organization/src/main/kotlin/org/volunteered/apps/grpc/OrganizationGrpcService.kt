@@ -5,18 +5,19 @@ import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.OrganizationService
 import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.util.IsoUtil
-import org.volunteered.libs.organization.v1.CreateOrganizationRequest
-import org.volunteered.libs.organization.v1.CreateOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationRequest
-import org.volunteered.libs.organization.v1.DeleteOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.GetOrganizationRequest
-import org.volunteered.libs.organization.v1.GetOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.OrganizationServiceGrpcKt
-import org.volunteered.libs.organization.v1.SearchOrganizationByNameRequest
-import org.volunteered.libs.organization.v1.SearchOrganizationByNameResponse
-import org.volunteered.libs.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.UpdateOrganizationSubsidiaryRequest
 
 @GrpcService
 class OrganizationGrpcService(
@@ -56,7 +57,7 @@ class OrganizationGrpcService(
         return organizationService.deleteOrganizationSubsidiary(request)
     }
 
-    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
         return organizationService.updateOrganizationSubsidiary(request)
     }
 
