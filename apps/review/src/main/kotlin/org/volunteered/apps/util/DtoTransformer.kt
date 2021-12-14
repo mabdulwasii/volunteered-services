@@ -52,7 +52,7 @@ class DtoTransformer {
             id = reviewEntity.id!!
             organizationSubsidiaryCity = reviewEntity.organizationSubsidiaryCity
             rating = reviewEntity.rating
-            body = reviewEntity.body
+            reviewEntity.body?.let { body = it }
             reviewEntity.userDisplayName?.let { userDisplayName = it }
             reviewEntity.userAvatar?.let { userAvatar = it }
             reviewEntity.helpfulCount?.let { helpfulCount = it }

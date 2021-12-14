@@ -17,7 +17,7 @@ class ReviewEntity(
 
     var rating : Int,
 
-    var body : String,
+    var body : String? = null,
 
     @Column(name = "organization_id")
     var organizationId  : Long,
