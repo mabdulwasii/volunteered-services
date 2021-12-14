@@ -3,6 +3,7 @@ package org.volunteered.apps.util
 import org.springframework.data.domain.Page
 import org.volunteered.apps.entity.ReplyReviewEntity
 import org.volunteered.apps.entity.ReviewEntity
+import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.PaginationRequest
@@ -11,6 +12,7 @@ import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
+import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.review.v1.getReviewsResponse
 import org.volunteered.libs.proto.review.v1.review
@@ -92,6 +94,11 @@ class DtoTransformer {
             userDisplayName = replyReviewEntity.userDisplayName
             replyReviewEntity.userAvatar?.let { userAvatar = it }
             body = replyReviewEntity.body
+        }
+
+        fun buildReviewEntityFromReviewDto(reviewEntity: ReviewEntity, request: UpdateReviewRequest) {
+            request.body.whenNotEmpty { reviewEntity.body = it }
+            request.rating.whenGreaterThanZero { reviewEntity.rating = it }
         }
 
     }

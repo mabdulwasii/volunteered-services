@@ -23,6 +23,7 @@ import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
+import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.getUserByIdRequest
@@ -60,6 +61,16 @@ class ReviewServiceImpl(
         val savedReview = reviewRepository.save(reviewEntity)
 
         return DtoTransformer.transformReviewEntityToReviewDto(savedReview)
+    }
+
+    override suspend fun updateReview(request: UpdateReviewRequest): Review {
+        val reviewEntity = reviewRepository.findByIdOrNull(request.id)
+
+        reviewEntity?.let {
+            DtoTransformer.buildReviewEntityFromReviewDto(it, request)
+            val savedReviewEntity = reviewRepository.save(it)
+            return DtoTransformer.transformReviewEntityToReviewDto(savedReviewEntity)
+        }?: throw ReviewDoesNotExistException("Review does not exist")
     }
 
     override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {

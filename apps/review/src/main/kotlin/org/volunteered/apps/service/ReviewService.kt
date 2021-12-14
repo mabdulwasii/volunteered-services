@@ -9,6 +9,7 @@ import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
+import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 
 interface ReviewService {
@@ -18,4 +19,5 @@ interface ReviewService {
     suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty
     suspend fun replyReview(request: ReplyReviewRequest): ReviewReply
     suspend fun deleteReview(request: DeleteReviewRequest): Empty
+    suspend fun updateReview(request: UpdateReviewRequest): Review
 }

@@ -12,6 +12,7 @@ import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
 import org.volunteered.libs.proto.review.v1.ReviewServiceGrpcKt
+import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 
 @GrpcService
@@ -40,5 +41,9 @@ class ReviewGrpcService(
 
     override suspend fun deleteReview(request: DeleteReviewRequest): Empty {
         return reviewService.deleteReview(request)
+    }
+
+    override suspend fun updateReview(request: UpdateReviewRequest): Review {
+        return reviewService.updateReview(request)
     }
 }
