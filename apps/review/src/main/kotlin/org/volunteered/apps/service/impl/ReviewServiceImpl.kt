@@ -4,11 +4,13 @@ import com.google.protobuf.Empty
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.volunteered.apps.exception.CannotWriteReviewException
 import org.volunteered.apps.exception.ReviewDoesNotExistException
 import org.volunteered.apps.repository.ReplyReviewRepository
 import org.volunteered.apps.repository.ReviewRepository
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.util.DtoTransformer
+import org.volunteered.apps.util.StringEncoder
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
@@ -35,8 +37,22 @@ class ReviewServiceImpl(
     private val replReviewRepository: ReplyReviewRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
-        var user = getUserById(request.userId)
-        val organizationSubsidiary = getOrganizationSubsidiaryById(request.organizationSubsidiaryId)
+        val userId = request.userId
+        val organizationSubsidiaryId = request.organizationSubsidiaryId
+
+        val reviewExist : Boolean = if (request.anonymous){
+            val hashValue = StringEncoder.hashValue("$userId")
+            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(hashValue, organizationSubsidiaryId)
+        }else {
+            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(userId.toString(), organizationSubsidiaryId)
+        }
+
+        if (reviewExist){
+            throw CannotWriteReviewException("You cannot write multiple reviews for an organization")
+        }
+
+        val user = getUserById(userId)
+        val organizationSubsidiary = getOrganizationSubsidiaryById(organizationSubsidiaryId)
 
         val reviewEntity = DtoTransformer.transformWriteReviewRequestToReviewEntity(request, user,
             organizationSubsidiary)

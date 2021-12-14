@@ -15,10 +15,6 @@ import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.review.v1.getReviewsResponse
 import org.volunteered.libs.proto.review.v1.review
 import org.volunteered.libs.proto.review.v1.reviewReply
-import java.security.SecureRandom
-import java.security.spec.KeySpec
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
 
 class DtoTransformer {
     companion object {
@@ -40,9 +36,9 @@ class DtoTransformer {
                 userAvatar = user.profilePhoto
             )
             if (request.anonymous) {
-                reviewEntity.userId = hashValue(user.id.toString())
-                user.firstName.whenNotEmpty { reviewEntity.userDisplayName = hashValue(it) }
-                user.profilePhoto.whenNotEmpty { reviewEntity.userAvatar = hashValue(it) }
+                reviewEntity.userId = StringEncoder.hashValue(user.id.toString())
+                user.firstName.whenNotEmpty { reviewEntity.userDisplayName = StringEncoder.hashValue(it) }
+                user.profilePhoto.whenNotEmpty { reviewEntity.userAvatar = StringEncoder.hashValue(it) }
             }
 
             return reviewEntity
@@ -98,17 +94,6 @@ class DtoTransformer {
             body = replyReviewEntity.body
         }
 
-        private fun hashValue(stringValue: String?): String {
-            val random = SecureRandom()
-            val salt = ByteArray(16)
-            random.nextBytes(salt)
-
-            val spec: KeySpec = PBEKeySpec(stringValue?.toCharArray(), salt, 65536, 128)
-            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-
-            val encoded = factory.generateSecret(spec).encoded
-            return String(encoded)
-        }
     }
 
 }
