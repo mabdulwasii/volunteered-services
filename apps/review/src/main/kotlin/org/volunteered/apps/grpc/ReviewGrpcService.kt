@@ -3,15 +3,18 @@ package org.volunteered.apps.grpc
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.service.ReviewService
+import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
+import org.volunteered.libs.proto.review.v1.RatingConfig
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
 import org.volunteered.libs.proto.review.v1.ReviewServiceGrpcKt
+import org.volunteered.libs.proto.review.v1.UpdateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 
@@ -45,5 +48,13 @@ class ReviewGrpcService(
 
     override suspend fun updateReview(request: UpdateReviewRequest): Review {
         return reviewService.updateReview(request)
+    }
+
+    override suspend fun createRatingConfig(request: CreateRatingConfigRequest): RatingConfig {
+        return reviewService.createRatingConfig(request)
+    }
+
+    override suspend fun updateRatingConfig(request: UpdateRatingConfigRequest): RatingConfig {
+        return reviewService.updateRatingConfig(request)
     }
 }

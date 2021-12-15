@@ -44,3 +44,4 @@ logging:
       hibernate:
         stat: debug
         type: trace
+

@@ -1,6 +1,7 @@
 package org.volunteered.apps.util
 
 import org.springframework.data.domain.Page
+import org.volunteered.apps.entity.RatingConfigEntity
 import org.volunteered.apps.entity.ReplyReviewEntity
 import org.volunteered.apps.entity.ReviewEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
@@ -9,12 +10,15 @@ import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.PaginationRequest
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.paginationResponse
+import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
+import org.volunteered.libs.proto.review.v1.UpdateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.review.v1.getReviewsResponse
+import org.volunteered.libs.proto.review.v1.ratingConfig
 import org.volunteered.libs.proto.review.v1.review
 import org.volunteered.libs.proto.review.v1.reviewReply
 
@@ -54,7 +58,7 @@ class DtoTransformer {
             reviewEntity.userDisplayName?.let { userDisplayName = it }
             reviewEntity.userAvatar?.let { userAvatar = it }
             reviewEntity.helpfulCount?.let { helpfulCount = it }
-            reviewEntity.verified?.let { verified = it }
+            verified = reviewEntity.verified
         }
 
         fun transformReviewEntityListToReviewDtoList(reviewEntityList: Page<ReviewEntity>, paginationRequest:
@@ -99,6 +103,32 @@ class DtoTransformer {
         fun buildReviewEntityFromReviewDto(reviewEntity: ReviewEntity, request: UpdateReviewRequest) {
             request.body.whenNotEmpty { reviewEntity.body = it }
             request.rating.whenGreaterThanZero { reviewEntity.rating = it }
+        }
+
+        fun transformCreateRatingConfigRequestToRatingConfigEntity(request: CreateRatingConfigRequest) : RatingConfigEntity {
+            return RatingConfigEntity(
+                ratingType = request.ratingType,
+                weight = request.weight
+            )
+        }
+
+        fun transformReviewConfigEntityToReviewConfigDto(ratingConfigEntity: RatingConfigEntity) = ratingConfig {
+            id = ratingConfigEntity.id!!
+            ratingType = ratingConfigEntity.ratingType
+            weight = ratingConfigEntity.weight
+        }
+
+        fun transformRatingConfigEntityToRatingConfigDto(ratingConfigEntity: RatingConfigEntity) = ratingConfig {
+            id = ratingConfigEntity.id!!
+            ratingType = ratingConfigEntity.ratingType
+            weight = ratingConfigEntity.weight
+        }
+
+        fun transformRatingConfigDtoToRatingConfigEntity(
+            request: UpdateRatingConfigRequest,
+            ratingConfigEntity: RatingConfigEntity
+        ) {
+            ratingConfigEntity.weight = request.weight
         }
 
     }
