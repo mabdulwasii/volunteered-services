@@ -6,6 +6,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.volunteered.apps.entity.ReviewEntity
 import org.volunteered.apps.exception.CannotWriteReviewException
+import org.volunteered.apps.exception.OrganizationSubsidiaryRatingDoesNotExistException
 import org.volunteered.apps.exception.RatingConfigDoesNotExistException
 import org.volunteered.apps.exception.ReviewDoesNotExistException
 import org.volunteered.apps.repository.RatingConfigRepository
@@ -23,9 +24,12 @@ import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryReque
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
+import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
+import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
+import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
 import org.volunteered.libs.proto.review.v1.RatingType
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
@@ -67,21 +71,12 @@ class ReviewServiceImpl(
         return DtoTransformer.transformReviewEntityToReviewDto(savedReview)
     }
 
-    private fun ensureReviewExist(
-        request: WriteReviewRequest,
-        userId: Long,
-        organizationSubsidiaryId: Long
-    ) {
-        val reviewExist: Boolean = if (request.anonymous) {
-            val hashValue = StringEncoder.hashValue("$userId")
-            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(hashValue, organizationSubsidiaryId)
-        } else {
-            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(userId.toString(), organizationSubsidiaryId)
-        }
-
-        if (reviewExist) {
-            throw CannotWriteReviewException("You cannot write multiple reviews for an organization")
-        }
+    override suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating {
+        val organizationSubsidiaryId = request.organizationSubsidiaryId
+        val retrievedRating = ratingRepository.findByOrganizationSubsidiaryId(organizationSubsidiaryId)
+        retrievedRating?.let {
+            return DtoTransformer.transformRatingEntityToRatingDto(it)
+        } ?: throw OrganizationSubsidiaryRatingDoesNotExistException("Organization subsidiary rating does not exist")
     }
 
     override suspend fun updateReview(request: UpdateReviewRequest): Review {
@@ -155,6 +150,12 @@ class ReviewServiceImpl(
         return DtoTransformer.transformReviewConfigEntityToReviewConfigDto(savedRatingConfigEntity)
     }
 
+    override suspend fun getRatingConfig(request: GetRatingConfigRequest): RatingConfig {
+        val ratingType = request.ratingType
+        val ratingConfigEntity = ratingConfigRepository.findByRatingType(ratingType)
+        return DtoTransformer.transformRatingConfigEntityToRatingConfigDto(ratingConfigEntity)
+    }
+
     override suspend fun updateRatingConfig(request: UpdateRatingConfigRequest): RatingConfig {
         val ratingConfigEntity = ratingConfigRepository.findById(request.id)
         ratingConfigEntity?.let {
@@ -198,6 +199,23 @@ class ReviewServiceImpl(
                 unverifiedRatingConfig.weight, newRating)
         }
         ratingRepository.save(ratingEntity)
+    }
+
+    private fun ensureReviewExist(
+        request: WriteReviewRequest,
+        userId: Long,
+        organizationSubsidiaryId: Long
+    ) {
+        val reviewExist: Boolean = if (request.anonymous) {
+            val hashValue = StringEncoder.hashValue("$userId")
+            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(hashValue, organizationSubsidiaryId)
+        } else {
+            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(userId.toString(), organizationSubsidiaryId)
+        }
+
+        if (reviewExist) {
+            throw CannotWriteReviewException("You cannot write multiple reviews for an organization")
+        }
     }
 
 }

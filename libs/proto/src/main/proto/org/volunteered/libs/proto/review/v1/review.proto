@@ -20,6 +20,8 @@ service ReviewService {
   rpc UpdateReview(UpdateReviewRequest) returns (Review);
   rpc CreateRatingConfig(CreateRatingConfigRequest) returns (RatingConfig);
   rpc UpdateRatingConfig(UpdateRatingConfigRequest) returns (RatingConfig);
+  rpc GetRatingConfig(GetRatingConfigRequest) returns (RatingConfig);
+  rpc GetOrganizationSubsidiaryRating(GetOrganizationSubsidiaryRatingRequest) returns (Rating);
 }
 
 message WriteReviewRequest {
@@ -100,6 +102,22 @@ message CreateRatingConfigRequest{
 message UpdateRatingConfigRequest{
   int32 id = 1;
   int32 weight = 2;
+}
+
+message GetOrganizationSubsidiaryRatingRequest{
+  int64 organizationSubsidiaryId = 1;
+}
+
+message Rating {
+  int64 id = 1;
+  int64 organizationSubsidiaryId = 2;
+  int32 rating = 3;
+  int32 unverified_rating_count = 4;
+  int32 verified_rating_count = 5;
+}
+
+message GetRatingConfigRequest {
+  RatingType ratingType = 1;
 }
 
 enum RatingType {

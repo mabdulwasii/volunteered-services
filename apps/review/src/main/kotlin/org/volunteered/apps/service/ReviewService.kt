@@ -4,9 +4,12 @@ import com.google.protobuf.Empty
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
+import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
+import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
+import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
@@ -25,4 +28,6 @@ interface ReviewService {
     suspend fun updateReview(request: UpdateReviewRequest): Review
     suspend fun createRatingConfig(request: CreateRatingConfigRequest): RatingConfig
     suspend fun updateRatingConfig(request: UpdateRatingConfigRequest): RatingConfig
+    suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating
+    suspend fun getRatingConfig(request: GetRatingConfigRequest): RatingConfig
 }
