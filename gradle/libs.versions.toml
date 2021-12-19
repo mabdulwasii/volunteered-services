@@ -1,13 +1,13 @@
 [versions]
 #
 ## kotlin
-kotlin = "1.6.0"
+kotlin = "1.6.0-RC"
 #spek = "2.0.11"
 #kotest = "4.6.3"
 #junit = "5.8.1"
 #serialization = "1.3.0"
 #kaml = "0.17.0"
-coroutines = "1.6.0-RC"
+coroutines = "1.5.2"
 #metadata = "0.3.0"
 #turbine = "0.6.1"
 #ktlint = "0.40.0"
