@@ -1,4 +1,4 @@
-package org.volunteered.apps.config
+package org.volunteered.apps.review.config
 
 import net.devh.boot.grpc.client.inject.GrpcClient
 import net.devh.boot.grpc.client.inject.GrpcClientBean
@@ -6,8 +6,8 @@ import net.devh.boot.grpc.client.inject.GrpcClientBeans
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.volunteered.apps.service.ReviewService
-import org.volunteered.apps.service.impl.ReviewServiceImpl
+import org.volunteered.apps.review.service.ReviewService
+import org.volunteered.apps.review.service.impl.ReviewServiceImpl
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 

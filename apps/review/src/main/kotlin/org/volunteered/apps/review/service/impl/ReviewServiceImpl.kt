@@ -1,8 +1,8 @@
-package org.volunteered.apps.service.impl
+package org.volunteered.apps.review.service.impl
 
 import com.google.protobuf.Empty
 import org.springframework.stereotype.Service
-import org.volunteered.apps.service.ReviewService
+import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
