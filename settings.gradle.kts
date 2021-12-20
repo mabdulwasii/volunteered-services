@@ -20,10 +20,10 @@ pluginManagement {
         id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
 
         id("com.google.protobuf") version "0.8.17" apply false
+
+        id("com.google.cloud.tools.jib") version "3.1.4"
     }
 }
-
-rootProject.name = "volunteered-services"
 
 include(
     ":apps:auth",

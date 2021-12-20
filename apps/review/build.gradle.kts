@@ -34,6 +34,18 @@ dependencies {
     testImplementation(libs.spring.boot.starter.test)
 }
 
+application {
+    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
+}
+
 tasks.test {
     useJUnitPlatform()
+}
+
+jib {
+    containerizingMode = "packaged"
+    container {
+        ports = listOf("9894")
+        mainClass = application.mainClass.get()
+    }
 }

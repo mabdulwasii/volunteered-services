@@ -37,11 +37,23 @@ dependencies {
     testImplementation(libs.mockk.test)
 }
 
+application {
+    mainClass.set("org.volunteered.apps.organization.OrganizationApplicationKt")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget ="11"
+        jvmTarget = "11"
+    }
+}
+
+jib {
+    containerizingMode = "packaged"
+    container {
+        ports = listOf("9893")
+        mainClass = application.mainClass.get()
     }
 }

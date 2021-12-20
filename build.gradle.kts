@@ -2,12 +2,18 @@ plugins {
     base
     idea
     kotlin("jvm")
+    id("com.google.cloud.tools.jib")
 }
 
 version = "0.0.1-SNAPSHOT"
 
+val baseDockerImage: String by project
+val containerRegistry: String by project
+
 val excludedProjects = setOf("apps", "libs")
-val grpcProjects = setOf("user")
+val restProjects = setOf("auth")
+val grpcProjects = setOf("user", "organization", "review", "recommendation")
+
 
 allprojects {
     repositories {
@@ -28,12 +34,41 @@ subprojects {
         }
 
         apply {
-            if (path.startsWith(":apps") && (name in grpcProjects)) {
+            if (path.startsWith(":apps") && (name in grpcProjects + restProjects)) {
                 plugin("application")
+                plugin("com.google.cloud.tools.jib")
             }
 
             if (path.startsWith(":libs")) {
                 plugin("java-library")
+            }
+        }
+
+        tasks {
+            plugins.withId("com.google.cloud.tools.jib") {
+                jib {
+                    from {
+                        if (project.hasProperty("baseDockerImage")) {
+                            image = baseDockerImage
+                        }
+                    }
+                    to {
+                        if (project.hasProperty("containerRegistry")) {
+                            image = "${containerRegistry}/${rootProject.name}-${project.name}:${project.version}"
+                        }
+                    }
+                    container {
+                        creationTime = "USE_CURRENT_TIMESTAMP"
+                        labels.putAll(
+                            mapOf(
+                                "version" to "${project.version}",
+                                "name" to project.name,
+                                "group" to "${project.group}"
+                            )
+                        )
+                        format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.OCI
+                    }
+                }
             }
         }
     }

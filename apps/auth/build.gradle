@@ -28,6 +28,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+application {
+	mainClass.set("org.volunteered.apps.auth.AuthApplication")
+}
+
 test {
 	finalizedBy jacocoTestReport // report is always generated after tests run
 }
@@ -43,5 +47,13 @@ jacoco {
 
 test {
 	useJUnitPlatform()
+}
+
+jib {
+	containerizingMode = "packaged"
+	container {
+		ports = ["9891"]
+		mainClass = application.mainClass.get()
+	}
 }
 
