@@ -3,6 +3,7 @@ plugins {
     idea
     kotlin("jvm")
     id("com.google.cloud.tools.jib")
+    id("com.diffplug.spotless")
 }
 
 version = "0.0.1-SNAPSHOT"
@@ -10,10 +11,21 @@ version = "0.0.1-SNAPSHOT"
 val baseDockerImage: String by project
 val containerRegistry: String by project
 
+val ktlintVersion = libs.versions.ktlint.get()
+
 val excludedProjects = setOf("apps", "libs")
 val restProjects = setOf("auth")
 val grpcProjects = setOf("user", "organization", "review", "recommendation")
 
+spotless {
+    kotlin {
+        ktlint(ktlintVersion)
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint(ktlintVersion)
+    }
+}
 
 allprojects {
     repositories {
@@ -34,6 +46,8 @@ subprojects {
         }
 
         apply {
+            plugin("com.diffplug.spotless")
+
             if (path.startsWith(":apps") && (name in grpcProjects + restProjects)) {
                 plugin("application")
                 plugin("com.google.cloud.tools.jib")
@@ -41,6 +55,23 @@ subprojects {
 
             if (path.startsWith(":libs")) {
                 plugin("java-library")
+            }
+        }
+
+        spotless {
+            java {
+                removeUnusedImports()
+                trimTrailingWhitespace()
+                endWithNewline()
+                targetExclude("**/build/**")
+            }
+            kotlin {
+                targetExclude("**/build/**")
+                ktlint(ktlintVersion)
+            }
+            kotlinGradle {
+                target("*.gradle.kts")
+                ktlint(ktlintVersion)
             }
         }
 

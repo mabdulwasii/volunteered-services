@@ -22,6 +22,7 @@ pluginManagement {
         id("com.google.protobuf") version "0.8.17" apply false
 
         id("com.google.cloud.tools.jib") version "3.1.4"
+        id("com.diffplug.spotless") version "5.17.0"
     }
 }
 
