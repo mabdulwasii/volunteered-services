@@ -4,6 +4,9 @@ plugins {
     kotlin("jvm")
     id("com.google.cloud.tools.jib")
     id("com.diffplug.spotless")
+    id("com.github.ben-manes.versions")
+    id("se.patrikerdes.use-latest-versions")
+    id("com.dropbox.affectedmoduledetector")
 }
 
 version = "0.0.1-SNAPSHOT"
@@ -16,6 +19,15 @@ val ktlintVersion = libs.versions.ktlint.get()
 val excludedProjects = setOf("apps", "libs")
 val restProjects = setOf("auth")
 val grpcProjects = setOf("user", "organization", "review", "recommendation")
+
+affectedModuleDetector {
+    baseDir = "${project.rootDir}"
+    pathsAffectingAllModules = setOf("gradle/libs.versions.toml")
+    logFilename = "output.log"
+    logFolder = "${rootProject.buildDir}/affectedModuleDetector"
+    specifiedBranch = "develop"
+    compareFrom = "SpecifiedBranchCommit"
+}
 
 spotless {
     kotlin {
@@ -105,6 +117,44 @@ subprojects {
     }
 }
 
+tasks {
+    fun isNonStable(version: String): Boolean {
+        val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+        val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+        val isStable = stableKeyword || regex.matches(version)
+        return isStable.not()
+    }
+
+    dependencyUpdates {
+        rejectVersionIf {
+            isNonStable(candidate.version)
+        }
+
+        outputDir = "$buildDir/dependencyUpdates"
+        checkForGradleUpdate = true
+        revision = "release"
+        gradleReleaseChannel = "current"
+    }
+
+    register<AffectedTask>("affected") {
+        group = "Affected Module Detector"
+        description = "print all affected subprojects due to code changes"
+    }
+}
+
 gradle.buildFinished {
     project.buildDir.deleteRecursively()
+}
+
+open class AffectedTask : DefaultTask() {
+    @TaskAction
+    fun printAffected() {
+        project.subprojects.forEach {
+            println(
+                "Is ${it.name} Affected? : " + com.dropbox.affectedmoduledetector.AffectedModuleDetector.isProjectAffected(
+                    it
+                )
+            )
+        }
+    }
 }

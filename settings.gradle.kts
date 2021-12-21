@@ -4,6 +4,21 @@ pluginManagement {
         gradlePluginPortal()
     }
 
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath("org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r")
+            classpath("com.dropbox.affectedmoduledetector:affectedmoduledetector:0.1.2")
+        }
+        configurations.classpath {
+            resolutionStrategy {
+                force("org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r")
+            }
+        }
+    }
+
     enableFeaturePreview("VERSION_CATALOGS")
     enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -23,6 +38,9 @@ pluginManagement {
 
         id("com.google.cloud.tools.jib") version "3.1.4"
         id("com.diffplug.spotless") version "5.17.0"
+        id("com.github.ben-manes.versions") version "0.39.0"
+        id("se.patrikerdes.use-latest-versions") version "0.2.17"
+        id("com.dropbox.affectedmoduledetector") version "0.1.2" apply false
     }
 }
 
