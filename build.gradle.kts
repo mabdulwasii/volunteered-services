@@ -85,7 +85,7 @@ subprojects {
                     }
                     to {
                         if (project.hasProperty("containerRegistry")) {
-                            image = "${containerRegistry}/${rootProject.name}-${project.name}:${project.version}"
+                            image = "$containerRegistry/${rootProject.name}-${project.name}:${project.version}"
                         }
                     }
                     container {

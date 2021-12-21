@@ -50,7 +50,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should not create user if email exists`(): Unit = runBlocking{
+    fun `should not create user if email exists`(): Unit = runBlocking {
         val request = createUserRequest {
             firstName = DEFAULT_FIRST_NAME
             lastName = DEFAULT_LAST_NAME
@@ -65,8 +65,8 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should create user if email does not exists`() : Unit = runBlocking {
-        val request = createUserRequest{
+    fun `should create user if email does not exists`(): Unit = runBlocking {
+        val request = createUserRequest {
             firstName = DEFAULT_FIRST_NAME
             lastName = DEFAULT_LAST_NAME
             email = DEFAULT_EMAIL
@@ -93,7 +93,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should not get user if Id is invalid`() : Unit = runBlocking{
+    fun `should not get user if Id is invalid`(): Unit = runBlocking {
         val request = getUserByIdRequest {
             id = INVALID_ID
         }
@@ -104,7 +104,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should get user if id is valid`() : Unit = runBlocking {
+    fun `should get user if id is valid`(): Unit = runBlocking {
         val request = getUserByIdRequest {
             id = INVALID_ID
         }
@@ -130,7 +130,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should throw exception if user does not exist`() : Unit = runBlocking {
+    fun `should throw exception if user does not exist`(): Unit = runBlocking {
         val request = getUserByEmailRequest {
             email = DEFAULT_EMAIL
         }
@@ -141,7 +141,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should get user` () : Unit = runBlocking {
+    fun `should get user`(): Unit = runBlocking {
         val request = getUserByEmailRequest {
             email = DEFAULT_EMAIL
         }
@@ -166,7 +166,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should not update user if user is invalid`() : Unit = runBlocking {
+    fun `should not update user if user is invalid`(): Unit = runBlocking {
         val user = user {
             id = DEFAULT_ID
             firstName = DEFAULT_FIRST_NAME
@@ -181,7 +181,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should update user if user is valid`() : Unit = runBlocking {
+    fun `should update user if user is valid`(): Unit = runBlocking {
 
         val user = user {
             id = DEFAULT_ID
@@ -218,7 +218,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should delete user`() : Unit = runBlocking{
+    fun `should delete user`(): Unit = runBlocking {
         val request = deleteUserRequest {
             id = DEFAULT_ID
         }

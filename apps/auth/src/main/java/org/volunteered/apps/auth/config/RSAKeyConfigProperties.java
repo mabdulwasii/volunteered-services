@@ -12,30 +12,27 @@ import java.security.PublicKey;
 @Configuration
 @ConfigurationProperties(prefix = "rsa.key")
 public class RSAKeyConfigProperties {
-
     @Value("${rsa.key.publicKeyFile}")
     private String publicKeyFile;
 
     @Value("${rsa.key.privateKeyFile}")
     private String privateKeyFile;
 
-    private PublicKey publicKey;
+	private PublicKey publicKey;
 
-    private PrivateKey privateKey;
+	private PrivateKey privateKey;
 
-    public void loadRSAKey() throws Exception {
-        this.publicKey = RSAEncryptionUtils.getPublicKey(publicKeyFile);
-        this.privateKey = RSAEncryptionUtils.getPrivateKey(privateKeyFile);
-    
-    }
-    
-    
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
+	public void loadRSAKey() throws Exception {
+		this.publicKey = RSAEncryptionUtils.getPublicKey(publicKeyFile);
+		this.privateKey = RSAEncryptionUtils.getPrivateKey(privateKeyFile);
+	}
 
-    public PrivateKey getPrivateKey() throws Exception {
-        loadRSAKey();
-        return privateKey;
-    }
+	public PublicKey getPublicKey() {
+		return publicKey;
+	}
+
+	public PrivateKey getPrivateKey() throws Exception {
+		loadRSAKey();
+		return privateKey;
+	}
 }

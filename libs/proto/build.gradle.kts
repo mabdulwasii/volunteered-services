@@ -1,4 +1,3 @@
-/* ktlint-disable no-wildcard-imports */
 import com.google.protobuf.gradle.builtins
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
@@ -46,7 +45,7 @@ dependencies {
 //    testFixturesImplementation(libs.protobuf.java)
 }
 
-//affectedTestConfiguration { jvmTestTask = "check" }
+// affectedTestConfiguration { jvmTestTask = "check" }
 
 sourceSets {
     main {

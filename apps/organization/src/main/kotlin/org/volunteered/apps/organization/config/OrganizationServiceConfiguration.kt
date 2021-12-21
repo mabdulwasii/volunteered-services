@@ -31,6 +31,7 @@ class OrganizationServiceConfiguration {
             organizationRepository,
             organizationSubsidiaryRepository,
             benefitRepository,
-            userServiceCoroutineStub)
+            userServiceCoroutineStub
+        )
     }
 }

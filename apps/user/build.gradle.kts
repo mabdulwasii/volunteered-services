@@ -57,4 +57,3 @@ jib {
         mainClass = application.mainClass.get()
     }
 }
-

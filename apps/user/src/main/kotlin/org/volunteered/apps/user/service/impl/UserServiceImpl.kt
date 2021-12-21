@@ -40,7 +40,7 @@ class UserServiceImpl(
 
     override suspend fun existsById(request: ExistsByIdRequest): BoolValue {
         return boolValue {
-           value =  userRepository.existsById(request.id)
+            value = userRepository.existsById(request.id)
         }
     }
 

@@ -70,7 +70,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should transform organizationEntity to OrganizationDto` () {
+    fun `should transform organizationEntity to OrganizationDto`() {
         val organizationEntity = OrganizationEntity(
             id = DEFAULT_ID,
             name = DEFAULT_ORG_NAME,
@@ -83,7 +83,7 @@ internal class DtoTransformerTest {
             numberOfEmployees = 230,
             benefits = setOf(Benefit(1, "Benefit 1"), Benefit(2, "Benefit 2"))
         )
-        val subsidiary = OrganizationSubsidiaryEntity (
+        val subsidiary = OrganizationSubsidiaryEntity(
             name = DEFAULT_SUBSIDIARY_NAME,
             email = DEFAULT_SUBSIDIARY_EMAIL,
             city = DEFAULT_SUBSIDIARY_CITY,
@@ -115,7 +115,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should throw exception if id is null when transform organizationEntity to OrganizationDto` () {
+    fun `should throw exception if id is null when transform organizationEntity to OrganizationDto`() {
         val organizationEntity = OrganizationEntity(
             name = DEFAULT_ORG_NAME,
             email = DEFAULT_EMAIL,
@@ -127,7 +127,7 @@ internal class DtoTransformerTest {
             numberOfEmployees = 230,
             benefits = setOf(Benefit(1, "Benefit 1"), Benefit(2, "Benefit 2"))
         )
-        val subsidiary = OrganizationSubsidiaryEntity (
+        val subsidiary = OrganizationSubsidiaryEntity(
             name = DEFAULT_SUBSIDIARY_NAME,
             email = DEFAULT_SUBSIDIARY_EMAIL,
             city = DEFAULT_SUBSIDIARY_CITY,
@@ -144,7 +144,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should transform organizationSubsidiaryEntity to organizationSubsidiaryDto` () {
+    fun `should transform organizationSubsidiaryEntity to organizationSubsidiaryDto`() {
         val organizationSubsidiaryEntity = OrganizationSubsidiaryEntity(
             id = DEFAULT_SUBSIDIARY_ID,
             name = DEFAULT_SUBSIDIARY_NAME,

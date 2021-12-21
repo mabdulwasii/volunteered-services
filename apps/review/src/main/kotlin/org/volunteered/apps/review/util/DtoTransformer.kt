@@ -1,4 +1,3 @@
 package org.volunteered.apps.review.util
 
-class DtoTransformer {
-}
+class DtoTransformer

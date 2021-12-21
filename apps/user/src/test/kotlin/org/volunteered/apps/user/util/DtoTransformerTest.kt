@@ -14,7 +14,7 @@ import org.volunteered.libs.proto.user.v1.createUserRequest
 @SpringBootTest
 internal class DtoTransformerTest {
     @Test
-    fun `should transform createUserRequest to UserEntity`(){
+    fun `should transform createUserRequest to UserEntity`() {
         val createUserRequest = createUserRequest {
             firstName = DEFAULT_FIRST_NAME
             lastName = DEFAULT_LAST_NAME
