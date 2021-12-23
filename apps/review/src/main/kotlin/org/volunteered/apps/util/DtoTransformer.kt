@@ -67,7 +67,7 @@ class DtoTransformer {
         PaginationRequest): GetReviewsResponse {
             val reviewDtoList = mutableListOf<Review>()
 
-            reviewEntityList.forEach {
+            reviewEntityList.content.forEach {
                 val reviewDto = transformReviewEntityToReviewDto(it)
                 reviewDtoList.add(reviewDto)
             }

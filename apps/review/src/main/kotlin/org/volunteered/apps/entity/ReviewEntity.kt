@@ -38,7 +38,7 @@ class ReviewEntity(
     var userAvatar : String? = null,
 
     @Column(name = "helpful_count")
-    var helpfulCount : Long ?= null,
+    var helpfulCount : Long? = null,
 
     var verified : Boolean = false
 )

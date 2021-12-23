@@ -13,6 +13,10 @@ import org.volunteered.apps.repository.RatingConfigRepository
 import org.volunteered.apps.repository.RatingRepository
 import org.volunteered.apps.repository.ReplyReviewRepository
 import org.volunteered.apps.repository.ReviewRepository
+import org.volunteered.apps.repository.dao.ReviewSpecifications.Companion.buildEntitySort
+import org.volunteered.apps.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganization
+import org.volunteered.apps.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganizationSubsidiary
+import org.volunteered.apps.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForUser
 import org.volunteered.apps.service.ReviewService
 import org.volunteered.apps.util.DtoTransformer
 import org.volunteered.apps.util.RatingCalculator
@@ -28,6 +32,7 @@ import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingReque
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
+import org.volunteered.libs.proto.review.v1.GetUserReviewsRequest
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
@@ -40,6 +45,9 @@ import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.getUserByIdRequest
+
+
+
 
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -92,12 +100,18 @@ class ReviewServiceImpl(
     override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
         val organizationId = request.organizationId
         val pagination = request.pagination
+        val sorting = request.sort
+        val filter = request.filter
+
         val paginationLimitPerPage = pagination.limitPerPage
         val paginationPage = pagination.page
 
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
 
-        val retrievedReviews = reviewRepository.findAllByOrganizationId(organizationId, pageable)
+        val sort = buildEntitySort(sorting)
+        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
+        val specification = buildReviewSpecificationForOrganization(filter, organizationId)
+
+        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
 
         return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
     }
@@ -105,13 +119,36 @@ class ReviewServiceImpl(
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
         val organizationSubsidiaryId = request.organizationSubsidiaryId
         val pagination = request.pagination
+        val sorting = request.sort
+        val filter = request.filter
+
         val paginationLimitPerPage = pagination.limitPerPage
         val paginationPage = pagination.page
 
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
+        val sort = buildEntitySort(sorting)
+        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
+        val specification = buildReviewSpecificationForOrganizationSubsidiary(filter, organizationSubsidiaryId)
 
-        val retrievedReviews =
-            reviewRepository.findAllByOrganizationSubsidiaryId(organizationSubsidiaryId, pageable)
+        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
+
+        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
+    }
+
+    override suspend fun getUserReviews(request: GetUserReviewsRequest): GetReviewsResponse {
+        val userId = request.userId
+
+        val pagination = request.pagination
+        val sorting = request.sort
+        val filter = request.filter
+
+        val paginationLimitPerPage = pagination.limitPerPage
+        val paginationPage = pagination.page
+
+        val sort = buildEntitySort(sorting)
+        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
+        val specification = buildReviewSpecificationForUser(filter, userId)
+
+        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
 
         return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
     }

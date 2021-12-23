@@ -10,6 +10,7 @@ import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingReque
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
+import org.volunteered.libs.proto.review.v1.GetUserReviewsRequest
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
@@ -36,6 +37,11 @@ class ReviewGrpcService(
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
         return reviewService.getOrganizationSubsidiaryReviews(request)
     }
+
+    override suspend fun getUserReviews(request: GetUserReviewsRequest): GetReviewsResponse {
+        return reviewService.getUserReviews(request)
+    }
+
 
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
         return reviewService.markReviewAsHelpful(request)

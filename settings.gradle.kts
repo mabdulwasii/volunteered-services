@@ -15,6 +15,7 @@ pluginManagement {
         kotlin("plugin.spring") version kotlinVersion apply false
         kotlin("plugin.jpa") version kotlinVersion apply false
         kotlin("plugin.allopen") version "1.4.32" apply false
+        kotlin("kapt") version "1.5.20" apply false
 
         id("org.jetbrains.kotlin.jvm") version "1.6.0" apply false
 

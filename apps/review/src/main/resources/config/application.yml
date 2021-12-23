@@ -30,6 +30,7 @@ spring:
         generate_statistics: true
         format_sql: true
         show-sql: true
+    show-sql: true
   h2:
     console:
       enabled: true

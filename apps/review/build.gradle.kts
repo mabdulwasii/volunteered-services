@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
     kotlin("plugin.allopen")
+    kotlin("kapt")
 }
 
 allOpen {
@@ -16,6 +17,9 @@ allOpen {
 version = "0.0.1-SNAPSHOT"
 
 dependencies {
+
+    kapt("org.hibernate:hibernate-jpamodelgen:5.4.30.Final")
+
     implementation(kotlin("stdlib"))
 
     implementation(project(":libs:core"))

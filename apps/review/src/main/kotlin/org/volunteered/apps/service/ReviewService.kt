@@ -8,6 +8,7 @@ import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingReque
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
+import org.volunteered.libs.proto.review.v1.GetUserReviewsRequest
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
@@ -22,6 +23,7 @@ interface ReviewService {
     suspend fun writeReview(request: WriteReviewRequest): Review
     suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse
     suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse
+    suspend fun getUserReviews(request: GetUserReviewsRequest): GetReviewsResponse
     suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty
     suspend fun replyReview(request: ReplyReviewRequest): ReviewReply
     suspend fun deleteReview(request: DeleteReviewRequest): Empty
