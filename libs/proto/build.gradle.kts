@@ -15,8 +15,6 @@ plugins {
 //    `java-test-fixtures`
 }
 
-version = "0.0.1-SNAPSHOT"
-
 val grpcVersion = libs.versions.grpc.get()
 val grpcKotlinVersion = libs.versions.grpcKotlin.get()
 val protobufVersion = libs.versions.protobuf.get()

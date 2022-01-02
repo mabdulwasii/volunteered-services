@@ -2,14 +2,15 @@ plugins {
     base
     idea
     kotlin("jvm")
-    id("com.google.cloud.tools.jib")
     id("com.diffplug.spotless")
     id("com.github.ben-manes.versions")
     id("se.patrikerdes.use-latest-versions")
     id("com.dropbox.affectedmoduledetector")
+    id("pl.allegro.tech.build.axion-release")
+    id("com.google.cloud.tools.jib")
 }
 
-version = "0.0.1-SNAPSHOT"
+version = scmVersion.version
 
 val baseDockerImage: String by project
 val containerRegistry: String by project
@@ -20,6 +21,25 @@ val excludedProjects = setOf("apps", "libs")
 val restProjects = setOf("auth")
 val grpcProjects = setOf("user", "organization", "review", "recommendation")
 
+scmVersion {
+    useHighestVersion = true
+
+    tag(
+        closureOf<pl.allegro.tech.build.axion.release.domain.TagNameSerializationConfig> {
+            prefix = "v"
+            versionSeparator = ""
+        }
+    )
+
+    branchVersionIncrementer = mapOf(
+        "feature/.*" to "incrementMinor",
+        "hotfix/.*" to "incrementPatch",
+        "release/.*" to "incrementPrerelease",
+        "develop" to "incrementPatch",
+        "master" to "incrementMinor"
+    )
+}
+
 affectedModuleDetector {
     baseDir = "${project.rootDir}"
     pathsAffectingAllModules = setOf("gradle/libs.versions.toml")
@@ -27,6 +47,13 @@ affectedModuleDetector {
     logFolder = "${rootProject.buildDir}/affectedModuleDetector"
     specifiedBranch = "develop"
     compareFrom = "SpecifiedBranchCommit"
+}
+
+val shortRevision: String = scmVersion.scmPosition.shortRevision
+val isSnapshot = version.toString().endsWith("-SNAPSHOT")
+val isCI = System.getenv("CI").isNullOrBlank().not()
+if (!project.hasProperty("release.quiet")) {
+    println("Version: $version,  Branch: ${scmVersion.scmPosition.branch}, isCI: $isCI")
 }
 
 spotless {
