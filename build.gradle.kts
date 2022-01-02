@@ -36,7 +36,7 @@ scmVersion {
         "hotfix/.*" to "incrementPatch",
         "release/.*" to "incrementPrerelease",
         "develop" to "incrementPatch",
-        "master" to "incrementMinor"
+        "main" to "incrementMinor"
     )
 }
 
