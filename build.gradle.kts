@@ -49,7 +49,6 @@ affectedModuleDetector {
     compareFrom = "SpecifiedBranchCommit"
 }
 
-//val token: String = System.getenv("GITHUB_TOKEN")
 val shortRevision: String = scmVersion.scmPosition.shortRevision
 val isSnapshot = version.toString().endsWith("-SNAPSHOT")
 val isCI = System.getenv("CI").isNullOrBlank().not()
@@ -165,16 +164,15 @@ tasks {
     }
 
     register<AffectedTask>("affected") {
-        group = "Affected Module Detector"
         description = "Prints all affected subprojects due to code changes"
     }
 
-    register("loadGitHubToken") {
-        description = "Loads github token from environment. To be used by axion for pushing releases"
+    register("loadGitHubCredentials") {
+        description = "Loads github credentials from environment. To be used by axion for pushing releases"
 
         val token: String? = System.getenv("GITHUB_TOKEN")
         if (token.isNullOrBlank()) {
-            println("Github token not found in environment. Please set GITHUB_TOKEN")
+            throw GradleException("GITHUB_TOKEN environment variable not found")
         } else {
             scmVersion.repository.customUsername = "Volunteered"
             scmVersion.repository.customPassword = token
@@ -182,15 +180,13 @@ tasks {
     }
 
     named("release") {
-        dependsOn(":loadGitHubToken")
+        dependsOn(":loadGitHubCredentials")
     }
 }
 
 gradle.buildFinished {
     project.buildDir.deleteRecursively()
 }
-
-
 
 open class AffectedTask : DefaultTask() {
     @TaskAction
@@ -204,18 +200,3 @@ open class AffectedTask : DefaultTask() {
         }
     }
 }
-
-//open class LoadGithubTokenTask : DefaultTask() {
-//    @Input
-//    val token: String = System.getenv("GITHUB_TOKEN")
-//
-//    @TaskAction
-//    fun loadGitHubToken() {
-//        if (token.isBlank()) {
-//            println("Github token not found in environment. Please set GITHUB_TOKEN")
-//        } else {
-//            scmVersion.repository.customUsername = "Volunteered"
-//            scmVersion.repository.customPassword = token
-//        }
-//    }
-//}
