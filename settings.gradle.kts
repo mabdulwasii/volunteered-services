@@ -35,7 +35,7 @@ pluginManagement {
         id("com.diffplug.spotless") version "5.17.0"
         id("com.github.ben-manes.versions") version "0.39.0"
         id("se.patrikerdes.use-latest-versions") version "0.2.17"
-        id("pl.allegro.tech.build.axion-release") version "1.13.3"
+        id("pl.allegro.tech.build.axion-release") version "1.13.6"
         id("com.dropbox.affectedmoduledetector") version "0.1.2" apply false
         id("org.springframework.boot") version "2.5.6" apply false
         id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
