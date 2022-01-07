@@ -21,17 +21,16 @@ import org.volunteered.apps.organization.exception.OrganizationDoesNotExistExcep
 import org.volunteered.apps.organization.repository.BenefitRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
-import org.volunteered.libs.organization.v1.createOrganizationRequest
-import org.volunteered.libs.organization.v1.createOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.deleteOrganizationRequest
-import org.volunteered.libs.organization.v1.deleteOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.getOrganizationRequest
-import org.volunteered.libs.organization.v1.getOrganizationSubsidiaryRequest
-import org.volunteered.libs.organization.v1.searchOrganizationByNameRequest
-import org.volunteered.libs.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
-import org.volunteered.libs.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.user.v1.existsByIdRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.deleteOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.deleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
+import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @SpringBootTest
 internal class OrganizationServiceImplTest {
@@ -43,15 +42,16 @@ internal class OrganizationServiceImplTest {
         organizationRepository,
         organizationSubsidiaryRepository,
         benefitRepository,
-        userServiceStub)
+        userServiceStub
+    )
 
     @BeforeEach
     fun setUp() {
-        clearMocks(organizationRepository, organizationSubsidiaryRepository, benefitRepository, userServiceStub )
+        clearMocks(organizationRepository, organizationSubsidiaryRepository, benefitRepository, userServiceStub)
     }
 
     @Test
-    fun `should not create organization if creator does not exist` () : Unit = runBlocking {
+    fun `should not create organization if creator does not exist`(): Unit = runBlocking {
         val request = createOrganizationRequest {
             creatorId = DEFAULT_ID
             name = DEFAULT_ORG_NAME
@@ -61,16 +61,15 @@ internal class OrganizationServiceImplTest {
             country = DEFAULT_COUNTRY
         }
 
-
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
         } returns boolValue { value = false }
 
         assertThrows<CreatorDoesNotExistException> { service.createOrganization(request) }
     }
 
     @Test
-    fun `should throw exception if organization already exists` () : Unit = runBlocking {
+    fun `should throw exception if organization already exists`(): Unit = runBlocking {
         val request = createOrganizationRequest {
             creatorId = DEFAULT_ID
             name = DEFAULT_ORG_NAME
@@ -81,7 +80,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns true
 
@@ -89,7 +88,7 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should create organization` () : Unit = runBlocking {
+    fun `should create organization`(): Unit = runBlocking {
         val request = createOrganizationRequest {
             creatorId = DEFAULT_ID
             name = DEFAULT_ORG_NAME
@@ -113,7 +112,7 @@ internal class OrganizationServiceImplTest {
         organizationEntity.hq = organizationSubsidiaryEntity
 
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns false
         every { organizationRepository.save(any()) } returns organizationEntity
@@ -130,21 +129,21 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should create organization subsidiary` () : Unit = runBlocking {
+    fun `should create organization subsidiary`(): Unit = runBlocking {
         val request = createOrganizationSubsidiaryRequest {
             creatorId = DEFAULT_ID
             organizationId = DEFAULT_SUBSIDIARY_ID
             subsidiary = organizationSubsidiary {
                 name = DEFAULT_SUBSIDIARY_NAME
                 email = DEFAULT_SUBSIDIARY_EMAIL
-                city =  DEFAULT_SUBSIDIARY_CITY
+                city = DEFAULT_SUBSIDIARY_CITY
                 country = DEFAULT_SUBSIDIARY_COUNTRY
                 description = DEFAULT_SUBSIDIARY_DESCRIPTION
                 phone = DEFAULT_SUBSIDIARY_PHONE
             }
         }
         val organizationEntity = OrganizationEntity(
-            id =  request.creatorId,
+            id = request.creatorId,
             name = DEFAULT_ORG_NAME,
             email = DEFAULT_EMAIL,
             bio = BIO
@@ -161,7 +160,7 @@ internal class OrganizationServiceImplTest {
         )
 
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns organizationEntity
         every { organizationSubsidiaryRepository.save(any()) } returns organizationSubsidiaryEntity
@@ -179,14 +178,14 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should not create organization subsidiary if creator does not exists` () : Unit = runBlocking {
+    fun `should not create organization subsidiary if creator does not exists`(): Unit = runBlocking {
         val request = createOrganizationSubsidiaryRequest {
             creatorId = DEFAULT_ID
             organizationId = DEFAULT_SUBSIDIARY_ID
             subsidiary = organizationSubsidiary {
                 name = DEFAULT_SUBSIDIARY_NAME
                 email = DEFAULT_SUBSIDIARY_EMAIL
-                city =  DEFAULT_SUBSIDIARY_CITY
+                city = DEFAULT_SUBSIDIARY_CITY
                 country = DEFAULT_SUBSIDIARY_COUNTRY
                 description = DEFAULT_SUBSIDIARY_DESCRIPTION
                 phone = DEFAULT_SUBSIDIARY_PHONE
@@ -194,22 +193,21 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
         } returns boolValue { value = false }
 
-        assertThrows<CreatorDoesNotExistException> { service.createOrganizationSubsidiary(request)}
-
+        assertThrows<CreatorDoesNotExistException> { service.createOrganizationSubsidiary(request) }
     }
 
     @Test
-    fun `should not create organization subsidiary if organizationEntity does not exist` () : Unit = runBlocking {
+    fun `should not create organization subsidiary if organizationEntity does not exist`(): Unit = runBlocking {
         val request = createOrganizationSubsidiaryRequest {
             creatorId = DEFAULT_ID
             organizationId = DEFAULT_SUBSIDIARY_ID
             subsidiary = organizationSubsidiary {
                 name = DEFAULT_SUBSIDIARY_NAME
                 email = DEFAULT_SUBSIDIARY_EMAIL
-                city =  DEFAULT_SUBSIDIARY_CITY
+                city = DEFAULT_SUBSIDIARY_CITY
                 country = DEFAULT_SUBSIDIARY_COUNTRY
                 description = DEFAULT_SUBSIDIARY_DESCRIPTION
                 phone = DEFAULT_SUBSIDIARY_PHONE
@@ -217,16 +215,16 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking {  userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
         } returns boolValue { value = true }
 
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.createOrganizationSubsidiary(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.createOrganizationSubsidiary(request) }
     }
 
     @Test
-    fun `should update organization`() : Unit = runBlocking{
+    fun `should update organization`(): Unit = runBlocking {
         val request = updateOrganizationRequest {
             id = DEFAULT_ID
             hqId = DEFAULT_SUBSIDIARY_ID
@@ -266,7 +264,7 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should not update organization if organizationEntity does not exist`() : Unit = runBlocking{
+    fun `should not update organization if organizationEntity does not exist`(): Unit = runBlocking {
         val request = updateOrganizationRequest {
             id = DEFAULT_ID
             hqId = DEFAULT_SUBSIDIARY_ID
@@ -279,11 +277,11 @@ internal class OrganizationServiceImplTest {
 
         every { organizationRepository.findByIdOrNull(request.id) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.updateOrganization(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.updateOrganization(request) }
     }
 
     @Test
-    fun `should not update organization if organization hq does not exist`() : Unit = runBlocking{
+    fun `should not update organization if organization hq does not exist`(): Unit = runBlocking {
         val request = updateOrganizationRequest {
             id = DEFAULT_ID
             hqId = DEFAULT_SUBSIDIARY_ID
@@ -303,11 +301,11 @@ internal class OrganizationServiceImplTest {
         every { organizationRepository.findByIdOrNull(request.id) } returns organizationEntity
         every { organizationSubsidiaryRepository.findByIdOrNull(request.hqId) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.updateOrganization(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.updateOrganization(request) }
     }
 
     @Test
-    fun `should delete organization`() : Unit = runBlocking {
+    fun `should delete organization`(): Unit = runBlocking {
         val request = deleteOrganizationRequest {
             id = DEFAULT_ID
         }
@@ -321,7 +319,7 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should delete organization subsidiary`() : Unit = runBlocking {
+    fun `should delete organization subsidiary`(): Unit = runBlocking {
         val request = deleteOrganizationSubsidiaryRequest {
             id = DEFAULT_ID
         }
@@ -335,11 +333,11 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should get organization subsidiary by Id`() : Unit = runBlocking {
-        val request = getOrganizationSubsidiaryRequest{
+    fun `should get organization subsidiary by Id`(): Unit = runBlocking {
+        val request = getOrganizationSubsidiaryRequest {
             id = DEFAULT_SUBSIDIARY_ID
         }
-        val  organizationSubsidiaryEntity = OrganizationSubsidiaryEntity(
+        val organizationSubsidiaryEntity = OrganizationSubsidiaryEntity(
             id = DEFAULT_SUBSIDIARY_ID,
             name = DEFAULT_SUBSIDIARY_NAME,
             email = DEFAULT_SUBSIDIARY_EMAIL,
@@ -348,10 +346,10 @@ internal class OrganizationServiceImplTest {
             phone = DEFAULT_SUBSIDIARY_PHONE,
             description = DEFAULT_SUBSIDIARY_DESCRIPTION,
             parent = OrganizationEntity(
-                id =  DEFAULT_ID,
+                id = DEFAULT_ID,
                 name = DEFAULT_ORG_NAME,
                 email = DEFAULT_EMAIL,
-                bio =  BIO
+                bio = BIO
             )
         )
 
@@ -369,16 +367,16 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should get organization by Id`() : Unit = runBlocking {
-        val request = getOrganizationRequest{
+    fun `should get organization by Id`(): Unit = runBlocking {
+        val request = getOrganizationRequest {
             id = DEFAULT_ID
         }
-        val  organizationEntity = OrganizationEntity(
+        val organizationEntity = OrganizationEntity(
             id = request.id,
             name = DEFAULT_ORG_NAME,
             email = DEFAULT_EMAIL,
             phone = DEFAULT_ORG_PHONE,
-            bio =  BIO
+            bio = BIO
         )
 
         every { organizationRepository.findByIdOrNull(request.id) } returns organizationEntity
@@ -454,7 +452,7 @@ internal class OrganizationServiceImplTest {
 
 
     @Test
-    fun `should update organization subsidiary`() : Unit = runBlocking {
+    fun `should update organization subsidiary`(): Unit = runBlocking {
         val request = organizationSubsidiary {
             id = DEFAULT_SUBSIDIARY_ID
             name = DEFAULT_SUBSIDIARY_NAME
@@ -465,18 +463,18 @@ internal class OrganizationServiceImplTest {
             description = DEFAULT_SUBSIDIARY_DESCRIPTION
         }
         val organizationSubsidiaryEntity = OrganizationSubsidiaryEntity(
-            id =  request.id,
+            id = request.id,
             name = request.name,
             email = request.email,
             city = request.city,
-            country =  request.country,
+            country = request.country,
             phone = request.phone,
             description = request.description,
             parent = OrganizationEntity(
                 id = DEFAULT_ID,
                 name = DEFAULT_ORG_NAME,
                 email = DEFAULT_EMAIL,
-                bio =  BIO
+                bio = BIO
             )
         )
 
@@ -496,7 +494,7 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should not update organization subsidiary if organization subsidiary does not exist`() : Unit = runBlocking {
+    fun `should not update organization subsidiary if organization subsidiary does not exist`(): Unit = runBlocking {
         val request = organizationSubsidiary {
             id = DEFAULT_SUBSIDIARY_ID
             name = DEFAULT_SUBSIDIARY_NAME
@@ -509,7 +507,7 @@ internal class OrganizationServiceImplTest {
 
         every { organizationSubsidiaryRepository.findByIdOrNull(request.id) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.updateOrganizationSubsidiary(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.updateOrganizationSubsidiary(request) }
     }
 
     companion object {

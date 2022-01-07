@@ -14,7 +14,7 @@ grpc:
 
 spring:
   datasource:
-    url: jdbc:h2:file:./apps/review/review
+    url: jdbc:h2:file:../review/review
     username: sa
     password:
     driverClassName: org.h2.Driver

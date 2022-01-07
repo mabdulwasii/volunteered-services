@@ -18,8 +18,8 @@ class DtoTransformer {
             )
         }
 
-        fun transformUserEntityToUserDto(userEntity: UserEntity) : User {
-            val websiteAndSocialMediaUrls =  websiteAndSocialMediaUrls {
+        fun transformUserEntityToUserDto(userEntity: UserEntity): User {
+            val websiteAndSocialMediaUrls = websiteAndSocialMediaUrls {
                 userEntity.website?.let { website = it }
                 userEntity.linkedin?.let { linkedin = it }
                 userEntity.facebook?.let { facebook = it }

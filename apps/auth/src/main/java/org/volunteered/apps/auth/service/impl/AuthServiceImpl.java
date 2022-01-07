@@ -30,40 +30,36 @@ import java.util.stream.Collectors;
 import static org.volunteered.apps.auth.security.jwt.UserDetailsImpl.build;
 
 @Service
-public class AuthServiceImpl implements AuthService{
-    
-    private final AuthenticationManager authenticationManager;
-    private final RefreshTokenService refreshTokenService;
-    private final UserService userService;
-    
-    private final JWTUtils jwtUtils;
-    
-    private final RSAKeyConfigProperties rsaKeyProp;
-    
-    public AuthServiceImpl(AuthenticationManager authenticationManager,
-                           RefreshTokenService refreshTokenService,
-                           UserService userService,
-                           JWTUtils jwtUtils,
-                           RSAKeyConfigProperties rsaKeyProp) {
-        this.authenticationManager = authenticationManager;
-        this.refreshTokenService = refreshTokenService;
-        this.userService = userService;
-        this.jwtUtils = jwtUtils;
-        this.rsaKeyProp = rsaKeyProp;
-    }
-    
-    public Jwt authenticate(LoginDetails loginDetails) throws Exception {
-        
-        Authentication authentication;
+public class AuthServiceImpl implements AuthService {
+	private final AuthenticationManager authenticationManager;
+	private final RefreshTokenService refreshTokenService;
+	private final UserService userService;
+	private final JWTUtils jwtUtils;
+	private final RSAKeyConfigProperties rsaKeyProp;
 
-        try {
-            authentication = authenticationManager.authenticate(
+	public AuthServiceImpl(AuthenticationManager authenticationManager,
+	                       RefreshTokenService refreshTokenService,
+	                       UserService userService,
+	                       JWTUtils jwtUtils,
+	                       RSAKeyConfigProperties rsaKeyProp) {
+		this.authenticationManager = authenticationManager;
+		this.refreshTokenService = refreshTokenService;
+		this.userService = userService;
+		this.jwtUtils = jwtUtils;
+		this.rsaKeyProp = rsaKeyProp;
+	}
+
+	public Jwt authenticate(LoginDetails loginDetails) throws Exception {
+		Authentication authentication;
+
+		try {
+			authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginDetails.getUsername(), loginDetails.getPassword()));
-        } catch (BadCredentialsException e) {
-            e.printStackTrace();
-            throw new BadCredentialsException("Bad Credentials");
-        } catch (Exception e) {
-            e.printStackTrace();
+		} catch (BadCredentialsException e) {
+			e.printStackTrace();
+			throw new BadCredentialsException("Bad Credentials");
+		} catch (Exception e) {
+			e.printStackTrace();
             throw new Exception("User authentication failed");
         }
 
@@ -80,30 +76,30 @@ public class AuthServiceImpl implements AuthService{
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
-            var optionalRefreshToken = refreshTokenService.createRefreshToken(loginUser.getId());
+	        var optionalRefreshToken = refreshTokenService.createRefreshToken(loginUser.getId());
 
-            String refreshToken = optionalRefreshToken.map(RefreshToken::getToken).orElse("");
+	        String refreshToken = optionalRefreshToken.map(RefreshToken::getToken).orElse("");
 
-            return new Jwt(jwt, refreshToken, loginUser.getId(), loginUser.getUsername(), authorities);
+	        return new Jwt(jwt, refreshToken, loginUser.getId(), loginUser.getUsername(), authorities);
         } else {
-            throw new RuntimeException("Invalid Login Details");
+	        throw new RuntimeException("Invalid Login Details");
         }
-    }
-    
-    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        String requestRefreshToken = refreshTokenRequest.getRefreshToken();
-        
-        return refreshTokenService.findByToken(requestRefreshToken)
-		        .map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser)
-		        .map(user -> {
-			        String token = null;
-			        try {
-				        token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
-			        } catch (Exception e) {
-				        e.printStackTrace();
-			        }
-			        return new RefreshTokenResponse(token, requestRefreshToken);
-		        })
+	}
+
+	public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+		String requestRefreshToken = refreshTokenRequest.getRefreshToken();
+
+		return refreshTokenService.findByToken(requestRefreshToken)
+				.map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser)
+				.map(user -> {
+					String token = null;
+					try {
+						token = jwtUtils.generateToken(build(user), rsaKeyProp.getPrivateKey());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new RefreshTokenResponse(token, requestRefreshToken);
+				})
 		        .orElseThrow(() -> new TokenRefreshExpiredException(requestRefreshToken,
 				        "Error: Invalid refresh token!"));
     }

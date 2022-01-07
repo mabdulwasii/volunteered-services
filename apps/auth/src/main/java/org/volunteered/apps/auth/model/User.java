@@ -27,7 +27,6 @@ import javax.validation.constraints.Size;
                 @UniqueConstraint(columnNames = "username")
         })
 public class User implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,28 +62,27 @@ public class User implements Serializable {
         this.activated = activated;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_authority",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id"))
-    private Set<Authority> authorities = new HashSet<>();
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_authority",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id"))
+	private Set<Authority> authorities = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-    
-    
-    public String getUsername() {
-        return username;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public boolean isActivated() {
-        return activated;
-    }
+	public String getPassword() {
+		return password;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
 
     public void setActivated(boolean activated) {
         this.activated = activated;

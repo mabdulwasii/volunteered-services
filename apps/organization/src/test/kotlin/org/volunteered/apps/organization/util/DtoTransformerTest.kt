@@ -13,7 +13,6 @@ import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
-import org.volunteered.libs.proto.organization.v1.updateOrganizationSubsidiaryRequest
 
 internal class DtoTransformerTest {
     @Test
@@ -71,7 +70,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should transform organizationEntity to OrganizationDto` () {
+    fun `should transform organizationEntity to OrganizationDto`() {
         val organizationEntity = OrganizationEntity(
             id = DEFAULT_ID,
             name = DEFAULT_ORG_NAME,
@@ -84,7 +83,7 @@ internal class DtoTransformerTest {
             numberOfEmployees = 230,
             benefits = setOf(Benefit(1, "Benefit 1"), Benefit(2, "Benefit 2"))
         )
-        val subsidiary = OrganizationSubsidiaryEntity (
+        val subsidiary = OrganizationSubsidiaryEntity(
             name = DEFAULT_SUBSIDIARY_NAME,
             email = DEFAULT_SUBSIDIARY_EMAIL,
             city = DEFAULT_SUBSIDIARY_CITY,
@@ -116,7 +115,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should throw exception if id is null when transform organizationEntity to OrganizationDto` () {
+    fun `should throw exception if id is null when transform organizationEntity to OrganizationDto`() {
         val organizationEntity = OrganizationEntity(
             name = DEFAULT_ORG_NAME,
             email = DEFAULT_EMAIL,
@@ -128,7 +127,7 @@ internal class DtoTransformerTest {
             numberOfEmployees = 230,
             benefits = setOf(Benefit(1, "Benefit 1"), Benefit(2, "Benefit 2"))
         )
-        val subsidiary = OrganizationSubsidiaryEntity (
+        val subsidiary = OrganizationSubsidiaryEntity(
             name = DEFAULT_SUBSIDIARY_NAME,
             email = DEFAULT_SUBSIDIARY_EMAIL,
             city = DEFAULT_SUBSIDIARY_CITY,
@@ -145,7 +144,7 @@ internal class DtoTransformerTest {
     }
 
     @Test
-    fun `should transform organizationSubsidiaryEntity to organizationSubsidiaryDto` () {
+    fun `should transform organizationSubsidiaryEntity to organizationSubsidiaryDto`() {
         val organizationSubsidiaryEntity = OrganizationSubsidiaryEntity(
             id = DEFAULT_SUBSIDIARY_ID,
             name = DEFAULT_SUBSIDIARY_NAME,
@@ -236,7 +235,7 @@ internal class DtoTransformerTest {
             )
         )
 
-        val updateOrganizationSubsidiaryRequest = updateOrganizationSubsidiaryRequest {
+        val organizationSubsidiary = organizationSubsidiary {
             name = EMPTY_STRING
             email = EMPTY_STRING
             city = "Abuja"
@@ -245,14 +244,17 @@ internal class DtoTransformerTest {
             description = DEFAULT_SUBSIDIARY_DESCRIPTION
         }
 
-        DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(updateOrganizationSubsidiaryRequest, organizationSubsidiaryEntity)
+        DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(
+            organizationSubsidiary,
+            organizationSubsidiaryEntity
+        )
 
-        assertNotEquals(updateOrganizationSubsidiaryRequest.name, organizationSubsidiaryEntity.name)
-        assertNotEquals(updateOrganizationSubsidiaryRequest.email, organizationSubsidiaryEntity.email)
-        assertEquals(updateOrganizationSubsidiaryRequest.city, organizationSubsidiaryEntity.city)
-        assertEquals(updateOrganizationSubsidiaryRequest.country, organizationSubsidiaryEntity.country)
-        assertEquals(updateOrganizationSubsidiaryRequest.phone, organizationSubsidiaryEntity.phone)
-        assertEquals(updateOrganizationSubsidiaryRequest.description, organizationSubsidiaryEntity.description)
+        assertNotEquals(organizationSubsidiary.name, organizationSubsidiaryEntity.name)
+        assertNotEquals(organizationSubsidiary.email, organizationSubsidiaryEntity.email)
+        assertEquals(organizationSubsidiary.city, organizationSubsidiaryEntity.city)
+        assertEquals(organizationSubsidiary.country, organizationSubsidiaryEntity.country)
+        assertEquals(organizationSubsidiary.phone, organizationSubsidiaryEntity.phone)
+        assertEquals(organizationSubsidiary.description, organizationSubsidiaryEntity.description)
     }
     companion object {
         const val DEFAULT_ORG_NAME = "Wright Enterprise"

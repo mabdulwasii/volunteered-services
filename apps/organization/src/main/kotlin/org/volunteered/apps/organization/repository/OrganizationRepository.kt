@@ -6,6 +6,7 @@ import org.volunteered.apps.organization.entity.OrganizationEntity
 
 @Repository
 interface OrganizationRepository : JpaRepository<OrganizationEntity, Long> {
+    fun findByEmail(email: String): OrganizationEntity?
     fun existsByEmail(email: String): Boolean
     fun findByNameLike(name: String) : List<OrganizationEntity>
 }

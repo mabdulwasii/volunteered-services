@@ -16,4 +16,3 @@ class Language(
     @NotNull
     var name: String
 )
-
