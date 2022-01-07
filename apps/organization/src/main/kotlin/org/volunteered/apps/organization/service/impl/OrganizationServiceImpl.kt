@@ -58,13 +58,15 @@ class OrganizationServiceImpl(
     }
 
     @Transactional
-    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
         organizationSubsidiaryEntity?.let {
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)
             val updatedOrganizationSubsidiaryEntity = organizationSubsidiaryRepository.save(it)
 
-            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(updatedOrganizationSubsidiaryEntity)
+            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(
+                updatedOrganizationSubsidiaryEntity
+            )
         } ?: throw OrganizationDoesNotExistException("Organization subsidiary does not exist")
     }
 

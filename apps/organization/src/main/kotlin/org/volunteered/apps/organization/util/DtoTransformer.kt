@@ -4,13 +4,16 @@ import org.volunteered.apps.organization.entity.OrganizationEntity
 import org.volunteered.apps.organization.entity.OrganizationSubsidiaryEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameResponse
 
 class DtoTransformer {
     companion object {
@@ -119,6 +122,18 @@ class DtoTransformer {
         }
 
         fun transformOrganizationEntityListToOrganizationDtoList(organizationEntityList: List<OrganizationEntity>) : SearchOrganizationByNameResponse {
+            val organizationList = mutableListOf<Organization>()
+
+            organizationEntityList.map {
+                val organizationDto = transformOrganizationEntityToOrganizationDto(it)
+                organizationList.add(organizationDto)
+            }
+            return searchOrganizationByNameResponse {
+                organizations.addAll(organizationList)
+            }
+        }
+
+        fun transformOrganizationEntityListToOrganizationDtoList(organizationEntityList: List<OrganizationEntity>): SearchOrganizationByNameResponse {
             val organizationList = mutableListOf<Organization>()
 
             organizationEntityList.map {
