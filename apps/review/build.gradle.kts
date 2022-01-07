@@ -32,12 +32,12 @@ dependencies {
     testImplementation(libs.spring.boot.starter.test)
 }
 
-application {
-    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
+affectedTestConfiguration {
+    jvmTestTask = "check"
 }
 
-tasks.test {
-    useJUnitPlatform()
+application {
+    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
 }
 
 jib {

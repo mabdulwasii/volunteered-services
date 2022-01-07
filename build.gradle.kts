@@ -1,6 +1,8 @@
 plugins {
     base
     idea
+    jacoco
+    id("org.sonarqube")
     kotlin("jvm")
     id("com.diffplug.spotless")
     id("com.github.ben-manes.versions")
@@ -12,10 +14,12 @@ plugins {
 
 version = scmVersion.version
 
+val jacocoQualityGate: String by project
 val baseDockerImage: String by project
 val containerRegistry: String by project
 
 val ktlintVersion = libs.versions.ktlint.get()
+val jacocoVersion = libs.versions.jacoco.get()
 
 val excludedProjects = setOf("apps", "libs")
 val restProjects = setOf("auth")
@@ -66,6 +70,19 @@ spotless {
     }
 }
 
+sonarqube {
+    properties {
+        property("sonar.java.codeCoveragePlugin", "jacoco")
+        property("sonar.dynamicAnalysis", "reuseReports")
+        property("sonar.exclusions", "**/*Generated.java")
+    }
+    tasks.sonarqube {
+        subprojects.filter { it.name !in excludedProjects }.forEach {
+            dependsOn(":${it.path}:check")
+        }
+    }
+}
+
 allprojects {
     repositories {
         mavenCentral()
@@ -79,12 +96,13 @@ subprojects {
         if (path.startsWith(":apps")) {
             group = "org.volunteered.apps"
         }
-
         if (path.startsWith(":libs")) {
             group = "org.volunteered.libs"
         }
 
         apply {
+            plugin("jacoco")
+            plugin("org.sonarqube")
             plugin("com.diffplug.spotless")
 
             if (path.startsWith(":apps") && (name in grpcProjects + restProjects)) {
@@ -94,6 +112,18 @@ subprojects {
 
             if (path.startsWith(":libs")) {
                 plugin("java-library")
+            }
+        }
+
+        jacoco {
+            toolVersion = jacocoVersion
+        }
+
+        sonarqube {
+            properties {
+                property("sonar.junit.reportPaths", "$buildDir/test-results/test")
+                property("sonar.java.binaries", "$buildDir/classes/java, $buildDir/classes/kotlin")
+                property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
             }
         }
 
@@ -115,6 +145,76 @@ subprojects {
         }
 
         tasks {
+            jacocoTestReport {
+                reports {
+                    html.required.set(true)
+                    xml.required.set(true)
+                }
+            }
+
+            jacocoTestCoverageVerification {
+                violationRules {
+                    rule { limit { minimum = jacocoQualityGate.toBigDecimal() } }
+                    rule {
+                        enabled = false
+                        element = "CLASS"
+                        includes = listOf("org.volunteered.libs.proto.*")
+                    }
+                }
+            }
+
+            test {
+                useJUnitPlatform {
+                    excludeTags("slow", "integration")
+                }
+                filter {
+                    isFailOnNoMatchingTests = false
+                }
+                testLogging {
+                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+                    showExceptions = true
+                    showStandardStreams = true
+                    events(
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR
+                    )
+                }
+                finalizedBy("jacocoTestReport")
+            }
+
+            register<Test>("integrationTest") {
+                useJUnitPlatform {
+                    includeTags("integration", "e2e")
+                }
+                filter {
+                    isFailOnNoMatchingTests = false
+                }
+                testLogging {
+                    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+                    showExceptions = true
+                    showStandardStreams = true
+                    events(
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR
+                    )
+                }
+                shouldRunAfter(test)
+                finalizedBy("jacocoTestReport")
+            }
+
+            check {
+                dependsOn("jacocoTestCoverageVerification")
+                dependsOn("jacocoTestReport")
+                // dependsOn(integrationTest)
+//                 dependsOn("spotlessCheck")
+            }
+
             plugins.withId("com.google.cloud.tools.jib") {
                 jib {
                     from {
@@ -182,6 +282,10 @@ tasks {
     named("release") {
         dependsOn(":loadGitHubCredentials")
     }
+
+    named("runAffectedUnitTests") {
+        finalizedBy("affected")
+    }
 }
 
 gradle.buildFinished {
@@ -191,12 +295,17 @@ gradle.buildFinished {
 open class AffectedTask : DefaultTask() {
     @TaskAction
     fun printAffected() {
+        println(
+            """
+            ################################
+            #      Affected Modules        #
+            ################################
+            """.trimIndent()
+        )
         project.subprojects.forEach {
-            println(
-                "Is ${it.name} Affected? : " + com.dropbox.affectedmoduledetector.AffectedModuleDetector.isProjectAffected(
-                    it
-                )
-            )
+            if (com.dropbox.affectedmoduledetector.AffectedModuleDetector.isProjectAffected(it)) {
+                println(it.name)
+            }
         }
     }
 }

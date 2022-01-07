@@ -5,3 +5,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib"))
 }
+
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}

@@ -31,6 +31,7 @@ pluginManagement {
         kotlin("plugin.jpa") version kotlinVersion apply false
         kotlin("plugin.allopen") version kotlinVersion apply false
 
+        id("org.sonarqube") version "3.3"
         id("com.google.cloud.tools.jib") version "3.1.4"
         id("com.diffplug.spotless") version "5.17.0"
         id("com.github.ben-manes.versions") version "0.39.0"

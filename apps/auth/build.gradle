@@ -2,7 +2,6 @@ plugins {
 	id 'org.springframework.boot'
 	id 'io.spring.dependency-management'
 	id 'java'
-  	id 'jacoco'
 }
 
 sourceCompatibility = '11'
@@ -17,7 +16,6 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator'
 	implementation 'commons-io:commons-io:2.11.0'
 
-
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	runtimeOnly 'com.h2database:h2'
@@ -26,25 +24,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+affectedTestConfiguration {
+	jvmTestTask = "check"
+}
+
 application {
 	mainClass.set("org.volunteered.apps.auth.AuthApplication")
-}
-
-test {
-	finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-jacocoTestReport {
-	dependsOn test // tests are required to run before generating the report
-}
-
-jacoco {
-	toolVersion = "0.8.7"
-	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
-}
-
-test {
-	useJUnitPlatform()
 }
 
 jib {

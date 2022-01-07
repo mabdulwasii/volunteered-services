@@ -35,13 +35,14 @@ dependencies {
     testImplementation(libs.mockk.test)
 }
 
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}
+
 application {
     mainClass.set("org.volunteered.apps.organization.OrganizationApplicationKt")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         jvmTarget = "11"

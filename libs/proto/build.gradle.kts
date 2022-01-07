@@ -43,7 +43,9 @@ dependencies {
 //    testFixturesImplementation(libs.protobuf.java)
 }
 
-// affectedTestConfiguration { jvmTestTask = "check" }
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}
 
 sourceSets {
     main {

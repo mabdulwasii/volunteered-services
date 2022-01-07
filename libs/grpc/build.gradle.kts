@@ -16,3 +16,7 @@ dependencies {
 
     implementation(libs.guava)
 }
+
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}
