@@ -9,6 +9,8 @@ import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 
 interface OrganizationService {
@@ -20,4 +22,5 @@ interface OrganizationService {
     suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
+    suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse
 }

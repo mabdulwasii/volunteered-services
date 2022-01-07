@@ -23,6 +23,8 @@ import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.existsByIdRequest
@@ -56,13 +58,15 @@ class OrganizationServiceImpl(
     }
 
     @Transactional
-    override suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary {
+    override suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary {
         val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
         organizationSubsidiaryEntity?.let {
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)
             val updatedOrganizationSubsidiaryEntity = organizationSubsidiaryRepository.save(it)
 
-            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(updatedOrganizationSubsidiaryEntity)
+            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(
+                updatedOrganizationSubsidiaryEntity
+            )
         } ?: throw OrganizationDoesNotExistException("Organization subsidiary does not exist")
     }
 

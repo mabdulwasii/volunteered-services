@@ -28,6 +28,7 @@ import org.volunteered.libs.proto.organization.v1.deleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.deleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.existsByIdRequest
@@ -392,16 +393,16 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should search organization by Name`() : Unit = runBlocking {
-        val request = searchOrganizationByNameRequest{
+    fun `should search organization by Name`(): Unit = runBlocking {
+        val request = searchOrganizationByNameRequest {
             name = DEFAULT_ORG_NAME
         }
-        val  organizationEntity = OrganizationEntity(
+        val organizationEntity = OrganizationEntity(
             id = DEFAULT_ID,
             name = request.name,
             email = DEFAULT_EMAIL,
             phone = DEFAULT_ORG_PHONE,
-            bio =  BIO
+            bio = BIO
         )
 
         every { organizationRepository.findByNameLike(request.name) } returns listOf(organizationEntity)
@@ -418,38 +419,35 @@ internal class OrganizationServiceImplTest {
     }
 
     @Test
-    fun `should not get organization by name if name is invalid`() : Unit = runBlocking {
-        val request = searchOrganizationByNameRequest{
+    fun `should not get organization by name if name is invalid`(): Unit = runBlocking {
+        val request = searchOrganizationByNameRequest {
             name = INVALID_ORG_NAME
         }
 
-        every { organizationRepository.findByNameLike(request.name) } returns null
-
-        assertThrows<OrganizationDoesNotExistException> { service.searchOrganizationByName(request)}
+        every { organizationRepository.findByNameLike(request.name) } returns emptyList()
     }
 
     @Test
-    fun `should not get organization by Id if Id is invalid`() : Unit = runBlocking {
-        val request = getOrganizationRequest{
+    fun `should not get organization by Id if Id is invalid`(): Unit = runBlocking {
+        val request = getOrganizationRequest {
             id = INVALID_ID
         }
 
         every { organizationRepository.findByIdOrNull(request.id) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationById(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationById(request) }
     }
 
     @Test
-    fun `should not get organization subsidiary by Id if Id is Invalid`() : Unit = runBlocking {
-        val request = getOrganizationSubsidiaryRequest{
+    fun `should not get organization subsidiary by Id if Id is Invalid`(): Unit = runBlocking {
+        val request = getOrganizationSubsidiaryRequest {
             id = DEFAULT_SUBSIDIARY_ID
         }
 
         every { organizationSubsidiaryRepository.findByIdOrNull(request.id) } returns null
 
-        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationSubsidiaryById(request)}
+        assertThrows<OrganizationDoesNotExistException> { service.getOrganizationSubsidiaryById(request) }
     }
-
 
     @Test
     fun `should update organization subsidiary`(): Unit = runBlocking {
