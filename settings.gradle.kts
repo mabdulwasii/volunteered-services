@@ -49,6 +49,7 @@ include(
     ":apps:user",
     ":apps:organization",
     ":apps:review",
+    ":apps:recommendation",
 
     ":libs:core",
     ":libs:grpc",

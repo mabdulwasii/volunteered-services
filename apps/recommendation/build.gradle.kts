@@ -40,13 +40,13 @@ affectedTestConfiguration {
 }
 
 application {
-    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
+    mainClass.set("org.volunteered.apps.recommendation.RecommendationApplicationKt")
 }
 
 jib {
     containerizingMode = "packaged"
     container {
-        ports = listOf("9894")
+        ports = listOf("9895")
         mainClass = application.mainClass.get()
     }
 }
