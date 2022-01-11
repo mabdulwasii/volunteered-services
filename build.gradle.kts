@@ -270,7 +270,8 @@ tasks {
     register("loadGitHubCredentials") {
         description = "Loads github credentials from environment. To be used by axion for pushing releases"
 
-        val token: String? = System.getenv("GITHUB_TOKEN")
+//        val token: String? = System.getenv("GITHUB_TOKEN")
+        val token: String? = "GITHUB_TOKEN"
         if (token.isNullOrBlank()) {
             throw GradleException("GITHUB_TOKEN environment variable not found")
         } else {

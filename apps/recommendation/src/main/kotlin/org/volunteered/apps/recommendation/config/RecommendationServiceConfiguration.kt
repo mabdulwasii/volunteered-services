@@ -1,4 +1,4 @@
-package org.volunteered.apps.review.config
+package org.volunteered.apps.recommendation.config
 
 import net.devh.boot.grpc.client.inject.GrpcClient
 import net.devh.boot.grpc.client.inject.GrpcClientBean
