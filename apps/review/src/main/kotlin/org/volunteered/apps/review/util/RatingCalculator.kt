@@ -51,7 +51,7 @@ class RatingCalculator {
             rating: Int,
             verifiedWeight: Int,
             unverifiedWeight: Int,
-            newRating : Int
+            newRating: Int
         ): RatingEntity {
             val unverifiedRatingCount: Int
             val verifiedRatingCount: Int
@@ -94,13 +94,13 @@ class RatingCalculator {
             newVerifiedRating: Int,
             unVerifiedRatingCount: Int,
             rating: Int,
-            verifiedWeight : Int,
-            unVerifiedWeight : Int
+            verifiedWeight: Int,
+            unVerifiedWeight: Int
         ): Int {
             val numerator =
                 (currentVerifiedRatingCount * verifiedWeight * rating)
-                    .plus (unVerifiedRatingCount * unVerifiedWeight * rating)
-                    .plus (newVerifiedRating * verifiedWeight)
+                    .plus(unVerifiedRatingCount * unVerifiedWeight * rating)
+                    .plus(newVerifiedRating * verifiedWeight)
 
             val denominator = (currentVerifiedRatingCount * verifiedWeight)
                 .plus(unVerifiedRatingCount * unVerifiedWeight)
@@ -119,8 +119,8 @@ class RatingCalculator {
         ): Int {
             val numerator =
                 (currentUnVerifiedRatingCount * unVerifiedWeight * rating)
-                    .plus (verifiedRatingCount * verifiedWeight * rating)
-                    .plus (newUnVerifiedRating * unVerifiedWeight)
+                    .plus(verifiedRatingCount * verifiedWeight * rating)
+                    .plus(newUnVerifiedRating * unVerifiedWeight)
 
             val denominator = (currentUnVerifiedRatingCount * unVerifiedWeight)
                 .plus(verifiedRatingCount * verifiedWeight)
@@ -129,5 +129,4 @@ class RatingCalculator {
             return numerator.div(denominator)
         }
     }
-
 }

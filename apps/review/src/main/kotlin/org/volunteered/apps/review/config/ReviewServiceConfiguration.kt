@@ -41,7 +41,13 @@ class ReviewServiceConfiguration {
         @Autowired ratingConfigRepository: RatingConfigRepository,
         @Autowired ratingRepository: RatingRepository
     ): ReviewService {
-        return ReviewServiceImpl(userServiceCoroutineStub, organizationServiceCoroutineStub, reviewRepository,
-            replyReviewRepository, ratingConfigRepository, ratingRepository)
+        return ReviewServiceImpl(
+            userServiceCoroutineStub,
+            organizationServiceCoroutineStub,
+            reviewRepository,
+            replyReviewRepository,
+            ratingConfigRepository,
+            ratingRepository
+        )
     }
 }

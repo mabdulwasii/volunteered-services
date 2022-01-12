@@ -23,13 +23,13 @@ class ReplyReviewEntity(
     var review: ReviewEntity,
 
     @Column(name = "user_id")
-    var userId : Long,
+    var userId: Long,
 
     @Column(name = "user_display_name")
-    var userDisplayName : String,
+    var userDisplayName: String,
 
     @Column(name = "user_avatar")
-    var userAvatar : String? = null,
+    var userAvatar: String? = null,
 
-    var body : String
+    var body: String
 )

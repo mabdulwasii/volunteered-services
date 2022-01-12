@@ -30,7 +30,7 @@ class DtoTransformer {
             request: WriteReviewRequest,
             user: User,
             organizationSubsidiary: OrganizationSubsidiary
-        ) : ReviewEntity {
+        ): ReviewEntity {
 
             val reviewEntity = ReviewEntity(
                 rating = request.rating,
@@ -63,8 +63,10 @@ class DtoTransformer {
             verified = reviewEntity.verified
         }
 
-        fun transformReviewEntityListToReviewDtoList(reviewEntityList: Page<ReviewEntity>, paginationRequest:
-        PaginationRequest): GetReviewsResponse {
+        fun transformReviewEntityListToReviewDtoList(
+            reviewEntityList: Page<ReviewEntity>,
+            paginationRequest: PaginationRequest
+        ): GetReviewsResponse {
             val reviewDtoList = mutableListOf<Review>()
 
             reviewEntityList.forEach {
@@ -83,8 +85,11 @@ class DtoTransformer {
             }
         }
 
-        fun transformReplyReviewRequestToReplyReviewEntity(request: ReplyReviewRequest, user: User, reviewEntity: ReviewEntity):
-                ReplyReviewEntity {
+        fun transformReplyReviewRequestToReplyReviewEntity(
+            request: ReplyReviewRequest,
+            user: User,
+            reviewEntity: ReviewEntity
+        ): ReplyReviewEntity {
             return ReplyReviewEntity(
                 review = reviewEntity,
                 userId = user.id,
@@ -107,7 +112,9 @@ class DtoTransformer {
             request.rating.whenGreaterThanZero { reviewEntity.rating = it }
         }
 
-        fun transformCreateRatingConfigRequestToRatingConfigEntity(request: CreateRatingConfigRequest) : RatingConfigEntity {
+        fun transformCreateRatingConfigRequestToRatingConfigEntity(
+            request: CreateRatingConfigRequest
+        ): RatingConfigEntity {
             return RatingConfigEntity(
                 ratingType = request.ratingType,
                 weight = request.weight
@@ -140,7 +147,5 @@ class DtoTransformer {
             unverifiedRatingCount = ratingEntity.unverifiedRatingCount
             verifiedRatingCount = ratingEntity.verifiedRatingCount
         }
-
     }
-
 }

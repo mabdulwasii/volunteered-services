@@ -15,14 +15,14 @@ class RatingEntity(
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
-    var rating : Int,
+    var rating: Int,
 
     @Column(name = "organization_subsidiary_id")
-    var organizationSubsidiaryId  : Long,
+    var organizationSubsidiaryId: Long,
 
     @Column(name = "unverified_rating_count")
-    var unverifiedRatingCount : Int = 0,
+    var unverifiedRatingCount: Int = 0,
 
     @Column(name = "verified_rating_count")
-    var verifiedRatingCount : Int = 0,
+    var verifiedRatingCount: Int = 0,
 )

@@ -7,6 +7,6 @@ import org.volunteered.libs.proto.review.v1.RatingType
 
 @Repository
 interface RatingConfigRepository : JpaRepository<RatingConfigEntity, Long> {
-    fun findByRatingType(ratingType: RatingType) : RatingConfigEntity
-    fun findById(id: Int) : RatingConfigEntity?
+    fun findByRatingType(ratingType: RatingType): RatingConfigEntity
+    fun findById(id: Int): RatingConfigEntity?
 }

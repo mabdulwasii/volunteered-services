@@ -20,8 +20,8 @@ class RatingConfigEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rating_type")
-    var ratingType : RatingType,
+    var ratingType: RatingType,
 
     @Column(name = "weight")
-    var weight  : Int,
+    var weight: Int,
 )

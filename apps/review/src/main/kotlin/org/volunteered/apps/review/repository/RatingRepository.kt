@@ -6,5 +6,5 @@ import org.volunteered.apps.review.entity.RatingEntity
 
 @Repository
 interface RatingRepository : JpaRepository<RatingEntity, Long> {
-    fun findByOrganizationSubsidiaryId(organizationSubsidiaryId: Long) : RatingEntity?
+    fun findByOrganizationSubsidiaryId(organizationSubsidiaryId: Long): RatingEntity?
 }
