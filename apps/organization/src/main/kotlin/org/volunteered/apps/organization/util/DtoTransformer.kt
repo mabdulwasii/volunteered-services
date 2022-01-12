@@ -4,7 +4,6 @@ import org.volunteered.apps.organization.entity.OrganizationEntity
 import org.volunteered.apps.organization.entity.OrganizationSubsidiaryEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
-import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.common.v1.organization
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
@@ -121,15 +120,11 @@ class DtoTransformer {
             organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
         }
 
-        fun transformOrganizationEntityListToOrganizationDtoList(organizationEntityList: List<OrganizationEntity>): SearchOrganizationByNameResponse {
-            val organizationList = mutableListOf<Organization>()
-
-            organizationEntityList.map {
-                val organizationDto = transformOrganizationEntityToOrganizationDto(it)
-                organizationList.add(organizationDto)
-            }
+        fun transformOrganizationEntityListToOrganizationDtoList(
+            organizationEntityList: List<OrganizationEntity>
+        ): SearchOrganizationByNameResponse {
             return searchOrganizationByNameResponse {
-                organizations.addAll(organizationList)
+                organizations.addAll(organizationEntityList.map { transformOrganizationEntityToOrganizationDto(it) })
             }
         }
     }

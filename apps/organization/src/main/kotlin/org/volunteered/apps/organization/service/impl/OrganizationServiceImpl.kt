@@ -133,9 +133,7 @@ class OrganizationServiceImpl(
 
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
         val organizationEntityList = organizationRepository.findByNameLike(request.name)
-        organizationEntityList.let {
-            return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
-        }
+        return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
