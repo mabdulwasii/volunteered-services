@@ -1,8 +1,8 @@
-package org.volunteered.apps.grpc
+package org.volunteered.apps.review.grpc
 
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
-import org.volunteered.apps.service.ReviewService
+import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest

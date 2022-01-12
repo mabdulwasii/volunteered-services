@@ -1,4 +1,4 @@
-package org.volunteered.apps.service
+package org.volunteered.apps.review.service
 
 import com.google.protobuf.Empty
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest

@@ -1,7 +1,7 @@
-package org.volunteered.apps.util
+package org.volunteered.apps.review.util
 
-import org.volunteered.apps.entity.RatingEntity
-import org.volunteered.apps.entity.ReviewEntity
+import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.ReviewEntity
 
 class RatingCalculator {
     companion object {
@@ -9,11 +9,11 @@ class RatingCalculator {
             ratingEntity: RatingEntity,
             verified: Boolean,
             rating: Int,
-            verifiedWeight : Int,
-            unverifiedWeight : Int,
-            newRating : Int
-        )  : RatingEntity{
-            val calculatedRating : Int
+            verifiedWeight: Int,
+            unverifiedWeight: Int,
+            newRating: Int
+        ): RatingEntity {
+            val calculatedRating: Int
             val currentVerifiedRatingCount = ratingEntity.verifiedRatingCount
             val unVerifiedRatingCount = ratingEntity.unverifiedRatingCount
 

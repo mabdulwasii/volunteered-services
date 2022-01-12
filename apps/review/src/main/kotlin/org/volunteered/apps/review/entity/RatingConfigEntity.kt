@@ -1,4 +1,4 @@
-package org.volunteered.apps.entity
+package org.volunteered.apps.review.entity
 
 import org.volunteered.libs.proto.review.v1.RatingType
 import javax.persistence.Column

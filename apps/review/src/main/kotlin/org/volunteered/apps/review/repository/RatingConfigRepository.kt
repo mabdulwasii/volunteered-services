@@ -1,8 +1,8 @@
-package org.volunteered.apps.repository
+package org.volunteered.apps.review.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import org.volunteered.apps.entity.RatingConfigEntity
+import org.volunteered.apps.review.entity.RatingConfigEntity
 import org.volunteered.libs.proto.review.v1.RatingType
 
 @Repository

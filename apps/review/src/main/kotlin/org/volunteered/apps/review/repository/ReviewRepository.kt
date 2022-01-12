@@ -1,10 +1,10 @@
-package org.volunteered.apps.repository
+package org.volunteered.apps.review.repository
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import org.volunteered.apps.entity.ReviewEntity
+import org.volunteered.apps.review.entity.ReviewEntity
 
 @Repository
 interface ReviewRepository : JpaRepository<ReviewEntity, Long> {

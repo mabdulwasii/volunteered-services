@@ -1,4 +1,4 @@
-package org.volunteered.apps.entity
+package org.volunteered.apps.review.entity
 
 import javax.persistence.Column
 import javax.persistence.Entity

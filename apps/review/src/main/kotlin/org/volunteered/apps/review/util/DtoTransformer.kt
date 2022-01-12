@@ -1,10 +1,10 @@
-package org.volunteered.apps.util
+package org.volunteered.apps.review.util
 
 import org.springframework.data.domain.Page
-import org.volunteered.apps.entity.RatingConfigEntity
-import org.volunteered.apps.entity.RatingEntity
-import org.volunteered.apps.entity.ReplyReviewEntity
-import org.volunteered.apps.entity.ReviewEntity
+import org.volunteered.apps.review.entity.RatingConfigEntity
+import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.ReplyReviewEntity
+import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary

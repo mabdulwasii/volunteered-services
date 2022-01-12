@@ -1,4 +1,4 @@
-package org.volunteered.apps.util
+package org.volunteered.apps.review.util
 
 import java.security.SecureRandom
 import java.security.spec.KeySpec

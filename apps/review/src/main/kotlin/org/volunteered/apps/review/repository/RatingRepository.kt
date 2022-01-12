@@ -1,8 +1,8 @@
-package org.volunteered.apps.repository
+package org.volunteered.apps.review.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import org.volunteered.apps.entity.RatingEntity
+import org.volunteered.apps.review.entity.RatingEntity
 
 @Repository
 interface RatingRepository : JpaRepository<RatingEntity, Long> {
