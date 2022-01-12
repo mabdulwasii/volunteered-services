@@ -14,11 +14,9 @@ import java.util.UUID;
 
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
-
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final JWTUtils jwtUtils;
-
 
     public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository, JWTUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
@@ -28,21 +26,20 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public Optional<RefreshToken> createRefreshToken(Long userId) {
+	    RefreshToken refreshToken = null;
 
-        RefreshToken refreshToken = null;
-    
-        var optionalUser = userRepository.findById(userId);
-    
-        if (optionalUser.isPresent()) {
-            refreshToken = new RefreshToken();
-            refreshToken.setUser(optionalUser.get());
-            refreshToken.setExpiryDate(Instant.now().plusMillis(jwtUtils.getRefreshExpiration()));
-            refreshToken.setToken(UUID.randomUUID().toString());
-        
-            refreshToken = refreshTokenRepository.save(refreshToken);
-        }
+	    var optionalUser = userRepository.findById(userId);
 
-        return Optional.ofNullable(refreshToken);
+	    if (optionalUser.isPresent()) {
+		    refreshToken = new RefreshToken();
+		    refreshToken.setUser(optionalUser.get());
+		    refreshToken.setExpiryDate(Instant.now().plusMillis(jwtUtils.getRefreshExpiration()));
+		    refreshToken.setToken(UUID.randomUUID().toString());
+
+		    refreshToken = refreshTokenRepository.save(refreshToken);
+	    }
+
+	    return Optional.ofNullable(refreshToken);
     }
 
     @Override
@@ -52,7 +49,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken refreshToken) {
-
         if (refreshToken.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(refreshToken);
             throw new TokenRefreshExpiredException(refreshToken.getToken(), "Refresh token was expired. Please make a new sign in request");

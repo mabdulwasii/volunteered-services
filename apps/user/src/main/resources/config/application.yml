@@ -7,7 +7,7 @@ grpc:
 
 spring:
   datasource:
-    url: jdbc:h2:file:./apps/user/user
+    url: jdbc:h2:file:../user/user
     username: sa
     password:
     driverClassName: org.h2.Driver

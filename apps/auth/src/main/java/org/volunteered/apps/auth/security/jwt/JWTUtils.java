@@ -39,22 +39,22 @@ public class JWTUtils {
      * @return token token
      */
     public String generateToken(UserDetailsImpl userDetails, PrivateKey privateKey) {
-        HashMap<String, Object> claims = new HashMap<>();
-        claims.put("sub", userDetails.getUsername());
-        return generateToken(claims, privateKey);
+	    HashMap<String, Object> claims = new HashMap<>();
+	    claims.put("sub", userDetails.getUsername());
+	    return generateToken(claims, privateKey);
     }
-    
-    /**
-     * Generate token
-     *
-     * @param claims Data declaration
-     * @return token token
-     */
-    private String generateToken(Map<String, Object> claims, PrivateKey privateKey) {
-        Date date = new Date();
-        return Jwts.builder().setClaims(claims)
-                .setId(createJTI())
-                .setIssuedAt(date)
+
+	/**
+	 * Generate token
+	 *
+	 * @param claims Data declaration
+	 * @return token token
+	 */
+	private String generateToken(Map<String, Object> claims, PrivateKey privateKey) {
+		Date date = new Date();
+		return Jwts.builder().setClaims(claims)
+				.setId(createJTI())
+				.setIssuedAt(date)
                 .setExpiration(new Date(date.getTime() + expiration))
                 .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();

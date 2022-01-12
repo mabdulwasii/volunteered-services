@@ -15,7 +15,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "refresh_token", indexes = @Index(columnList = "token", unique = true))
 public class RefreshToken {
-
     public RefreshToken(long id, User user, String token, Instant expiryDate) {
         this.id = id;
         this.user = user;

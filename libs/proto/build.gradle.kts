@@ -1,4 +1,3 @@
-/* ktlint-disable no-wildcard-imports */
 import com.google.protobuf.gradle.builtins
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
@@ -15,8 +14,6 @@ plugins {
     id("com.google.protobuf")
 //    `java-test-fixtures`
 }
-
-version = "0.0.1-SNAPSHOT"
 
 val grpcVersion = libs.versions.grpc.get()
 val grpcKotlinVersion = libs.versions.grpcKotlin.get()
@@ -46,7 +43,9 @@ dependencies {
 //    testFixturesImplementation(libs.protobuf.java)
 }
 
-//affectedTestConfiguration { jvmTestTask = "check" }
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}
 
 sourceSets {
     main {

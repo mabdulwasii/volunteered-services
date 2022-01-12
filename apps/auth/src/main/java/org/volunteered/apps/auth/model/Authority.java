@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @Table(name = "authority")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Authority implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     public Authority() {
@@ -38,11 +37,11 @@ public class Authority implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 50)
     private AuthorityType name;
-	
+
 	public AuthorityType getName() {
         return name;
     }
-	
+
 	// prettier-ignore
     @Override
     public String toString() {
