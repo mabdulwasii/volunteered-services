@@ -13,7 +13,6 @@ import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
 interface RecommendationService {
     suspend fun requestRecommendation(request: RequestRecommendationRequest): RecommendationRequest
     suspend fun getOrganizationRecommendationRequests(request: OrganizationRecommendationRequests): GetOrganizationRecommendationRequestsResponse
-
     suspend fun writeRecommendation(request: WriteRecommendationRequest): Recommendation
     suspend fun getOrganizationRecommendations(request: GetOrganizationRecommendationsRequest): GetRecommendationsResponse
     suspend fun getUserRecommendations(request: GetUserRecommendationsRequest): GetRecommendationsResponse
