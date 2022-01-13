@@ -10,7 +10,9 @@ import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameResponse
 
 class DtoTransformer {
     companion object {
@@ -116,6 +118,14 @@ class DtoTransformer {
             organizationSubsidiary.country.whenNotEmpty { organizationSubsidiaryEntity.country = it }
             organizationSubsidiary.phone.whenNotEmpty { organizationSubsidiaryEntity.phone = it }
             organizationSubsidiary.description.whenNotEmpty { organizationSubsidiaryEntity.description = it }
+        }
+
+        fun transformOrganizationEntityListToOrganizationDtoList(
+            organizationEntityList: List<OrganizationEntity>
+        ): SearchOrganizationByNameResponse {
+            return searchOrganizationByNameResponse {
+                organizations.addAll(organizationEntityList.map { transformOrganizationEntityToOrganizationDto(it) })
+            }
         }
     }
 }

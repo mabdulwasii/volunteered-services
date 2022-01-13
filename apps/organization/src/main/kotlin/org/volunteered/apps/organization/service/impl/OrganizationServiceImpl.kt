@@ -23,6 +23,8 @@ import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
+import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.existsByIdRequest
@@ -62,7 +64,9 @@ class OrganizationServiceImpl(
             DtoTransformer.buildOrganizationSubsidiaryEntityFromOrganizationSubsidiaryDto(request, it)
             val updatedOrganizationSubsidiaryEntity = organizationSubsidiaryRepository.save(it)
 
-            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(updatedOrganizationSubsidiaryEntity)
+            return DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(
+                updatedOrganizationSubsidiaryEntity
+            )
         } ?: throw OrganizationDoesNotExistException("Organization subsidiary does not exist")
     }
 
@@ -125,6 +129,11 @@ class OrganizationServiceImpl(
         return organizationSubsidiaryEntity?.let {
             DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it)
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
+    }
+
+    override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
+        val organizationEntityList = organizationRepository.findByNameLike(request.name)
+        return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
