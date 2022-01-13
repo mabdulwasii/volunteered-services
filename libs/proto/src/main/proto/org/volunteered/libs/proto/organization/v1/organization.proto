@@ -17,13 +17,14 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc SearchOrganizationByName(SearchOrganizationByNameRequest) returns (SearchOrganizationByNameResponse);
-  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest)
+      returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
-  rpc UpdateOrganizationSubsidiary(UpdateOrganizationSubsidiaryRequest)
+  rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary)
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
-  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
+  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
 }
 
 message CreateOrganizationRequest {

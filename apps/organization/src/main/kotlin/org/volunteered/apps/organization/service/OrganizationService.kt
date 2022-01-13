@@ -2,7 +2,7 @@ package org.volunteered.apps.organization.service
 
 import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
-import org.volunteered.libs.proto.common.v1.ExistsByIdRequest
+import org.volunteered.libs.proto.common.v1.Id
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
@@ -25,5 +25,5 @@ interface OrganizationService {
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
     suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse
-    suspend fun organizationSubsidiaryExistsById(request: ExistsByIdRequest): BoolValue
+    suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue
 }

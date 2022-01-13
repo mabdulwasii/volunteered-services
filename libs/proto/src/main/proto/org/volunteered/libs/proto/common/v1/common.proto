@@ -85,6 +85,6 @@ message PaginationResponse {
   int32 page = 3;
 }
 
-message ExistsByIdRequest {
+message Id {
   int64 id = 1;
 }

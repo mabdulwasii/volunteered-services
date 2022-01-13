@@ -6,7 +6,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.organization.service.OrganizationService
 import org.volunteered.libs.core.exception.InvalidCountryCodeException
 import org.volunteered.libs.core.util.IsoUtil
-import org.volunteered.libs.proto.common.v1.ExistsByIdRequest
+import org.volunteered.libs.proto.common.v1.Id
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
@@ -66,7 +66,7 @@ class OrganizationGrpcService(
         return organizationService.searchOrganizationByName(request)
     }
 
-    override suspend fun organizationSubsidiaryExistsById(request: ExistsByIdRequest): BoolValue {
+    override suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue {
         return organizationService.organizationSubsidiaryExistsById(request)
     }
 }
