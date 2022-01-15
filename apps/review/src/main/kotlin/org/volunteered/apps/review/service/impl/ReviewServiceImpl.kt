@@ -47,7 +47,7 @@ class ReviewServiceImpl(
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
     private val organizationServiceStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
     private val reviewRepository: ReviewRepository,
-    private val replReviewRepository: ReplyReviewRepository,
+    private val replyReviewRepository: ReplyReviewRepository,
     private val ratingConfigRepository: RatingConfigRepository,
     private val ratingRepository: RatingRepository
 ) : ReviewService {
@@ -133,7 +133,7 @@ class ReviewServiceImpl(
         val reviewEntity = reviewRepository.findByIdOrNull(request.reviewId)
         reviewEntity?.let {
             val replyReviewEntity = DtoTransformer.transformReplyReviewRequestToReplyReviewEntity(request, user, it)
-            val savedReplyReviewEntity = replReviewRepository.save(replyReviewEntity)
+            val savedReplyReviewEntity = replyReviewRepository.save(replyReviewEntity)
 
             return DtoTransformer.transformReplyReviewEntityToReplyReviewDto(savedReplyReviewEntity)
         } ?: throw ReviewDoesNotExistException("Review does not exist")
