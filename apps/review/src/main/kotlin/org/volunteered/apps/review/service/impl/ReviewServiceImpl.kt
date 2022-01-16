@@ -4,6 +4,7 @@ import com.google.protobuf.Empty
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.volunteered.apps.review.entity.RatingEntity
 import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.apps.review.exception.CannotWriteReviewException
 import org.volunteered.apps.review.exception.OrganizationSubsidiaryRatingDoesNotExistException
@@ -17,8 +18,6 @@ import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.apps.review.util.DtoTransformer
 import org.volunteered.apps.review.util.RatingCalculator
 import org.volunteered.apps.review.util.StringEncoder
-import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
-import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
@@ -31,7 +30,6 @@ import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
 import org.volunteered.libs.proto.review.v1.RatingConfig
-import org.volunteered.libs.proto.review.v1.RatingType
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
@@ -52,19 +50,17 @@ class ReviewServiceImpl(
     private val ratingRepository: RatingRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
-        val userId = request.userId
-        val organizationSubsidiaryId = request.organizationSubsidiaryId
+        ensureReviewDoesNotExist(request, request.userId, request.organizationSubsidiaryId)
 
-        ensureReviewExist(request, userId, organizationSubsidiaryId)
-
-        val user = getUserById(userId)
-        val organizationSubsidiary = getOrganizationSubsidiaryById(organizationSubsidiaryId)
-
-        val reviewEntity = DtoTransformer.transformWriteReviewRequestToReviewEntity(
-            request, user,
-            organizationSubsidiary
+        val user = userServiceStub.getUserById(
+            getUserByIdRequest { id = request.userId }
+        )
+        val organizationSubsidiary = organizationServiceStub.getOrganizationSubsidiaryById(
+            getOrganizationSubsidiaryRequest { id = request.organizationSubsidiaryId }
         )
 
+        val reviewEntity =
+            DtoTransformer.transformWriteReviewRequestToReviewEntity(request, user, organizationSubsidiary)
         val savedReview = reviewRepository.save(reviewEntity)
 
         saveOrUpdateOrganizationRating(savedReview)
@@ -73,8 +69,7 @@ class ReviewServiceImpl(
     }
 
     override suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating {
-        val organizationSubsidiaryId = request.organizationSubsidiaryId
-        val retrievedRating = ratingRepository.findByOrganizationSubsidiaryId(organizationSubsidiaryId)
+        val retrievedRating = ratingRepository.findByOrganizationSubsidiaryId(request.organizationSubsidiaryId)
         retrievedRating?.let {
             return DtoTransformer.transformRatingEntityToRatingDto(it)
         } ?: throw OrganizationSubsidiaryRatingDoesNotExistException("Organization subsidiary rating does not exist")
@@ -91,35 +86,23 @@ class ReviewServiceImpl(
     }
 
     override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
-        val organizationId = request.organizationId
-        val pagination = request.pagination
-        val paginationLimitPerPage = pagination.limitPerPage
-        val paginationPage = pagination.page
+        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage)
+        val retrievedReviews = reviewRepository.findAllByOrganizationId(request.organizationId, pageable)
 
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
-
-        val retrievedReviews = reviewRepository.findAllByOrganizationId(organizationId, pageable)
-
-        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
+        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
-        val organizationSubsidiaryId = request.organizationSubsidiaryId
-        val pagination = request.pagination
-        val paginationLimitPerPage = pagination.limitPerPage
-        val paginationPage = pagination.page
+        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage)
+        val retrievedReviews = reviewRepository.findAllByOrganizationSubsidiaryId(
+            request.organizationSubsidiaryId, pageable
+        )
 
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
-
-        val retrievedReviews =
-            reviewRepository.findAllByOrganizationSubsidiaryId(organizationSubsidiaryId, pageable)
-
-        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
+        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
-        val reviewId = request.reviewId
-        val retrievedReview = reviewRepository.findByIdOrNull(reviewId)
+        val retrievedReview = reviewRepository.findByIdOrNull(request.reviewId)
         retrievedReview?.let {
             it.helpfulCount = +1
             reviewRepository.save(it)
@@ -128,7 +111,9 @@ class ReviewServiceImpl(
     }
 
     override suspend fun replyReview(request: ReplyReviewRequest): ReviewReply {
-        val user = getUserById(request.userId)
+        val user = userServiceStub.getUserById(
+            getUserByIdRequest { id = request.userId }
+        )
 
         val reviewEntity = reviewRepository.findByIdOrNull(request.reviewId)
         reviewEntity?.let {
@@ -168,44 +153,32 @@ class ReviewServiceImpl(
         } ?: throw RatingConfigDoesNotExistException("Rating config does not exist")
     }
 
-    private suspend fun getUserById(userId: Long): User {
-        return userServiceStub.getUserById(
-            getUserByIdRequest { id = userId }
-        )
-    }
-
-    private suspend fun getOrganizationSubsidiaryById(organizationSubsidiaryId: Long): OrganizationSubsidiary {
-        return organizationServiceStub.getOrganizationSubsidiaryById(
-            getOrganizationSubsidiaryRequest { id = organizationSubsidiaryId }
-        )
-    }
-
     private fun saveOrUpdateOrganizationRating(reviewEntity: ReviewEntity) {
-        val verified = reviewEntity.verified
-        val organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId
-        val newRating = reviewEntity.rating
-
-        val unverifiedRatingConfig = ratingConfigRepository.findByRatingType(RatingType.UNVERIFIED)
-        val verifiedRatingConfig = ratingConfigRepository.findByRatingType(RatingType.VERIFIED)
-
-        var ratingEntity = ratingRepository.findByOrganizationSubsidiaryId(organizationSubsidiaryId)
-
-        if (ratingEntity == null) {
-            ratingEntity =
-                RatingCalculator.saveRating(
-                    reviewEntity, verified, 0, verifiedRatingConfig.weight,
-                    unverifiedRatingConfig.weight, newRating
-                )
-        } else {
-            RatingCalculator.updateRating(
-                ratingEntity, verified, ratingEntity.rating, verifiedRatingConfig.weight,
-                unverifiedRatingConfig.weight, newRating
+        val ratingEntity =
+            ratingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: RatingEntity(
+                organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
+                rating = 0,
+                verifiedRatingCount = 0,
+                unverifiedRatingCount = 0
             )
+
+        // TODO rating should be decimal not int
+        ratingEntity.rating = RatingCalculator.recomputeOrganizationSubsidiaryRating(
+            ratingEntity,
+            reviewEntity.rating,
+            reviewEntity.verified
+        )
+
+        if (reviewEntity.verified) {
+            ratingEntity.verifiedRatingCount += 1
+        } else {
+            ratingEntity.unverifiedRatingCount += 1
         }
+
         ratingRepository.save(ratingEntity)
     }
 
-    private fun ensureReviewExist(
+    private fun ensureReviewDoesNotExist(
         request: WriteReviewRequest,
         userId: Long,
         organizationSubsidiaryId: Long

@@ -1,132 +1,33 @@
 package org.volunteered.apps.review.util
 
 import org.volunteered.apps.review.entity.RatingEntity
-import org.volunteered.apps.review.entity.ReviewEntity
 
 class RatingCalculator {
     companion object {
-        fun updateRating(
-            ratingEntity: RatingEntity,
-            verified: Boolean,
-            rating: Int,
-            verifiedWeight: Int,
-            unverifiedWeight: Int,
-            newRating: Int
-        ): RatingEntity {
-            val calculatedRating: Int
-            val currentVerifiedRatingCount = ratingEntity.verifiedRatingCount
-            val unVerifiedRatingCount = ratingEntity.unverifiedRatingCount
+        // TODO get these values from config. Create a RatingConfig class to get the config values and inject that
+        //  class into this one on instantiation. Let an instance of this class be passed into ReviewServiceImpl
+        //  Hence, the subsequent functions need not be encapsulated in a companion object
+        private val UNVERIFIED_RATING_WEIGHT = 1
+        private val VERIFIED_RATING_WEIGHT = 3
 
-            if (verified) {
-                calculatedRating = calculateVerifiedRating(
-                    currentVerifiedRatingCount,
-                    newRating,
-                    unVerifiedRatingCount,
-                    rating,
-                    verifiedWeight,
-                    unverifiedWeight
-                )
-                ratingEntity.verifiedRatingCount = currentVerifiedRatingCount + 1
-                ratingEntity.rating = calculatedRating
-            } else {
-                calculatedRating = calculateUnVerifiedRating(
-                    unVerifiedRatingCount,
-                    newRating,
-                    currentVerifiedRatingCount,
-                    rating,
-                    verifiedWeight,
-                    unverifiedWeight
-                )
-
-                ratingEntity.unverifiedRatingCount = unVerifiedRatingCount + 1
-                ratingEntity.rating = calculatedRating
-            }
-
-            return ratingEntity
-        }
-
-        fun saveRating(
-            reviewEntity: ReviewEntity,
-            verified: Boolean,
-            rating: Int,
-            verifiedWeight: Int,
-            unverifiedWeight: Int,
-            newRating: Int
-        ): RatingEntity {
-            val unverifiedRatingCount: Int
-            val verifiedRatingCount: Int
-            val calculatedRating: Int
-
-            if (verified) {
-                unverifiedRatingCount = 0
-                verifiedRatingCount = 1
-                calculatedRating = calculateVerifiedRating(
-                    0,
-                    newRating,
-                    unverifiedRatingCount,
-                    rating,
-                    verifiedWeight,
-                    unverifiedWeight
-                )
-            } else {
-                unverifiedRatingCount = 1
-                verifiedRatingCount = 0
-                calculatedRating = calculateUnVerifiedRating(
-                    0,
-                    newRating,
-                    verifiedRatingCount,
-                    rating,
-                    verifiedWeight,
-                    unverifiedWeight
-                )
-            }
-
-            return RatingEntity(
-                organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
-                rating = calculatedRating,
-                verifiedRatingCount = verifiedRatingCount,
-                unverifiedRatingCount = unverifiedRatingCount
-            )
-        }
-
-        private fun calculateVerifiedRating(
-            currentVerifiedRatingCount: Int,
-            newVerifiedRating: Int,
-            unVerifiedRatingCount: Int,
-            rating: Int,
-            verifiedWeight: Int,
-            unVerifiedWeight: Int
+        fun recomputeOrganizationSubsidiaryRating(
+            orgSubsidiaryRating: RatingEntity,
+            newRating: Int,
+            isNewRatingVerified: Boolean
         ): Int {
-            val numerator =
-                (currentVerifiedRatingCount * verifiedWeight * rating)
-                    .plus(unVerifiedRatingCount * unVerifiedWeight * rating)
-                    .plus(newVerifiedRating * verifiedWeight)
+            val newRatingWeight = if (isNewRatingVerified) VERIFIED_RATING_WEIGHT else UNVERIFIED_RATING_WEIGHT
 
-            val denominator = (currentVerifiedRatingCount * verifiedWeight)
-                .plus(unVerifiedRatingCount * unVerifiedWeight)
+            val numerator =
+                (orgSubsidiaryRating.unverifiedRatingCount * UNVERIFIED_RATING_WEIGHT * orgSubsidiaryRating.rating)
+                    .plus(orgSubsidiaryRating.verifiedRatingCount * VERIFIED_RATING_WEIGHT * orgSubsidiaryRating.rating)
+                    .plus(newRating * newRatingWeight)
+
+            val denominator = (orgSubsidiaryRating.unverifiedRatingCount * UNVERIFIED_RATING_WEIGHT)
+                .plus(orgSubsidiaryRating.verifiedRatingCount * VERIFIED_RATING_WEIGHT)
                 .plus(1)
 
-            return numerator.div(denominator)
-        }
-
-        private fun calculateUnVerifiedRating(
-            currentUnVerifiedRatingCount: Int,
-            newUnVerifiedRating: Int,
-            verifiedRatingCount: Int,
-            rating: Int,
-            verifiedWeight: Int,
-            unVerifiedWeight: Int,
-        ): Int {
-            val numerator =
-                (currentUnVerifiedRatingCount * unVerifiedWeight * rating)
-                    .plus(verifiedRatingCount * verifiedWeight * rating)
-                    .plus(newUnVerifiedRating * unVerifiedWeight)
-
-            val denominator = (currentUnVerifiedRatingCount * unVerifiedWeight)
-                .plus(verifiedRatingCount * verifiedWeight)
-                .plus(1)
-
-            return numerator.div(denominator)
+            // TODO should not be integer division
+            return numerator / denominator
         }
     }
 }
