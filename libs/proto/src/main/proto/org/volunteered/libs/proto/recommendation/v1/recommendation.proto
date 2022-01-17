@@ -38,10 +38,12 @@ message WriteRecommendationRequest {
 
 message GetOrganizationRecommendationsRequest {
   int64 organization_subsidiary_id = 1;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
 }
 
 message GetUserRecommendationsRequest {
   int64 user_id = 1;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
 }
 
 message Recommendation {
@@ -57,7 +59,7 @@ message RecommendationRequest {
   int64 id = 1;
   int64 user_id = 2;
   int64 organization_subsidiary_id = 3;
-  string status = 4;
+  RequestStatus status = 4;
 }
 
 message GetRecommendationsResponse {
@@ -67,9 +69,16 @@ message GetRecommendationsResponse {
 
 message OrganizationRecommendationRequests {
   int64 organization_subsidiary_id = 1;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
 }
 
 message GetOrganizationRecommendationRequestsResponse {
   repeated RecommendationRequest recommendationRequests = 1;
   org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
+}
+
+enum RequestStatus{
+  AWAITING_RESPONSE = 0;
+  ACCEPTED = 1;
+  REJECTED = 2;
 }
