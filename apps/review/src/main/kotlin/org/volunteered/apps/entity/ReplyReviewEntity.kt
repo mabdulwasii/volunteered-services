@@ -25,11 +25,5 @@ class ReplyReviewEntity(
     @Column(name = "user_id")
     var userId : Long,
 
-    @Column(name = "user_display_name")
-    var userDisplayName : String,
-
-    @Column(name = "user_avatar")
-    var userAvatar : String? = null,
-
     var body : String
 )
