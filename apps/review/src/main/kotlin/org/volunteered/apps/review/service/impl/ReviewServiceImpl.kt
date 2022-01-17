@@ -195,6 +195,7 @@ class ReviewServiceImpl(
         ratingRepository.save(ratingEntity)
     }
 
+
     private fun ensureReviewDoesNotExist(
         request: WriteReviewRequest,
         userId: Long,
