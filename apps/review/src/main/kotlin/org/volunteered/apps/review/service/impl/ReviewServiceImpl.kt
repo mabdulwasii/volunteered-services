@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.ReplyReviewEntity
 import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.apps.review.exception.CannotWriteReviewException
 import org.volunteered.apps.review.exception.OrganizationSubsidiaryRatingDoesNotExistException
@@ -31,6 +32,8 @@ import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
+import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
+import org.volunteered.libs.proto.review.v1.GetReviewRepliesResponse
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
@@ -41,6 +44,7 @@ import org.volunteered.libs.proto.review.v1.ReviewReply
 import org.volunteered.libs.proto.review.v1.UpdateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
+import org.volunteered.libs.proto.review.v1.getReviewRepliesResponse
 import org.volunteered.libs.proto.review.v1.getReviewsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.getUserByIdRequest
@@ -208,34 +212,50 @@ class ReviewServiceImpl(
         }
     }
 
-    private suspend fun transformReviewEntityListToReviewDtoList(reviewEntityList: Page<ReviewEntity>, paginationRequest:
-    PaginationRequest
+    override suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse {
+        val retrievedReviewReplies = replyReviewRepository.findAllByReviewId(request.reviewId)
+        return transformReviewReplyListToGetReviewRepliesResponse(retrievedReviewReplies)
+    }
+
+    private suspend fun transformReviewReplyListToGetReviewRepliesResponse(reviewReplyList: List<ReplyReviewEntity>):
+            GetReviewRepliesResponse {
+        return getReviewRepliesResponse {
+            val reviewReplyDtoList = mutableListOf<ReviewReply>()
+            reviewReplyList.forEach {
+                val user = getUserById(it.userId)
+                val reviewReplyDto =
+                    DtoTransformer.transformReplyReviewEntityToReplyReviewDto(it, user)
+                reviewReplyDtoList.add(reviewReplyDto)
+            }
+            reviewReplies.addAll(reviewReplyDtoList)
+        }
+    }
+
+    private suspend fun transformReviewEntityListToReviewDtoList(
+        reviewEntityList: Page<ReviewEntity>, paginationRequest:
+        PaginationRequest
     ): GetReviewsResponse {
-        val reviewDtoList = mutableListOf<Review>()
-
-        reviewEntityList.forEach {
-            val user: User? = getUserFromReviewEntity(it)
-            val reviewDto = DtoTransformer.transformReviewEntityToReviewDto(it, user)
-            reviewDtoList.add(reviewDto)
-        }
-
-        val paginationResponse = paginationResponse {
-            total = reviewEntityList.totalElements
-            limitPerPage = paginationRequest.limitPerPage
-            page = paginationRequest.page
-        }
         return getReviewsResponse {
+            val reviewDtoList = mutableListOf<Review>()
+            reviewEntityList.forEach {
+                val user: User? = getUserFromReviewEntity(it)
+                val reviewDto = DtoTransformer.transformReviewEntityToReviewDto(it, user)
+                reviewDtoList.add(reviewDto)
+            }
+            val paginationResponse = paginationResponse {
+                total = reviewEntityList.totalElements
+                limitPerPage = paginationRequest.limitPerPage
+                page = paginationRequest.page
+            }
             reviews.addAll(reviewDtoList)
             pagination = paginationResponse
         }
     }
 
-    private suspend fun getUserFromReviewEntity(it: ReviewEntity): User? {
-        val userId = it.userId.toLongOrNull()
-        var user : User? = null
-        userId?.let { user = getUserById(userId)  }
+    private suspend fun getUserFromReviewEntity(reviewEntity: ReviewEntity): User? {
+        val userId = reviewEntity.userId.toLongOrNull()
+        lateinit var user: User
+        userId?.let { user = getUserById(userId) }
         return user
     }
-
-
 }

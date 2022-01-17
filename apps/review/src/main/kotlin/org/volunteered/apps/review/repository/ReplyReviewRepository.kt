@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import org.volunteered.apps.review.entity.ReplyReviewEntity
 
 @Repository
-interface ReplyReviewRepository : JpaRepository<ReplyReviewEntity, Long>
+interface ReplyReviewRepository : JpaRepository<ReplyReviewEntity, Long> {
+    fun findAllByReviewId(reviewId: Long): List<ReplyReviewEntity>
+}
