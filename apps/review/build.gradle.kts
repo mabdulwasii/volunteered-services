@@ -13,8 +13,6 @@ allOpen {
     annotation("javax.persistence.MappedSuperclass")
 }
 
-version = "0.0.1-SNAPSHOT"
-
 dependencies {
     implementation(kotlin("stdlib"))
 
@@ -34,6 +32,18 @@ dependencies {
     testImplementation(libs.spring.boot.starter.test)
 }
 
-tasks.test {
-    useJUnitPlatform()
+affectedTestConfiguration {
+    jvmTestTask = "check"
+}
+
+application {
+    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
+}
+
+jib {
+    containerizingMode = "packaged"
+    container {
+        ports = listOf("9894")
+        mainClass = application.mainClass.get()
+    }
 }

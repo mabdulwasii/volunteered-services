@@ -15,38 +15,36 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService{
-    
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthorityRepository authorityRepository;
-    
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authorityRepository = authorityRepository;
-    }
-    
-    @Override
-    public Optional<User> createUser(SignUpDetails signUpDetails) {
-        User savedUser = null;
-        
-        if (signUpDetails.getPassword().equalsIgnoreCase(signUpDetails.getConfirmPassword())) {
+public class UserServiceImpl implements UserService {
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthorityRepository authorityRepository;
 
-            String encryptedPassword = passwordEncoder.encode(signUpDetails.getPassword());
-            var user = new User(signUpDetails.getUsername(), encryptedPassword);
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.authorityRepository = authorityRepository;
+	}
 
-            Set<Authority> authorities = new HashSet<>();
-            authorityRepository.findByName(AuthorityType.ROLE_USER).ifPresent(authorities::add);
-            user.setAuthorities(authorities);
+	@Override
+	public Optional<User> createUser(SignUpDetails signUpDetails) {
+		User savedUser = null;
 
-            user.setActivated(true);
+		if (signUpDetails.getPassword().equalsIgnoreCase(signUpDetails.getConfirmPassword())) {
+
+			String encryptedPassword = passwordEncoder.encode(signUpDetails.getPassword());
+			var user = new User(signUpDetails.getUsername(), encryptedPassword);
+
+			Set<Authority> authorities = new HashSet<>();
+			authorityRepository.findByName(AuthorityType.ROLE_USER).ifPresent(authorities::add);
+			user.setAuthorities(authorities);
+
+			user.setActivated(true);
 
             savedUser = userRepository.save(user);
 
         }
 
         return Optional.ofNullable(savedUser);
-
     }
 }

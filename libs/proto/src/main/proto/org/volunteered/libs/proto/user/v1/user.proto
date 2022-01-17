@@ -13,7 +13,7 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.proto.common.v1.User);
-  rpc ExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
+  rpc ExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
   rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc UpdateUser(org.volunteered.libs.proto.common.v1.User) returns (org.volunteered.libs.proto.common.v1.User);

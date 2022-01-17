@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 @WithMockUser
 @SpringBootTest(classes = AuthApplication.class)
 class AuthServiceTest {
-
     public static final String ACCESS_TOKEN = "$%^&&***";
     public static final String REFRESH_TOKEN = "436%%#&*#373883";
     public static final long USER_ID = 1L;
@@ -56,20 +55,19 @@ class AuthServiceTest {
 
     @MockBean
     private RSAKeyConfigProperties rsaKeyProp;
-    
+
     @Test
     @DisplayName("should Register new user")
     void shouldRegisterNewUser() {
-        
-        var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
-        var user = new User(USER_ID, signUpDetails.getUsername(), signUpDetails.getPassword(), true);
-        
-        when(userService.createUser(signUpDetails)).thenReturn(Optional.of(user));
-        
-        var apiResponse = authService.register(signUpDetails);
-        
-        assertNotNull(apiResponse);
-        assertEquals(apiResponse.getMessage(), "User created successfully");
+	    var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
+	    var user = new User(USER_ID, signUpDetails.getUsername(), signUpDetails.getPassword(), true);
+
+	    when(userService.createUser(signUpDetails)).thenReturn(Optional.of(user));
+
+	    var apiResponse = authService.register(signUpDetails);
+
+	    assertNotNull(apiResponse);
+	    assertEquals(apiResponse.getMessage(), "User created successfully");
     }
 
     @Test
@@ -86,23 +84,21 @@ class AuthServiceTest {
     @Test
     @DisplayName("should Refresh token if token has not expired")
     void shouldRefreshTokenIfNotExpired() {
+	    var user = new User(USER_ID, username, PASSWORD, true);
+	    var refreshToken = new RefreshToken(1L, user, REFRESH_TOKEN, Instant.now().plus(Duration.ofMillis(2000)));
 
-        var user = new User(USER_ID, username, PASSWORD, true);
-        var refreshToken = new RefreshToken(1L, user, REFRESH_TOKEN, Instant.now().plus(Duration.ofMillis(2000)));
-    
-        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
-    
-        when(refreshTokenService.findByToken(REFRESH_TOKEN)).thenReturn(Optional.of(refreshToken));
-        when(refreshTokenService.verifyExpiration(any())).thenReturn(refreshToken);
-        when(jwtUtils.generateToken(any(), any())).thenReturn(ACCESS_TOKEN);
-    
-    
-        RefreshTokenResponse refreshTokenResponse = authService.refreshToken(refreshTokenRequest);
-    
-        assertNotNull(refreshTokenResponse);
-        assertEquals(refreshTokenResponse.getRefreshToken(), REFRESH_TOKEN);
-        assertEquals(refreshTokenResponse.getTokenType(), "Bearer");
-        assertEquals(refreshTokenResponse.getAccessToken(), ACCESS_TOKEN);
+	    RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
+
+	    when(refreshTokenService.findByToken(REFRESH_TOKEN)).thenReturn(Optional.of(refreshToken));
+	    when(refreshTokenService.verifyExpiration(any())).thenReturn(refreshToken);
+	    when(jwtUtils.generateToken(any(), any())).thenReturn(ACCESS_TOKEN);
+
+	    RefreshTokenResponse refreshTokenResponse = authService.refreshToken(refreshTokenRequest);
+
+	    assertNotNull(refreshTokenResponse);
+	    assertEquals(refreshTokenResponse.getRefreshToken(), REFRESH_TOKEN);
+	    assertEquals(refreshTokenResponse.getTokenType(), "Bearer");
+	    assertEquals(refreshTokenResponse.getAccessToken(), ACCESS_TOKEN);
     }
 
     @Test
@@ -120,6 +116,4 @@ class AuthServiceTest {
 
         assertThrows(TokenRefreshExpiredException.class, () -> authService.refreshToken(refreshTokenRequest));
     }
-
-
 }

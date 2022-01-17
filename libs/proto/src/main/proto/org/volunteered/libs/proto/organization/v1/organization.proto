@@ -17,13 +17,14 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc SearchOrganizationByName(SearchOrganizationByNameRequest) returns (SearchOrganizationByNameResponse);
-  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest)
+      returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
-  rpc UpdateOrganizationSubsidiary(UpdateOrganizationSubsidiaryRequest)
+  rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary)
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
-  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.ExistsByIdRequest) returns (google.protobuf.BoolValue);
+  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
 }
 
 message CreateOrganizationRequest {
@@ -79,14 +80,4 @@ message UpdateOrganizationRequest {
   string founder = 11;
   int32 number_of_employees = 12;
   repeated string benefits = 13;
-}
-
-message UpdateOrganizationSubsidiaryRequest {
-  int64 id = 1;
-  string name = 2;
-  string email = 3 [(validate.rules).string.email = true];
-  string city = 4;
-  string country = 5 [(validate.rules).string = {len: 2}];
-  string phone = 6;
-  string description = 7;
 }
