@@ -45,3 +45,11 @@ logging:
         stat: debug
         type: trace
 
+rating:
+  weight:
+    unverifiedRating: 1
+    verifiedRating: 3
+
+
+
+
