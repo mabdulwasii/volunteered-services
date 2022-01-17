@@ -1,22 +1,19 @@
 package org.volunteered.apps.review.util
 
-import java.security.SecureRandom
-import java.security.spec.KeySpec
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 class StringEncoder {
     companion object {
         fun hashValue(stringValue: String?): String {
-            val random = SecureRandom()
-            val salt = ByteArray(16)
-            random.nextBytes(salt)
-
-            val spec: KeySpec = PBEKeySpec(stringValue?.toCharArray(), salt, 65536, 128)
-            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-
-            val encoded = factory.generateSecret(spec).encoded
-            return String(encoded)
+            val md = MessageDigest.getInstance("MD5")
+            val hashInBytes = md.digest(stringValue?.
+            toByteArray(StandardCharsets.UTF_8))
+            val sb = StringBuilder()
+            for (b in hashInBytes) {
+                sb.append(String.format("%02x", b))
+            }
+            return sb.toString()
         }
     }
 }

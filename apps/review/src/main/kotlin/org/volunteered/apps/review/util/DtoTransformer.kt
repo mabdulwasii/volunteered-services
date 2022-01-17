@@ -1,10 +1,5 @@
 package org.volunteered.apps.review.util
 
-import org.volunteered.apps.entity.RatingConfigEntity
-import org.volunteered.apps.entity.RatingEntity
-import org.volunteered.apps.entity.ReplyReviewEntity
-import org.volunteered.apps.entity.ReviewEntity
-import org.springframework.data.domain.Page
 import org.volunteered.apps.review.entity.RatingConfigEntity
 import org.volunteered.apps.review.entity.RatingEntity
 import org.volunteered.apps.review.entity.ReplyReviewEntity
