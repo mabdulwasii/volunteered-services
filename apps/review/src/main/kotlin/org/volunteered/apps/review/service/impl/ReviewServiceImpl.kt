@@ -19,6 +19,10 @@ import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.apps.review.util.DtoTransformer
 import org.volunteered.apps.review.util.RatingCalculator
 import org.volunteered.apps.review.util.StringEncoder
+import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.common.v1.PaginationRequest
+import org.volunteered.libs.proto.common.v1.User
+import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
@@ -49,13 +53,14 @@ class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val replyReviewRepository: ReplyReviewRepository,
     private val ratingConfigRepository: RatingConfigRepository,
-    private val ratingRepository: RatingRepository
+    private val ratingRepository: RatingRepository,
+    private val ratingCalculator: RatingCalculator
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
         ensureReviewDoesNotExist(request, request.userId, request.organizationSubsidiaryId)
 
-        val user = getUserById(userId)
-        val organizationSubsidiary = getOrganizationSubsidiaryById(organizationSubsidiaryId)
+        val user = getUserById(request.userId)
+        val organizationSubsidiary = getOrganizationSubsidiaryById(request.organizationSubsidiaryId)
 
         val reviewEntity =
             DtoTransformer.transformWriteReviewRequestToReviewEntity(request, user, organizationSubsidiary)
@@ -172,7 +177,7 @@ class ReviewServiceImpl(
             )
 
         // TODO rating should be decimal not int
-        ratingEntity.rating = RatingCalculator.recomputeOrganizationSubsidiaryRating(
+        ratingEntity.rating = ratingCalculator.recomputeOrganizationSubsidiaryRating(
             ratingEntity,
             reviewEntity.rating,
             reviewEntity.verified

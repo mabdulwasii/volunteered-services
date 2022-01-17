@@ -12,6 +12,7 @@ import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
 import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.apps.review.service.impl.ReviewServiceImpl
+import org.volunteered.apps.review.util.RatingCalculator
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
@@ -39,7 +40,8 @@ class ReviewServiceConfiguration {
         @Autowired reviewRepository: ReviewRepository,
         @Autowired replyReviewRepository: ReplyReviewRepository,
         @Autowired ratingConfigRepository: RatingConfigRepository,
-        @Autowired ratingRepository: RatingRepository
+        @Autowired ratingRepository: RatingRepository,
+        @Autowired ratingCalculator: RatingCalculator
     ): ReviewService {
         return ReviewServiceImpl(
             userServiceCoroutineStub,
@@ -47,7 +49,8 @@ class ReviewServiceConfiguration {
             reviewRepository,
             replyReviewRepository,
             ratingConfigRepository,
-            ratingRepository
+            ratingRepository,
+            ratingCalculator
         )
     }
 }
