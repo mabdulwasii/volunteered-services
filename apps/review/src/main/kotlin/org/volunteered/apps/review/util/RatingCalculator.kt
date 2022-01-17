@@ -5,10 +5,7 @@ import org.volunteered.apps.review.config.RatingConfigProperties
 import org.volunteered.apps.review.entity.RatingEntity
 
 @Configuration
-class RatingCalculator(private val ratingConfigProperties: RatingConfigProperties) {
-    // TODO get these values from config. Create a RatingConfig class to get the config values and inject that
-    //  class into this one on instantiation. Let an instance of this class be passed into ReviewServiceImpl
-    //  Hence, the subsequent functions need not be encapsulated in a companion object
+class RatingCalculator(ratingConfigProperties: RatingConfigProperties) {
     private val UNVERIFIED_RATING_WEIGHT = ratingConfigProperties.unverifiedRating
     private val VERIFIED_RATING_WEIGHT = ratingConfigProperties.verifiedRatingWeight
 
@@ -16,7 +13,7 @@ class RatingCalculator(private val ratingConfigProperties: RatingConfigPropertie
         orgSubsidiaryRating: RatingEntity,
         newRating: Int,
         isNewRatingVerified: Boolean
-    ): Int {
+    ): Double {
         val newRatingWeight = if (isNewRatingVerified) VERIFIED_RATING_WEIGHT else UNVERIFIED_RATING_WEIGHT
 
         val numerator =
@@ -28,7 +25,6 @@ class RatingCalculator(private val ratingConfigProperties: RatingConfigPropertie
             .plus(orgSubsidiaryRating.verifiedRatingCount * VERIFIED_RATING_WEIGHT)
             .plus(1)
 
-        // TODO should not be integer division
         return numerator / denominator
     }
 

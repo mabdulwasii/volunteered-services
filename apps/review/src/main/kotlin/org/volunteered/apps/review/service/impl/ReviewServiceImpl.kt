@@ -171,12 +171,11 @@ class ReviewServiceImpl(
         val ratingEntity =
             ratingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: RatingEntity(
                 organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
-                rating = 0,
+                rating = 0.0,
                 verifiedRatingCount = 0,
                 unverifiedRatingCount = 0
             )
 
-        // TODO rating should be decimal not int
         ratingEntity.rating = ratingCalculator.recomputeOrganizationSubsidiaryRating(
             ratingEntity,
             reviewEntity.rating,

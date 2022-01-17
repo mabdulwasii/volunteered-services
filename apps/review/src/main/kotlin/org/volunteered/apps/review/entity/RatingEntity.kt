@@ -15,7 +15,7 @@ class RatingEntity(
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
-    var rating: Int,
+    var rating: Double,
 
     @Column(name = "organization_subsidiary_id")
     var organizationSubsidiaryId: Long,
