@@ -16,6 +16,7 @@ service ReviewService {
   rpc GetOrganizationSubsidiaryReviews(GetOrganizationSubsidiaryReviewsRequest) returns (GetReviewsResponse);
   rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
   rpc ReplyReview(ReplyReviewRequest) returns (ReviewReply);
+  rpc GetReviewReplies(GetReviewRepliesRequest) returns (GetReviewRepliesResponse);
   rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
   rpc UpdateReview(UpdateReviewRequest) returns (Review);
   rpc CreateRatingConfig(CreateRatingConfigRequest) returns (RatingConfig);
@@ -118,6 +119,14 @@ message Rating {
 
 message GetRatingConfigRequest {
   RatingType ratingType = 1;
+}
+
+message GetReviewRepliesRequest {
+  int64 review_id = 1;
+}
+
+message GetReviewRepliesResponse {
+  repeated ReviewReply reviewReplies = 1;
 }
 
 enum RatingType {
