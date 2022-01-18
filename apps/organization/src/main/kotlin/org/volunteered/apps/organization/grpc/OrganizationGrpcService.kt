@@ -46,7 +46,7 @@ class OrganizationGrpcService(
 
     override suspend fun getOrganizationOrganizationSubsidiaryIds(request: GetOrganizationOrganizationSubsidiaryIdsRequest):
             GetOrganizationOrganizationSubsidiaryIdsResponse {
-        return organizationService.getOrganizationOrganizationSubsidiaryIds(request)
+                return organizationService.getOrganizationOrganizationSubsidiaryIds(request)
     }
 
     override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {

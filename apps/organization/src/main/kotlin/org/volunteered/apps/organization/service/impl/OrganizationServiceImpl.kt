@@ -147,8 +147,8 @@ class OrganizationServiceImpl(
         return getOrganizationOrganizationSubsidiaryIdsResponse {
             organizationSubsidiaryIds.addAll(
                 organizationSubsidiaryRepository
-                .findAllByParentId(request.organizationId)
-                .mapNotNull { it.id }
+                    .findAllByParentId(request.organizationId)
+                    .mapNotNull { it.id }
             )
         }
     }

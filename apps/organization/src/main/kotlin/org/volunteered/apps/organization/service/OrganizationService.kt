@@ -28,6 +28,7 @@ interface OrganizationService {
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
     suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse
     suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue
-    suspend fun getOrganizationOrganizationSubsidiaryIds(request: GetOrganizationOrganizationSubsidiaryIdsRequest):
-            GetOrganizationOrganizationSubsidiaryIdsResponse
+    suspend fun getOrganizationOrganizationSubsidiaryIds(
+        request: GetOrganizationOrganizationSubsidiaryIdsRequest
+    ): GetOrganizationOrganizationSubsidiaryIdsResponse
 }
