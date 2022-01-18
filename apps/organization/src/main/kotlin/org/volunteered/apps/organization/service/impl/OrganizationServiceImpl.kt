@@ -25,11 +25,14 @@ import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -137,6 +140,16 @@ class OrganizationServiceImpl(
     override suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue {
         return boolValue {
             value = organizationSubsidiaryRepository.existsById(request.id)
+        }
+    }
+
+    override suspend fun getOrganizationOrganizationSubsidiaryIds(request: GetOrganizationOrganizationSubsidiaryIdsRequest): GetOrganizationOrganizationSubsidiaryIdsResponse {
+        return getOrganizationOrganizationSubsidiaryIdsResponse {
+            organizationSubsidiaryIds.addAll(
+                organizationSubsidiaryRepository
+                .findAllByParentId(request.organizationId)
+                .mapNotNull { it.id }
+            )
         }
     }
 

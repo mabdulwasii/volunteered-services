@@ -15,6 +15,7 @@ import org.volunteered.apps.review.repository.OrganizationSubsidiaryRatingReposi
 import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildEntitySort
+import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganization
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganizationSubsidiary
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForUser
 import org.volunteered.apps.review.service.ReviewService
@@ -26,8 +27,10 @@ import org.volunteered.libs.proto.common.v1.PaginationRequest
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
+import org.volunteered.libs.proto.organization.v1.getOrganizationOrganizationSubsidiaryIdsRequest
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
+import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
@@ -93,31 +96,42 @@ class ReviewServiceImpl(
         } ?: throw ReviewDoesNotExistException("Review does not exist")
     }
 
+    override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
+        val pageable = PageRequest.of(
+            request.pagination.page,
+            request.pagination.limitPerPage,
+            buildEntitySort(request.sort)
+        )
+        request.filter.city
+
+        val specification = buildReviewSpecificationForOrganization(
+            request.filter,
+            getOrganizationSubsidiaryIdList(request)
+        )
+        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
+        return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
+    }
+
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
-        val sort = buildEntitySort(request.sort)
-        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage, sort)
+        val pageable = PageRequest.of(request.pagination.page,
+            request.pagination.limitPerPage,
+            buildEntitySort(request.sort)
+        )
         val specification = buildReviewSpecificationForOrganizationSubsidiary(
             request.filter,
             request.organizationSubsidiaryId
         )
         val retrievedReviews =  reviewRepository.findAll(specification, pageable)
-
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
     override suspend fun getUserReviews(request: GetUserReviewsRequest): GetReviewsResponse {
-        val userId = request.userId
-
-        val pagination = request.pagination
-        val sorting = request.sort
-        val filter = request.filter
-
-        val paginationLimitPerPage = pagination.limitPerPage
-        val paginationPage = pagination.page
-
-        val sort = buildEntitySort(sorting)
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
-        val specification = buildReviewSpecificationForUser(filter, userId)
+        val pageable = PageRequest.of(
+            request.pagination.page,
+            request.pagination.limitPerPage,
+            buildEntitySort(request.sort)
+        )
+        val specification = buildReviewSpecificationForUser(request.filter, request.userId)
 
         val retrievedReviews =  reviewRepository.findAll(specification, pageable)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
@@ -137,7 +151,10 @@ class ReviewServiceImpl(
 
         val reviewEntity = reviewRepository.findByIdOrNull(request.reviewId)
         reviewEntity?.let {
-            val replyReviewEntity = DtoTransformer.transformReplyReviewRequestToReplyReviewEntity(request, user, it)
+            val replyReviewEntity = DtoTransformer.transformReplyReviewRequestToReplyReviewEntity(
+                request,
+                user,
+                it)
             val savedReplyReviewEntity = replyReviewRepository.save(replyReviewEntity)
 
             return DtoTransformer.transformReplyReviewEntityToReplyReviewDto(savedReplyReviewEntity, user)
@@ -161,7 +178,7 @@ class ReviewServiceImpl(
         )
     }
 
-    private fun saveOrUpdateOrganizationRating(reviewEntity: ReviewEntity) {
+    private suspend fun saveOrUpdateOrganizationRating(reviewEntity: ReviewEntity) {
         val organizationSubsidiaryRatingEntity =
             organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: OrganizationSubsidiaryRatingEntity(
                 organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
@@ -184,7 +201,6 @@ class ReviewServiceImpl(
 
         organizationSubsidiaryRatingRepository.save(organizationSubsidiaryRatingEntity)
     }
-
 
     private fun ensureReviewDoesNotExist(
         request: WriteReviewRequest,
@@ -248,5 +264,14 @@ class ReviewServiceImpl(
         var user: User? = null
         userId?.let { user = getUserById(userId) }
         return user
+    }
+
+    private suspend fun getOrganizationSubsidiaryIdList(request: GetOrganizationReviewsRequest): List<Long> {
+        val organizationSubsidiaryIds = organizationServiceStub.getOrganizationOrganizationSubsidiaryIds(
+            getOrganizationOrganizationSubsidiaryIdsRequest {
+                organizationId = request.organizationId
+            }
+        ).organizationSubsidiaryIdsList
+        return organizationSubsidiaryIds
     }
 }
