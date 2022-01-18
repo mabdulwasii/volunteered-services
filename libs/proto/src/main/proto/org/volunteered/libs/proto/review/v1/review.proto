@@ -14,7 +14,6 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service ReviewService {
   rpc WriteReview(WriteReviewRequest) returns (Review);
-  rpc GetOrganizationReviews(GetOrganizationReviewsRequest) returns (GetReviewsResponse);
   rpc GetOrganizationSubsidiaryReviews(GetOrganizationSubsidiaryReviewsRequest) returns (GetReviewsResponse);
   rpc GetUserReviews(GetUserReviewsRequest) returns (GetReviewsResponse);
   rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
@@ -22,9 +21,6 @@ service ReviewService {
   rpc GetReviewReplies(GetReviewRepliesRequest) returns (GetReviewRepliesResponse);
   rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
   rpc UpdateReview(UpdateReviewRequest) returns (Review);
-  rpc CreateRatingConfig(CreateRatingConfigRequest) returns (RatingConfig);
-  rpc UpdateRatingConfig(UpdateRatingConfigRequest) returns (RatingConfig);
-  rpc GetRatingConfig(GetRatingConfigRequest) returns (RatingConfig);
   rpc GetOrganizationSubsidiaryRating(GetOrganizationSubsidiaryRatingRequest) returns (Rating);
 }
 
@@ -124,36 +120,12 @@ message DeleteReviewRequest {
   int64 id = 1;
 }
 
-message RatingConfig {
-  int32 id = 1;
-  RatingType ratingType = 2;
-  int32 weight = 3;
-}
-
-message CreateRatingConfigRequest{
-  RatingType ratingType = 1;
-  int32 weight = 2;
-}
-
-message UpdateRatingConfigRequest{
-  int32 id = 1;
-  int32 weight = 2;
-}
-
 message GetOrganizationSubsidiaryRatingRequest{
   int64 organizationSubsidiaryId = 1;
 }
 
 message Rating {
-  int64 id = 1;
-  int64 organizationSubsidiaryId = 2;
   double rating = 3;
-  int32 unverified_rating_count = 4;
-  int32 verified_rating_count = 5;
-}
-
-message GetRatingConfigRequest {
-  RatingType ratingType = 1;
 }
 
 message GetOrganizationReviewsByCriteriaRequest {

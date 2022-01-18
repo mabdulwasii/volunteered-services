@@ -6,7 +6,6 @@ import net.devh.boot.grpc.client.inject.GrpcClientBeans
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.volunteered.apps.review.repository.RatingConfigRepository
 import org.volunteered.apps.review.repository.RatingRepository
 import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
@@ -39,7 +38,6 @@ class ReviewServiceConfiguration {
         @Autowired organizationServiceCoroutineStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
         @Autowired reviewRepository: ReviewRepository,
         @Autowired replyReviewRepository: ReplyReviewRepository,
-        @Autowired ratingConfigRepository: RatingConfigRepository,
         @Autowired ratingRepository: RatingRepository,
         @Autowired ratingCalculator: RatingCalculator
     ): ReviewService {
@@ -48,7 +46,6 @@ class ReviewServiceConfiguration {
             organizationServiceCoroutineStub,
             reviewRepository,
             replyReviewRepository,
-            ratingConfigRepository,
             ratingRepository,
             ratingCalculator
         )

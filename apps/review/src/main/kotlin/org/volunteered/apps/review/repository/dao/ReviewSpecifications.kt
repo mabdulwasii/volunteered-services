@@ -1,9 +1,9 @@
-package org.volunteered.apps.repository.dao
+package org.volunteered.apps.review.repository.dao
 
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
-import org.volunteered.apps.entity.ReviewEntity
-import org.volunteered.apps.entity.ReviewEntity_
+import org.volunteered.apps.review.entity.ReviewEntity
+import org.volunteered.apps.review.entity.ReviewEntity_
 import org.volunteered.libs.proto.review.v1.ReviewsFilterRequest
 import org.volunteered.libs.proto.review.v1.ReviewsSortRequest
 
@@ -42,16 +42,6 @@ class ReviewSpecifications {
             }
         }
 
-        private fun hasOrganizationId(organizationId: Long): Specification<ReviewEntity> {
-            return Specification<ReviewEntity> { root, _, builder ->
-                if (organizationId > 0) {
-                    builder.equal(root.get(ReviewEntity_.organizationId), "$organizationId")
-                } else {
-                    null
-                }
-            }
-        }
-
         private fun hasOrganizationSubsidiaryId(organizationSubsidiaryId: Long): Specification<ReviewEntity> {
             return Specification<ReviewEntity> { root, _, builder ->
                 if (organizationSubsidiaryId > 0) {
@@ -70,21 +60,6 @@ class ReviewSpecifications {
                     null
                 }
             }
-        }
-
-        fun buildReviewSpecificationForOrganization(
-            filter: ReviewsFilterRequest,
-            organizationId: Long
-        ): Specification<ReviewEntity> {
-            val verified = filter.verified
-            val rating = filter.rating
-            val organizationSubsidiaryCity = filter.city
-
-            return Specification
-                .where(isVerified(verified.value))
-                .and(hasRating(rating.value))
-                .and(containsOrganizationSubsidiaryCity(organizationSubsidiaryCity.value))
-                .and(hasOrganizationId(organizationId))
         }
 
         fun buildReviewSpecificationForOrganizationSubsidiary(

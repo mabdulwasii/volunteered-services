@@ -3,24 +3,19 @@ package org.volunteered.apps.review.grpc
 import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.review.service.ReviewService
-import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
-import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
-import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesResponse
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.GetUserReviewsRequest
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
-import org.volunteered.libs.proto.review.v1.RatingConfig
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
 import org.volunteered.libs.proto.review.v1.ReviewServiceGrpcKt
-import org.volunteered.libs.proto.review.v1.UpdateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 
@@ -30,10 +25,6 @@ class ReviewGrpcService(
 ) : ReviewServiceGrpcKt.ReviewServiceCoroutineImplBase() {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
         return reviewService.writeReview(request)
-    }
-
-    override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
-        return reviewService.getOrganizationReviews(request)
     }
 
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
@@ -61,20 +52,8 @@ class ReviewGrpcService(
         return reviewService.updateReview(request)
     }
 
-    override suspend fun createRatingConfig(request: CreateRatingConfigRequest): RatingConfig {
-        return reviewService.createRatingConfig(request)
-    }
-
-    override suspend fun updateRatingConfig(request: UpdateRatingConfigRequest): RatingConfig {
-        return reviewService.updateRatingConfig(request)
-    }
-
     override suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating {
         return reviewService.getOrganizationSubsidiaryRating(request)
-    }
-
-    override suspend fun getRatingConfig(request: GetRatingConfigRequest): RatingConfig {
-        return reviewService.getRatingConfig(request)
     }
 
     override suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse {

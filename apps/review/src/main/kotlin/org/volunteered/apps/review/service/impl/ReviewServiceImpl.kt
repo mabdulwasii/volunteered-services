@@ -10,12 +10,13 @@ import org.volunteered.apps.review.entity.ReplyReviewEntity
 import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.apps.review.exception.CannotWriteReviewException
 import org.volunteered.apps.review.exception.OrganizationSubsidiaryRatingDoesNotExistException
-import org.volunteered.apps.review.exception.RatingConfigDoesNotExistException
 import org.volunteered.apps.review.exception.ReviewDoesNotExistException
-import org.volunteered.apps.review.repository.RatingConfigRepository
 import org.volunteered.apps.review.repository.RatingRepository
 import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
+import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildEntitySort
+import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganizationSubsidiary
+import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForUser
 import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.apps.review.util.DtoTransformer
 import org.volunteered.apps.review.util.RatingCalculator
@@ -26,23 +27,18 @@ import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryRequest
-import org.volunteered.libs.proto.review.v1.CreateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
-import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
-import org.volunteered.libs.proto.review.v1.GetRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesResponse
 import org.volunteered.libs.proto.review.v1.GetReviewsResponse
 import org.volunteered.libs.proto.review.v1.GetUserReviewsRequest
 import org.volunteered.libs.proto.review.v1.MarkReviewAsHelpfulRequest
 import org.volunteered.libs.proto.review.v1.Rating
-import org.volunteered.libs.proto.review.v1.RatingConfig
 import org.volunteered.libs.proto.review.v1.ReplyReviewRequest
 import org.volunteered.libs.proto.review.v1.Review
 import org.volunteered.libs.proto.review.v1.ReviewReply
-import org.volunteered.libs.proto.review.v1.UpdateRatingConfigRequest
 import org.volunteered.libs.proto.review.v1.UpdateReviewRequest
 import org.volunteered.libs.proto.review.v1.WriteReviewRequest
 import org.volunteered.libs.proto.review.v1.getReviewRepliesResponse
@@ -57,7 +53,6 @@ class ReviewServiceImpl(
     private val organizationServiceStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
     private val reviewRepository: ReviewRepository,
     private val replyReviewRepository: ReplyReviewRepository,
-    private val ratingConfigRepository: RatingConfigRepository,
     private val ratingRepository: RatingRepository,
     private val ratingCalculator: RatingCalculator
 ) : ReviewService {
@@ -98,40 +93,16 @@ class ReviewServiceImpl(
         } ?: throw ReviewDoesNotExistException("Review does not exist")
     }
 
-    override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
-        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage)
-        val retrievedReviews = reviewRepository.findAllByOrganizationId(request.organizationId, pageable)
+    override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
+        val sort = buildEntitySort(request.sort)
+        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage, sort)
+        val specification = buildReviewSpecificationForOrganizationSubsidiary(
+            request.filter,
+            request.organizationSubsidiaryId
+        )
+        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
 
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
-        val sort = buildEntitySort(sorting)
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
-        val specification = buildReviewSpecificationForOrganization(filter, organizationId)
-
-        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
-
-        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
-    }
-
-    override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
-        val pageable = PageRequest.of(request.pagination.page, request.pagination.limitPerPage)
-        val retrievedReviews = reviewRepository.findAllByOrganizationSubsidiaryId(
-            request.organizationSubsidiaryId, pageable
-        )
-        val organizationSubsidiaryId = request.organizationSubsidiaryId
-        val pagination = request.pagination
-        val sorting = request.sort
-        val filter = request.filter
-
-        val paginationLimitPerPage = pagination.limitPerPage
-        val paginationPage = pagination.page
-
-        val sort = buildEntitySort(sorting)
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage, sort)
-        val specification = buildReviewSpecificationForOrganizationSubsidiary(filter, organizationSubsidiaryId)
-
-        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
-
-        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
     }
 
     override suspend fun getUserReviews(request: GetUserReviewsRequest): GetReviewsResponse {
@@ -149,8 +120,6 @@ class ReviewServiceImpl(
         val specification = buildReviewSpecificationForUser(filter, userId)
 
         val retrievedReviews =  reviewRepository.findAll(specification, pageable)
-
-        return DtoTransformer.transformReviewEntityListToReviewDtoList(retrievedReviews, pagination)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
@@ -178,30 +147,6 @@ class ReviewServiceImpl(
     override suspend fun deleteReview(request: DeleteReviewRequest): Empty {
         reviewRepository.deleteById(request.id)
         return Empty.getDefaultInstance()
-    }
-
-    override suspend fun createRatingConfig(request: CreateRatingConfigRequest): RatingConfig {
-        val ratingConfigEntity =
-            DtoTransformer.transformCreateRatingConfigRequestToRatingConfigEntity(request)
-        val savedRatingConfigEntity = ratingConfigRepository.save(ratingConfigEntity)
-        return DtoTransformer.transformReviewConfigEntityToReviewConfigDto(savedRatingConfigEntity)
-    }
-
-    override suspend fun getRatingConfig(request: GetRatingConfigRequest): RatingConfig {
-        val ratingType = request.ratingType
-        val ratingConfigEntity = ratingConfigRepository.findByRatingType(ratingType)
-        return DtoTransformer.transformRatingConfigEntityToRatingConfigDto(ratingConfigEntity)
-    }
-
-    override suspend fun updateRatingConfig(request: UpdateRatingConfigRequest): RatingConfig {
-        val ratingConfigEntity = ratingConfigRepository.findById(request.id)
-        ratingConfigEntity?.let {
-            DtoTransformer.transformRatingConfigDtoToRatingConfigEntity(request, ratingConfigEntity)
-
-            val savedRatingConfigEntity = ratingConfigRepository.save(ratingConfigEntity)
-
-            return DtoTransformer.transformRatingConfigEntityToRatingConfigDto(savedRatingConfigEntity)
-        } ?: throw RatingConfigDoesNotExistException("Rating config does not exist")
     }
 
     private suspend fun getUserById(userId: Long): User {
@@ -300,7 +245,7 @@ class ReviewServiceImpl(
 
     private suspend fun getUserFromReviewEntity(reviewEntity: ReviewEntity): User? {
         val userId = reviewEntity.userId.toLongOrNull()
-        lateinit var user: User
+        var user: User? = null
         userId?.let { user = getUserById(userId) }
         return user
     }
