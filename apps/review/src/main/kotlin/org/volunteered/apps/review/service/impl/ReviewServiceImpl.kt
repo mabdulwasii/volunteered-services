@@ -249,22 +249,22 @@ class ReviewServiceImpl(
     }
 
     private suspend fun transformReviewReplyListToGetReviewRepliesResponse(reviewReplyList: List<ReplyReviewEntity>):
-            GetReviewRepliesResponse {
-        return getReviewRepliesResponse {
-            val reviewReplyDtoList = mutableListOf<ReviewReply>()
-            reviewReplyList.forEach {
-                val user = getUserById(it.userId)
-                val reviewReplyDto =
-                    DtoTransformer.transformReplyReviewEntityToReplyReviewDto(it, user)
-                reviewReplyDtoList.add(reviewReplyDto)
+        GetReviewRepliesResponse {
+            return getReviewRepliesResponse {
+                val reviewReplyDtoList = mutableListOf<ReviewReply>()
+                reviewReplyList.forEach {
+                    val user = getUserById(it.userId)
+                    val reviewReplyDto =
+                        DtoTransformer.transformReplyReviewEntityToReplyReviewDto(it, user)
+                    reviewReplyDtoList.add(reviewReplyDto)
+                }
+                reviewReplies.addAll(reviewReplyDtoList)
             }
-            reviewReplies.addAll(reviewReplyDtoList)
         }
-    }
 
     private suspend fun transformReviewEntityListToReviewDtoList(
-        reviewEntityList: Page<ReviewEntity>, paginationRequest:
-        PaginationRequest
+        reviewEntityList: Page<ReviewEntity>,
+        paginationRequest: PaginationRequest
     ): GetReviewsResponse {
         return getReviewsResponse {
             val reviewDtoList = mutableListOf<Review>()
