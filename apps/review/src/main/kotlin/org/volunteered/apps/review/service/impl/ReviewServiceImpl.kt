@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service
 import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 import org.volunteered.apps.review.entity.ReplyReviewEntity
 import org.volunteered.apps.review.entity.ReviewEntity
+import org.volunteered.apps.review.entity.UserHelpfulReviewEntity
 import org.volunteered.apps.review.exception.CannotWriteReviewException
 import org.volunteered.apps.review.exception.OrganizationSubsidiaryRatingDoesNotExistException
 import org.volunteered.apps.review.exception.ReviewDoesNotExistException
+import org.volunteered.apps.review.exception.UserHelpfulReviewAlreadyExistException
 import org.volunteered.apps.review.repository.OrganizationSubsidiaryRatingRepository
 import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
+import org.volunteered.apps.review.repository.UserHelpfulReviewRepository
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildEntitySort
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganization
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildReviewSpecificationForOrganizationSubsidiary
@@ -57,7 +60,8 @@ class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val replyReviewRepository: ReplyReviewRepository,
     private val organizationSubsidiaryRatingRepository: OrganizationSubsidiaryRatingRepository,
-    private val ratingCalculator: RatingCalculator
+    private val ratingCalculator: RatingCalculator,
+    private val helpfulReviewRepository: UserHelpfulReviewRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
         ensureReviewDoesNotExist(request, request.userId, request.organizationSubsidiaryId)
@@ -138,12 +142,29 @@ class ReviewServiceImpl(
     }
 
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
-        val retrievedReview = reviewRepository.findByIdOrNull(request.reviewId)
-        retrievedReview?.let {
+        ensureUserHelpfulReviewDoesNotExist(request.userId, request.reviewId)
+        reviewRepository.findByIdOrNull(request.reviewId)?.let {
             it.helpfulCount = +1
             reviewRepository.save(it)
+            saveUserHelpfulReview(request.userId, it.id!!)
             return Empty.getDefaultInstance()
         } ?: throw ReviewDoesNotExistException("Review does not exist")
+    }
+
+    private fun ensureUserHelpfulReviewDoesNotExist(userId: Long, reviewId: Long) {
+        val exists = helpfulReviewRepository.existsByUserIdAndReviewId(userId, reviewId)
+        if (exists){
+            throw UserHelpfulReviewAlreadyExistException("Review has already been marked helpful")
+        }
+    }
+
+    private suspend fun saveUserHelpfulReview(userId: Long, reviewId: Long) {
+        helpfulReviewRepository.save(
+            UserHelpfulReviewEntity(
+                userId = userId,
+                reviewId = reviewId
+            )
+        )
     }
 
     override suspend fun replyReview(request: ReplyReviewRequest): ReviewReply {
