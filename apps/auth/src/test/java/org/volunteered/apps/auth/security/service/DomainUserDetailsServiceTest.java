@@ -21,23 +21,21 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = AuthApplication.class)
 class DomainUserDetailsServiceTest {
-    
-    public static final long USER_ID = 3L;
-    public static final String username = "dola@example.com";
-    public static final String PASSWORD = "admin";
-    
-    private final UserRepository userRepository = mock(UserRepository.class);
+	public static final long USER_ID = 3L;
+	public static final String username = "dola@example.com";
+	public static final String PASSWORD = "admin";
 
-    private DomainUserDetailsService domainUserDetailsService;
+	private final UserRepository userRepository = mock(UserRepository.class);
 
-    @BeforeEach
-    void setUp() {
+	private DomainUserDetailsService domainUserDetailsService;
 
-        domainUserDetailsService = new DomainUserDetailsService(userRepository);
-    }
+	@BeforeEach
+	void setUp() {
+		domainUserDetailsService = new DomainUserDetailsService(userRepository);
+	}
 
-    @Test
-    @DisplayName("Should load user if username is found")
+	@Test
+	@DisplayName("Should load user if username is found")
     void shouldLoadUserByUsername() {
         var user = new User(USER_ID, username, PASSWORD, true);
 
@@ -56,7 +54,6 @@ class DomainUserDetailsServiceTest {
     @Test
     @DisplayName("Should not load user if username is is not found")
     void shouldThrowExceptionIfUsernameNotFound() {
-
         when(userRepository.findOneWithAuthoritiesByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
         assertThrows(UsernameNotFoundException.class, () -> domainUserDetailsService.loadUserByUsername(username));
 
@@ -65,11 +62,9 @@ class DomainUserDetailsServiceTest {
     @Test
     @DisplayName("Should not load user if username is is not found")
     void shouldThrowExceptionIfUsernameNotActivated() {
-
         var user = new User(USER_ID, username, PASSWORD, false);
 
         when(userRepository.findOneWithAuthoritiesByUsernameIgnoreCase(username)).thenReturn(Optional.of(user));
         assertThrows(UserNotActivatedException.class, () -> domainUserDetailsService.loadUserByUsername(username));
-
     }
 }

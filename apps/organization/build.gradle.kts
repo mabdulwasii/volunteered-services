@@ -13,8 +13,6 @@ allOpen {
     annotation("javax.persistence.MappedSuperclass")
 }
 
-version = "0.0.1-SNAPSHOT"
-
 dependencies {
     implementation(kotlin("stdlib"))
 
@@ -37,11 +35,24 @@ dependencies {
     testImplementation(libs.mockk.test)
 }
 
-tasks.test {
-    useJUnitPlatform()
+affectedTestConfiguration {
+    jvmTestTask = "check"
 }
+
+application {
+    mainClass.set("org.volunteered.apps.organization.OrganizationApplicationKt")
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget ="11"
+        jvmTarget = "11"
+    }
+}
+
+jib {
+    containerizingMode = "packaged"
+    container {
+        ports = listOf("9893")
+        mainClass = application.mainClass.get()
     }
 }

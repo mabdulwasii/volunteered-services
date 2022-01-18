@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @WithMockUser
 class UserServiceTest {
-	
 	public static final long USER_ID = 3L;
     public static final String username = "dola@example.com";
     public static final String PASSWORD = "admin";
@@ -41,7 +40,7 @@ class UserServiceTest {
     private final AuthorityRepository authorityRepository = mock(AuthorityRepository.class);
     @Autowired
     private UserService userService;
-	
+
 	@Test
     @DisplayName("Should not create user if passwords mismatch")
     void shouldNotCreateUserIfPasswordMisMatch() {
@@ -50,13 +49,11 @@ class UserServiceTest {
         var OptionalUser = userService.createUser(signUpDetails);
 
         assertFalse(OptionalUser.isPresent(), "User created successfully");
-
     }
 
     @Test
     @DisplayName("Should create user if passwords match")
     void shouldCreateUserIfPasswordMatch() {
-
         var user = new User(USER_ID, username, PASSWORD, true);
         var role_user = new Authority(10, AuthorityType.ROLE_USER);
         var signUpDetails = new SignUpDetails(username, PASSWORD, PASSWORD);
@@ -71,6 +68,5 @@ class UserServiceTest {
         assertTrue(OptionalUser.isPresent(), "User not created");
         assertEquals(OptionalUser.get().getUsername(), username);
         assertTrue(OptionalUser.get().isActivated());
-
     }
 }

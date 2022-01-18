@@ -37,33 +37,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 class AuthControllerTest {
-
     public static final String ACCESS_TOKEN = "$%^&&***";
     public static final String REFRESH_TOKEN = "436%%#&*#373883";
     public static final long USER_ID = 1L;
     public static final String username = "admin@example.com";
-    public static final String PASSWORD = "admin";
+	public static final String PASSWORD = "admin";
 
-    @MockBean
-    private AuthService authService;
+	@MockBean
+	private AuthService authService;
 
-    @MockBean
-    private UserRepository userRepository;
+	@MockBean
+	private UserRepository userRepository;
 
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @Test
-    @DisplayName("Should signup if username does not exist")
-    void shouldSignupWithValidUsername() throws Exception {
+	@Autowired
+	private MockMvc mockMvc;
 
-        var signUpDetails = new SignUpDetails("example@gmail.com", "1234567890", "1234567890");
-        var apiResponse = new ApiResponse("User created successfully");
+	@Test
+	@DisplayName("Should signup if username does not exist")
+	void shouldSignupWithValidUsername() throws Exception {
 
-        when(authService.register(signUpDetails)).thenReturn(apiResponse);
+		var signUpDetails = new SignUpDetails("example@gmail.com", "1234567890", "1234567890");
+		var apiResponse = new ApiResponse("User created successfully");
 
-        //execute the post request
-        mockMvc.perform(post("/signup")
+		when(authService.register(signUpDetails)).thenReturn(apiResponse);
+
+		//execute the post request
+		mockMvc.perform(post("/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(signUpDetails)))
                 .andExpect(status().isOk());
@@ -94,16 +93,17 @@ class AuthControllerTest {
     @Test
     @DisplayName("Should not signup if email is invalid")
     void shouldNotSignupIfEmailIsInvalid() {
-    
-        var signUpDetails = new SignUpDetails("try.com", "1234567890", "1234567890");
-    
-        when(authService.register(signUpDetails)).thenThrow(RuntimeException.class);
-    
-        //execute the post request
-    
-        Assertions.assertThrows(AssertionError.class, () -> mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_JSON).content(asJsonString(signUpDetails)))
-            
-                .andExpect(status().is5xxServerError()).andExpect(content().contentType(MediaType.APPLICATION_JSON)));
+
+	    var signUpDetails = new SignUpDetails("try.com", "1234567890", "1234567890");
+
+	    when(authService.register(signUpDetails)).thenThrow(RuntimeException.class);
+
+	    //execute the post request
+
+	    Assertions.assertThrows(AssertionError.class, () -> mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_JSON)
+					    .content(asJsonString(signUpDetails)))
+
+			    .andExpect(status().is5xxServerError()).andExpect(content().contentType(MediaType.APPLICATION_JSON)));
     }
 
     @Test
@@ -124,16 +124,16 @@ class AuthControllerTest {
     @Test
     @DisplayName("Should refresh token if token is valid")
     void shouldRefreshTokenIfCodeIsValid() throws Exception {
-    
-        var refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
-        var tokenRefreshResponse = new RefreshTokenResponse(ACCESS_TOKEN, REFRESH_TOKEN);
 
-        when(authService.refreshToken(any())).thenReturn(tokenRefreshResponse);
+	    var refreshTokenRequest = new RefreshTokenRequest(REFRESH_TOKEN);
+	    var tokenRefreshResponse = new RefreshTokenResponse(ACCESS_TOKEN, REFRESH_TOKEN);
 
-        mockMvc.perform(post("/refresh_token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(refreshTokenRequest)))
-                .andExpect(status().isOk());
+	    when(authService.refreshToken(any())).thenReturn(tokenRefreshResponse);
+
+	    mockMvc.perform(post("/refresh_token")
+					    .contentType(MediaType.APPLICATION_JSON)
+					    .content(asJsonString(refreshTokenRequest)))
+			    .andExpect(status().isOk());
 
     }
 

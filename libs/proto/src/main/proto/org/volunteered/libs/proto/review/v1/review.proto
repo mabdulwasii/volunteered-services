@@ -19,6 +19,7 @@ service ReviewService {
   rpc GetUserReviews(GetUserReviewsRequest) returns (GetReviewsResponse);
   rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
   rpc ReplyReview(ReplyReviewRequest) returns (ReviewReply);
+  rpc GetReviewReplies(GetReviewRepliesRequest) returns (GetReviewRepliesResponse);
   rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
   rpc UpdateReview(UpdateReviewRequest) returns (Review);
   rpc CreateRatingConfig(CreateRatingConfigRequest) returns (RatingConfig);
@@ -146,7 +147,7 @@ message GetOrganizationSubsidiaryRatingRequest{
 message Rating {
   int64 id = 1;
   int64 organizationSubsidiaryId = 2;
-  int32 rating = 3;
+  double rating = 3;
   int32 unverified_rating_count = 4;
   int32 verified_rating_count = 5;
 }
@@ -164,6 +165,14 @@ message GetOrganizationReviewsByCriteriaRequest {
   bool sort_by_most_helpful = 6;
   int32 sort_by_rating = 7;
 }
+message GetReviewRepliesRequest {
+  int64 review_id = 1;
+}
+
+message GetReviewRepliesResponse {
+  repeated ReviewReply reviewReplies = 1;
+}
+
 enum RatingType {
   VERIFIED = 0;
   UNVERIFIED = 1;
