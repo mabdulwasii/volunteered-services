@@ -25,5 +25,5 @@ class ReplyReviewEntity(
     @Column(name = "user_id")
     var userId: Long,
 
-    var body : String
+    var body: String
 )

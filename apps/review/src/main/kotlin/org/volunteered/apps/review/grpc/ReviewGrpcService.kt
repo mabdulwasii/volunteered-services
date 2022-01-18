@@ -40,7 +40,6 @@ class ReviewGrpcService(
         return reviewService.getUserReviews(request)
     }
 
-
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
         return reviewService.markReviewAsHelpful(request)
     }
@@ -64,5 +63,4 @@ class ReviewGrpcService(
     override suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse {
         return reviewService.getReviewReplies(request)
     }
-
 }

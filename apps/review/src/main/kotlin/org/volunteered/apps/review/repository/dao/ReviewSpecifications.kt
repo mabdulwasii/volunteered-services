@@ -117,10 +117,10 @@ class ReviewSpecifications {
             val sort = sorting.sort
             val properties = mutableListOf<Sort.Order>()
 
-            if (sort.hasRating()){
+            if (sort.hasRating()) {
                 properties.add(Sort.Order(direction, "rating"))
             }
-            if (sort.hasHelpful()){
+            if (sort.hasHelpful()) {
                 properties.add(Sort.Order(direction, "helpfulCount"))
             }
 
