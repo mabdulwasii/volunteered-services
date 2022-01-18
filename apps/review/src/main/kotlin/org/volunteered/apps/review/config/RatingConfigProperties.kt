@@ -8,4 +8,4 @@ import org.springframework.boot.context.properties.ConstructorBinding
 data class RatingConfigProperties(
     val unverifiedRatingWeight: Int,
     val verifiedRatingWeight: Int
-    )
+)

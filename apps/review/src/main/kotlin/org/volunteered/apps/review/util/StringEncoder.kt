@@ -5,10 +5,11 @@ import java.security.MessageDigest
 
 class StringEncoder {
     companion object {
-        fun hashValue(stringValue: String?): String {
+        fun hashValue(stringValue: String): String {
             val md = MessageDigest.getInstance("MD5")
-            val hashInBytes = md.digest(stringValue?.
-            toByteArray(StandardCharsets.UTF_8))
+            val hashInBytes = md.digest(
+                stringValue.toByteArray(StandardCharsets.UTF_8)
+            )
             val sb = StringBuilder()
             for (b in hashInBytes) {
                 sb.append(String.format("%02x", b))

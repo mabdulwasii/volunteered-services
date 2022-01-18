@@ -18,22 +18,16 @@ class DtoTransformer {
     companion object {
         fun transformWriteReviewRequestToReviewEntity(
             request: WriteReviewRequest,
-            user: User,
-            organizationSubsidiary: OrganizationSubsidiary
+            organizationSubsidiary: OrganizationSubsidiary,
+            userId: String
         ): ReviewEntity {
-
-            val reviewEntity = ReviewEntity(
+            return ReviewEntity(
                 rating = request.rating,
                 body = request.body,
                 organizationSubsidiaryId = organizationSubsidiary.id,
                 helpfulCount = 0,
-                userId = request.userId.toString(),
+                userId = userId,
             )
-            if (request.anonymous) {
-                reviewEntity.userId = StringEncoder.hashValue(user.id.toString())
-            }
-
-            return reviewEntity
         }
 
         fun transformReviewEntityToReviewDto(reviewEntity: ReviewEntity, user: User?) = review {

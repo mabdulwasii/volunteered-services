@@ -64,7 +64,13 @@ class ReviewServiceImpl(
     private val helpfulReviewRepository: UserHelpfulReviewRepository
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
-        ensureReviewDoesNotExist(request, request.userId, request.organizationSubsidiaryId)
+        val userId: String = if (request.anonymous) {
+            StringEncoder.hashValue(request.userId.toString())
+        } else {
+            request.userId.toString()
+        }
+
+        ensureReviewDoesNotExist(userId, request.organizationSubsidiaryId)
 
         val user = getUserById(request.userId)
         val organizationSubsidiary = getOrganizationSubsidiaryById(request.organizationSubsidiaryId)
@@ -72,8 +78,8 @@ class ReviewServiceImpl(
         val reviewEntity =
             DtoTransformer.transformWriteReviewRequestToReviewEntity(
                 request,
-                user,
-                organizationSubsidiary
+                organizationSubsidiary,
+                userId
             )
         val savedReview = reviewRepository.save(reviewEntity)
 
@@ -83,8 +89,7 @@ class ReviewServiceImpl(
     }
 
     override suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating {
-        val retrievedRating = organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(request.organizationSubsidiaryId)
-        retrievedRating?.let {
+        organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(request.organizationSubsidiaryId)?.let {
             return DtoTransformer.transformRatingEntityToRatingDto(it)
         } ?: throw OrganizationSubsidiaryRatingDoesNotExistException("Organization subsidiary rating does not exist")
     }
@@ -106,18 +111,17 @@ class ReviewServiceImpl(
             request.pagination.limitPerPage,
             buildEntitySort(request.sort)
         )
-        request.filter.city
-
         val specification = buildReviewSpecificationForOrganization(
             request.filter,
             getOrganizationSubsidiaryIdList(request)
         )
-        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
+        val retrievedReviews = reviewRepository.findAll(specification, pageable)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {
-        val pageable = PageRequest.of(request.pagination.page,
+        val pageable = PageRequest.of(
+            request.pagination.page,
             request.pagination.limitPerPage,
             buildEntitySort(request.sort)
         )
@@ -125,7 +129,7 @@ class ReviewServiceImpl(
             request.filter,
             request.organizationSubsidiaryId
         )
-        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
+        val retrievedReviews = reviewRepository.findAll(specification, pageable)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
@@ -137,7 +141,7 @@ class ReviewServiceImpl(
         )
         val specification = buildReviewSpecificationForUser(request.filter, request.userId)
 
-        val retrievedReviews =  reviewRepository.findAll(specification, pageable)
+        val retrievedReviews = reviewRepository.findAll(specification, pageable)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
@@ -153,7 +157,7 @@ class ReviewServiceImpl(
 
     private fun ensureUserHelpfulReviewDoesNotExist(userId: Long, reviewId: Long) {
         val exists = helpfulReviewRepository.existsByUserIdAndReviewId(userId, reviewId)
-        if (exists){
+        if (exists) {
             throw UserHelpfulReviewAlreadyExistException("Review has already been marked helpful")
         }
     }
@@ -175,7 +179,8 @@ class ReviewServiceImpl(
             val replyReviewEntity = DtoTransformer.transformReplyReviewRequestToReplyReviewEntity(
                 request,
                 user,
-                it)
+                it
+            )
             val savedReplyReviewEntity = replyReviewRepository.save(replyReviewEntity)
 
             return DtoTransformer.transformReplyReviewEntityToReplyReviewDto(savedReplyReviewEntity, user)
@@ -201,12 +206,13 @@ class ReviewServiceImpl(
 
     private suspend fun saveOrUpdateOrganizationRating(reviewEntity: ReviewEntity) {
         val organizationSubsidiaryRatingEntity =
-            organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: OrganizationSubsidiaryRatingEntity(
-                organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
-                rating = 0.0,
-                verifiedRatingCount = 0,
-                unverifiedRatingCount = 0
-            )
+            organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId)
+                ?: OrganizationSubsidiaryRatingEntity(
+                    organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
+                    rating = 0.0,
+                    verifiedRatingCount = 0,
+                    unverifiedRatingCount = 0
+                )
 
         organizationSubsidiaryRatingEntity.rating = ratingCalculator.recomputeOrganizationSubsidiaryRating(
             organizationSubsidiaryRatingEntity,
@@ -224,16 +230,13 @@ class ReviewServiceImpl(
     }
 
     private fun ensureReviewDoesNotExist(
-        request: WriteReviewRequest,
-        userId: Long,
+        userId: String,
         organizationSubsidiaryId: Long
     ) {
-        val reviewExist: Boolean = if (request.anonymous) {
-            val hashValue = StringEncoder.hashValue("$userId")
-            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(hashValue, organizationSubsidiaryId)
-        } else {
-            reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(userId.toString(), organizationSubsidiaryId)
-        }
+        val reviewExist = reviewRepository.existsByUserIdAndOrganizationSubsidiaryId(
+            userId,
+            organizationSubsidiaryId
+        )
 
         if (reviewExist) {
             throw CannotWriteReviewException("You cannot write multiple reviews for an organization")
