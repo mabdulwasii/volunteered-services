@@ -65,8 +65,8 @@ class DtoTransformer {
 
         fun buildReviewEntityFromReviewDto(
             reviewEntity: ReviewEntity,
-            request: UpdateReviewRequest)
-        {
+            request: UpdateReviewRequest
+        ) {
             request.body.whenNotEmpty { reviewEntity.body = it }
             request.rating.whenGreaterThanZero { reviewEntity.rating = it }
         }

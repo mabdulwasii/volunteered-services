@@ -17,4 +17,5 @@ class StringEncoder {
             return sb.toString()
         }
     }
+
 }

@@ -5,7 +5,7 @@ import org.volunteered.apps.review.config.RatingConfigProperties
 import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 
 @Component
-class RatingCalculator(private  val ratingConfigProperties: RatingConfigProperties) {
+class RatingCalculator(private val ratingConfigProperties: RatingConfigProperties) {
     fun recomputeOrganizationSubsidiaryRating(
         orgSubsidiaryRating: OrganizationSubsidiaryRatingEntity,
         newRating: Int,
@@ -26,5 +26,4 @@ class RatingCalculator(private  val ratingConfigProperties: RatingConfigProperti
 
         return numerator / denominator
     }
-
 }
