@@ -2,7 +2,7 @@ package org.volunteered.apps.review.util
 
 import org.springframework.context.annotation.Configuration
 import org.volunteered.apps.review.config.RatingConfigProperties
-import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 
 @Configuration
 class RatingCalculator(ratingConfigProperties: RatingConfigProperties) {
@@ -10,7 +10,7 @@ class RatingCalculator(ratingConfigProperties: RatingConfigProperties) {
     private val VERIFIED_RATING_WEIGHT = ratingConfigProperties.verifiedRatingWeight
 
     fun recomputeOrganizationSubsidiaryRating(
-        orgSubsidiaryRating: RatingEntity,
+        orgSubsidiaryRating: OrganizationSubsidiaryRatingEntity,
         newRating: Int,
         isNewRatingVerified: Boolean
     ): Double {

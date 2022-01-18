@@ -1,6 +1,6 @@
 package org.volunteered.apps.review.util
 
-import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 import org.volunteered.apps.review.entity.ReplyReviewEntity
 import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
@@ -58,7 +58,10 @@ class DtoTransformer {
             )
         }
 
-        fun transformReplyReviewEntityToReplyReviewDto(replyReviewEntity: ReplyReviewEntity, user: User) = reviewReply {
+        fun transformReplyReviewEntityToReplyReviewDto(
+            replyReviewEntity: ReplyReviewEntity,
+            user: User
+        ) = reviewReply {
             id = replyReviewEntity.id!!
             reviewId = replyReviewEntity.review.id!!
             userDisplayName = user.firstName
@@ -66,13 +69,16 @@ class DtoTransformer {
             body = replyReviewEntity.body
         }
 
-        fun buildReviewEntityFromReviewDto(reviewEntity: ReviewEntity, request: UpdateReviewRequest) {
+        fun buildReviewEntityFromReviewDto(
+            reviewEntity: ReviewEntity,
+            request: UpdateReviewRequest) {
             request.body.whenNotEmpty { reviewEntity.body = it }
             request.rating.whenGreaterThanZero { reviewEntity.rating = it }
         }
 
-        fun transformRatingEntityToRatingDto(ratingEntity: RatingEntity) = rating {
-            rating = ratingEntity.rating
-        }
+        fun transformRatingEntityToRatingDto(organizationSubsidiaryRatingEntity: OrganizationSubsidiaryRatingEntity) =
+            rating {
+                rating = organizationSubsidiaryRatingEntity.rating
+            }
     }
 }

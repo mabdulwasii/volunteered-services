@@ -5,13 +5,13 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.volunteered.apps.review.entity.RatingEntity
+import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 import org.volunteered.apps.review.entity.ReplyReviewEntity
 import org.volunteered.apps.review.entity.ReviewEntity
 import org.volunteered.apps.review.exception.CannotWriteReviewException
 import org.volunteered.apps.review.exception.OrganizationSubsidiaryRatingDoesNotExistException
 import org.volunteered.apps.review.exception.ReviewDoesNotExistException
-import org.volunteered.apps.review.repository.RatingRepository
+import org.volunteered.apps.review.repository.OrganizationSubsidiaryRatingRepository
 import org.volunteered.apps.review.repository.ReplyReviewRepository
 import org.volunteered.apps.review.repository.ReviewRepository
 import org.volunteered.apps.review.repository.dao.ReviewSpecifications.Companion.buildEntitySort
@@ -53,7 +53,7 @@ class ReviewServiceImpl(
     private val organizationServiceStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
     private val reviewRepository: ReviewRepository,
     private val replyReviewRepository: ReplyReviewRepository,
-    private val ratingRepository: RatingRepository,
+    private val organizationSubsidiaryRatingRepository: OrganizationSubsidiaryRatingRepository,
     private val ratingCalculator: RatingCalculator
 ) : ReviewService {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
@@ -76,7 +76,7 @@ class ReviewServiceImpl(
     }
 
     override suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating {
-        val retrievedRating = ratingRepository.findByOrganizationSubsidiaryId(request.organizationSubsidiaryId)
+        val retrievedRating = organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(request.organizationSubsidiaryId)
         retrievedRating?.let {
             return DtoTransformer.transformRatingEntityToRatingDto(it)
         } ?: throw OrganizationSubsidiaryRatingDoesNotExistException("Organization subsidiary rating does not exist")
@@ -162,27 +162,27 @@ class ReviewServiceImpl(
     }
 
     private fun saveOrUpdateOrganizationRating(reviewEntity: ReviewEntity) {
-        val ratingEntity =
-            ratingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: RatingEntity(
+        val organizationSubsidiaryRatingEntity =
+            organizationSubsidiaryRatingRepository.findByOrganizationSubsidiaryId(reviewEntity.organizationSubsidiaryId) ?: OrganizationSubsidiaryRatingEntity(
                 organizationSubsidiaryId = reviewEntity.organizationSubsidiaryId,
                 rating = 0.0,
                 verifiedRatingCount = 0,
                 unverifiedRatingCount = 0
             )
 
-        ratingEntity.rating = ratingCalculator.recomputeOrganizationSubsidiaryRating(
-            ratingEntity,
+        organizationSubsidiaryRatingEntity.rating = ratingCalculator.recomputeOrganizationSubsidiaryRating(
+            organizationSubsidiaryRatingEntity,
             reviewEntity.rating,
             reviewEntity.verified
         )
 
         if (reviewEntity.verified) {
-            ratingEntity.verifiedRatingCount += 1
+            organizationSubsidiaryRatingEntity.verifiedRatingCount += 1
         } else {
-            ratingEntity.unverifiedRatingCount += 1
+            organizationSubsidiaryRatingEntity.unverifiedRatingCount += 1
         }
 
-        ratingRepository.save(ratingEntity)
+        organizationSubsidiaryRatingRepository.save(organizationSubsidiaryRatingEntity)
     }
 
 

@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "review")
-class RatingEntity(
+class OrganizationSubsidiaryRatingEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -17,7 +17,7 @@ class RatingEntity(
 
     var rating: Double,
 
-    @Column(name = "organization_subsidiary_id")
+    @Column(name = "organization_subsidiary_id", unique = true)
     var organizationSubsidiaryId: Long,
 
     @Column(name = "unverified_rating_count")
