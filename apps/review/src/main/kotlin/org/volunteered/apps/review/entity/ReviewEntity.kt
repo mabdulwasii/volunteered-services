@@ -19,10 +19,10 @@ class ReviewEntity(
 
     var body: String? = null,
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", unique = true)
     var userId: String,
 
-    @Column(name = "organization_subsidiary_id")
+    @Column(name = "organization_subsidiary_id", unique = true)
     var organizationSubsidiaryId: Long,
 
     @Column(name = "helpful_count")
