@@ -1,29 +1,28 @@
 package org.volunteered.apps.review.util
 
-import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 import org.volunteered.apps.review.config.RatingConfigProperties
 import org.volunteered.apps.review.entity.OrganizationSubsidiaryRatingEntity
 
-@Configuration
-class RatingCalculator(ratingConfigProperties: RatingConfigProperties) {
-    private val UNVERIFIED_RATING_WEIGHT = ratingConfigProperties.unverifiedRating
-    private val VERIFIED_RATING_WEIGHT = ratingConfigProperties.verifiedRatingWeight
-
+@Component
+class RatingCalculator(private  val ratingConfigProperties: RatingConfigProperties) {
     fun recomputeOrganizationSubsidiaryRating(
         orgSubsidiaryRating: OrganizationSubsidiaryRatingEntity,
         newRating: Int,
         isNewRatingVerified: Boolean
     ): Double {
-        val newRatingWeight = if (isNewRatingVerified) VERIFIED_RATING_WEIGHT else UNVERIFIED_RATING_WEIGHT
+        val unverifiedRatingWeight = ratingConfigProperties.unverifiedRatingWeight
+        val verifiedRatingWeight = ratingConfigProperties.verifiedRatingWeight
+        val newRatingWeight = if (isNewRatingVerified) verifiedRatingWeight else unverifiedRatingWeight
 
         val numerator =
-            (orgSubsidiaryRating.unverifiedRatingCount * UNVERIFIED_RATING_WEIGHT * orgSubsidiaryRating.rating)
-                .plus(orgSubsidiaryRating.verifiedRatingCount * VERIFIED_RATING_WEIGHT * orgSubsidiaryRating.rating)
+            (orgSubsidiaryRating.unverifiedRatingCount * unverifiedRatingWeight * orgSubsidiaryRating.rating)
+                .plus(orgSubsidiaryRating.verifiedRatingCount * verifiedRatingWeight * orgSubsidiaryRating.rating)
                 .plus(newRating * newRatingWeight)
 
-        val denominator = (orgSubsidiaryRating.unverifiedRatingCount * UNVERIFIED_RATING_WEIGHT)
-            .plus(orgSubsidiaryRating.verifiedRatingCount * VERIFIED_RATING_WEIGHT)
-            .plus(1)
+        val denominator = (orgSubsidiaryRating.unverifiedRatingCount * unverifiedRatingWeight)
+            .plus(orgSubsidiaryRating.verifiedRatingCount * verifiedRatingWeight)
+            .plus(1).toDouble()
 
         return numerator / denominator
     }

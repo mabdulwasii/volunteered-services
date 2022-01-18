@@ -6,6 +6,6 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties("rating.weight")
 @ConstructorBinding
 data class RatingConfigProperties(
-    val unverifiedRating: Int,
+    val unverifiedRatingWeight: Int,
     val verifiedRatingWeight: Int
     )

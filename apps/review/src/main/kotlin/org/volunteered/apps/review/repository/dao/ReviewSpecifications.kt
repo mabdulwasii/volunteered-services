@@ -9,7 +9,7 @@ import org.volunteered.libs.proto.review.v1.ReviewsSortRequest
 
 class ReviewSpecifications {
     companion object {
-        private fun containsOrganizationSubsidiaryCity(organizationSubsidiaryCity: String): Specification<ReviewEntity> {
+        /*private fun containsOrganizationSubsidiaryCity(organizationSubsidiaryCity: String): Specification<ReviewEntity> {
             return Specification<ReviewEntity> { root, _, builder ->
                 if (organizationSubsidiaryCity.isNotBlank()) {
                     builder.like(
@@ -20,7 +20,7 @@ class ReviewSpecifications {
                     null
                 }
             }
-        }
+        }*/
 
         private fun hasRating(rating: Int): Specification<ReviewEntity> {
             return Specification<ReviewEntity> { root, _, builder ->
@@ -52,6 +52,16 @@ class ReviewSpecifications {
             }
         }
 
+        private fun hasOrganizationIdIn(organizationSubsidiaryIds: List<Long>): Specification<ReviewEntity> {
+            return Specification<ReviewEntity> { root, _, builder ->
+                if (organizationSubsidiaryIds.isNotEmpty()) {
+                    builder.isTrue(root.get(ReviewEntity_.organizationSubsidiaryId).`in`(organizationSubsidiaryIds))
+                } else {
+                    null
+                }
+            }
+        }
+
         private fun hasUserId(userId: Long): Specification<ReviewEntity> {
             return Specification<ReviewEntity> { root, query, builder ->
                 if (userId > 0) {
@@ -62,18 +72,29 @@ class ReviewSpecifications {
             }
         }
 
+        fun buildReviewSpecificationForOrganization(
+            filter: ReviewsFilterRequest,
+            organizationSubsidiaryIds: List<Long>
+        ): Specification<ReviewEntity> {
+            val verified = filter.verified
+            val rating = filter.rating
+
+            return Specification
+                .where(isVerified(verified.value))
+                .and(hasRating(rating.value))
+                .and(hasOrganizationIdIn(organizationSubsidiaryIds))
+        }
+
         fun buildReviewSpecificationForOrganizationSubsidiary(
             filter: ReviewsFilterRequest,
             organizationSubsidiaryId: Long
         ): Specification<ReviewEntity> {
             val verified = filter.verified
             val rating = filter.rating
-            val organizationSubsidiaryCity = filter.city
 
             return Specification
                 .where(isVerified(verified.value))
                 .and(hasRating(rating.value))
-                .and(containsOrganizationSubsidiaryCity(organizationSubsidiaryCity.value))
                 .and(hasOrganizationSubsidiaryId(organizationSubsidiaryId))
         }
 
@@ -83,12 +104,10 @@ class ReviewSpecifications {
         ): Specification<ReviewEntity> {
             val verified = filter.verified
             val rating = filter.rating
-            val organizationSubsidiaryCity = filter.city
 
             return Specification
                 .where(isVerified(verified.value))
                 .and(hasRating(rating.value))
-                .and(containsOrganizationSubsidiaryCity(organizationSubsidiaryCity.value))
                 .and(hasUserId(userId))
         }
 

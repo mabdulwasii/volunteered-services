@@ -4,6 +4,7 @@ import com.google.protobuf.Empty
 import net.devh.boot.grpc.server.service.GrpcService
 import org.volunteered.apps.review.service.ReviewService
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
+import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
@@ -25,6 +26,10 @@ class ReviewGrpcService(
 ) : ReviewServiceGrpcKt.ReviewServiceCoroutineImplBase() {
     override suspend fun writeReview(request: WriteReviewRequest): Review {
         return reviewService.writeReview(request)
+    }
+
+    override suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse {
+        return reviewService.getOrganizationReviews(request)
     }
 
     override suspend fun getOrganizationSubsidiaryReviews(request: GetOrganizationSubsidiaryReviewsRequest): GetReviewsResponse {

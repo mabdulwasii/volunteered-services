@@ -2,6 +2,7 @@ package org.volunteered.apps.review.service
 
 import com.google.protobuf.Empty
 import org.volunteered.libs.proto.review.v1.DeleteReviewRequest
+import org.volunteered.libs.proto.review.v1.GetOrganizationReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryRatingRequest
 import org.volunteered.libs.proto.review.v1.GetOrganizationSubsidiaryReviewsRequest
 import org.volunteered.libs.proto.review.v1.GetReviewRepliesRequest
@@ -26,4 +27,5 @@ interface ReviewService {
     suspend fun updateReview(request: UpdateReviewRequest): Review
     suspend fun getOrganizationSubsidiaryRating(request: GetOrganizationSubsidiaryRatingRequest): Rating
     suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse
+    suspend fun getOrganizationReviews(request: GetOrganizationReviewsRequest): GetReviewsResponse
 }
