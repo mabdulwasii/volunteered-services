@@ -63,7 +63,7 @@ class ReviewSpecifications {
         }
 
         private fun hasUserId(userId: Long): Specification<ReviewEntity> {
-            return Specification<ReviewEntity> { root, query, builder ->
+            return Specification<ReviewEntity> { root, _, builder ->
                 if (userId > 0) {
                     builder.equal(root.get(ReviewEntity_.userId), "$userId")
                 } else {
