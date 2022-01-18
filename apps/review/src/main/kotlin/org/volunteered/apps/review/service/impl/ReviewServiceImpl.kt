@@ -67,7 +67,11 @@ class ReviewServiceImpl(
         val organizationSubsidiary = getOrganizationSubsidiaryById(request.organizationSubsidiaryId)
 
         val reviewEntity =
-            DtoTransformer.transformWriteReviewRequestToReviewEntity(request, user, organizationSubsidiary)
+            DtoTransformer.transformWriteReviewRequestToReviewEntity(
+                request,
+                user,
+                organizationSubsidiary
+            )
         val savedReview = reviewRepository.save(reviewEntity)
 
         saveOrUpdateOrganizationRating(savedReview)
