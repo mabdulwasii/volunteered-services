@@ -14,6 +14,7 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service ReviewService {
   rpc WriteReview(WriteReviewRequest) returns (Review);
+  rpc GetOrganizationReviews(GetOrganizationReviewsRequest) returns (GetReviewsResponse);
   rpc GetOrganizationSubsidiaryReviews(GetOrganizationSubsidiaryReviewsRequest) returns (GetReviewsResponse);
   rpc GetUserReviews(GetUserReviewsRequest) returns (GetReviewsResponse);
   rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
