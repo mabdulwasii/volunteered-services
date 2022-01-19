@@ -21,6 +21,7 @@ import org.volunteered.apps.organization.exception.OrganizationDoesNotExistExcep
 import org.volunteered.apps.organization.repository.BenefitRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
+import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.createOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.createOrganizationSubsidiaryRequest
@@ -31,7 +32,6 @@ import org.volunteered.libs.proto.organization.v1.getOrganizationSubsidiaryReque
 import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.updateOrganizationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @SpringBootTest
 internal class OrganizationServiceImplTest {
@@ -63,7 +63,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(id { id = DEFAULT_ID }) }
         } returns boolValue { value = false }
 
         assertThrows<CreatorDoesNotExistException> { service.createOrganization(request) }
@@ -81,7 +81,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = DEFAULT_ID }) }
+            runBlocking { userServiceStub.existsById(id { id = DEFAULT_ID }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns true
 
@@ -113,7 +113,7 @@ internal class OrganizationServiceImplTest {
         organizationEntity.hq = organizationSubsidiaryEntity
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.existsByEmail(request.email) } returns false
         every { organizationRepository.save(any()) } returns organizationEntity
@@ -161,7 +161,7 @@ internal class OrganizationServiceImplTest {
         )
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns organizationEntity
         every { organizationSubsidiaryRepository.save(any()) } returns organizationSubsidiaryEntity
@@ -194,7 +194,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = false }
 
         assertThrows<CreatorDoesNotExistException> { service.createOrganizationSubsidiary(request) }
@@ -216,7 +216,7 @@ internal class OrganizationServiceImplTest {
         }
 
         every {
-            runBlocking { userServiceStub.existsById(existsByIdRequest { id = request.creatorId }) }
+            runBlocking { userServiceStub.existsById(id { id = request.creatorId }) }
         } returns boolValue { value = true }
 
         every { organizationRepository.findByIdOrNull(request.organizationId) } returns null
