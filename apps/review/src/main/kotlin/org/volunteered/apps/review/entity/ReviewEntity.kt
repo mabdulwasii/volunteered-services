@@ -5,10 +5,21 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Index
 import javax.persistence.Table
 
 @Entity
-@Table(name = "review")
+@Table(
+    name = "review",
+    indexes = [
+        Index(name = "index_userId", columnList = "userId", unique = true),
+        Index(
+            name = "index_organizationSubsidiaryId",
+            columnList = "organizationSubsidiaryId",
+            unique = true
+        )
+    ]
+)
 class ReviewEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +39,7 @@ class ReviewEntity(
     @Column(name = "helpful_count")
     var helpfulCount: Long? = null,
 
-    var verified: Boolean = false
+    var verified: Boolean = false,
+
+    var anonymous: Boolean = false,
 )

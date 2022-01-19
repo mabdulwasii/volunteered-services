@@ -62,10 +62,10 @@ class ReviewSpecifications {
             }
         }
 
-        private fun hasUserId(userId: Long): Specification<ReviewEntity> {
+        private fun hasUserId(userId: String): Specification<ReviewEntity> {
             return Specification<ReviewEntity> { root, _, builder ->
-                if (userId > 0) {
-                    builder.equal(root.get(ReviewEntity_.userId), "$userId")
+                if (userId.isNotEmpty()) {
+                    builder.equal(root.get(ReviewEntity_.userId), userId)
                 } else {
                     null
                 }
@@ -100,7 +100,8 @@ class ReviewSpecifications {
 
         fun buildReviewSpecificationForUser(
             filter: ReviewsFilterRequest,
-            userId: Long
+            userId: Long,
+            hashedUserId : String
         ): Specification<ReviewEntity> {
             val verified = filter.verified
             val rating = filter.rating
@@ -108,7 +109,8 @@ class ReviewSpecifications {
             return Specification
                 .where(isVerified(verified.value))
                 .and(hasRating(rating.value))
-                .and(hasUserId(userId))
+                .and(hasUserId(userId.toString()))
+                .and(hasUserId(hashedUserId))
         }
 
         fun buildEntitySort(sorting: ReviewsSortRequest): Sort {

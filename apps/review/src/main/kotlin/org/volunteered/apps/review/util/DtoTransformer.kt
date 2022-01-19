@@ -27,6 +27,7 @@ class DtoTransformer {
                 organizationSubsidiaryId = organizationSubsidiary.id,
                 helpfulCount = 0,
                 userId = userId,
+                anonymous = request.anonymous
             )
         }
 

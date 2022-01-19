@@ -5,10 +5,16 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Index
 import javax.persistence.Table
 
 @Entity
-@Table(name = "helpful_review")
+@Table(
+    name = "helpful_review",
+    indexes = [
+        Index(name = "index_reviewId", columnList = "reviewId", unique = true)
+    ]
+)
 class UserHelpfulReviewEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

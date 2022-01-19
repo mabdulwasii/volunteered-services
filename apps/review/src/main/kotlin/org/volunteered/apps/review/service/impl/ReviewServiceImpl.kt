@@ -139,36 +139,24 @@ class ReviewServiceImpl(
             request.pagination.limitPerPage,
             buildEntitySort(request.sort)
         )
-        val specification = buildReviewSpecificationForUser(request.filter, request.userId)
+        val specification = buildReviewSpecificationForUser(
+            request.filter,
+            request.userId,
+            StringEncoder.hashValue(request.userId.toString())
+        )
 
         val retrievedReviews = reviewRepository.findAll(specification, pageable)
         return transformReviewEntityListToReviewDtoList(retrievedReviews, request.pagination)
     }
 
     override suspend fun markReviewAsHelpful(request: MarkReviewAsHelpfulRequest): Empty {
-        ensureUserHelpfulReviewDoesNotExist(request.userId, request.reviewId)
+        ensureUserHasNotMarkedReviewAsHelpful(request.userId, request.reviewId)
         reviewRepository.findByIdOrNull(request.reviewId)?.let {
             it.helpfulCount = +1
             reviewRepository.save(it)
             saveUserHelpfulReview(request.userId, it.id!!)
             return Empty.getDefaultInstance()
         } ?: throw ReviewDoesNotExistException("Review does not exist")
-    }
-
-    private fun ensureUserHelpfulReviewDoesNotExist(userId: Long, reviewId: Long) {
-        val exists = helpfulReviewRepository.existsByUserIdAndReviewId(userId, reviewId)
-        if (exists) {
-            throw UserHelpfulReviewAlreadyExistException("Review has already been marked helpful")
-        }
-    }
-
-    private suspend fun saveUserHelpfulReview(userId: Long, reviewId: Long) {
-        helpfulReviewRepository.save(
-            UserHelpfulReviewEntity(
-                userId = userId,
-                reviewId = reviewId
-            )
-        )
     }
 
     override suspend fun replyReview(request: ReplyReviewRequest): ReviewReply {
@@ -190,6 +178,27 @@ class ReviewServiceImpl(
     override suspend fun deleteReview(request: DeleteReviewRequest): Empty {
         reviewRepository.deleteById(request.id)
         return Empty.getDefaultInstance()
+    }
+
+    override suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse {
+        val retrievedReviewReplies = replyReviewRepository.findAllByReviewId(request.reviewId)
+        return transformReviewReplyListToGetReviewRepliesResponse(retrievedReviewReplies)
+    }
+
+    private fun ensureUserHasNotMarkedReviewAsHelpful(userId: Long, reviewId: Long) {
+        val exists = helpfulReviewRepository.existsByUserIdAndReviewId(userId, reviewId)
+        if (exists) {
+            throw UserHelpfulReviewAlreadyExistException("Review has already been marked helpful")
+        }
+    }
+
+    private suspend fun saveUserHelpfulReview(userId: Long, reviewId: Long) {
+        helpfulReviewRepository.save(
+            UserHelpfulReviewEntity(
+                userId = userId,
+                reviewId = reviewId
+            )
+        )
     }
 
     private suspend fun getUserById(userId: Long): User {
@@ -241,11 +250,6 @@ class ReviewServiceImpl(
         if (reviewExist) {
             throw CannotWriteReviewException("You cannot write multiple reviews for an organization")
         }
-    }
-
-    override suspend fun getReviewReplies(request: GetReviewRepliesRequest): GetReviewRepliesResponse {
-        val retrievedReviewReplies = replyReviewRepository.findAllByReviewId(request.reviewId)
-        return transformReviewReplyListToGetReviewRepliesResponse(retrievedReviewReplies)
     }
 
     private suspend fun transformReviewReplyListToGetReviewRepliesResponse(reviewReplyList: List<ReplyReviewEntity>):
