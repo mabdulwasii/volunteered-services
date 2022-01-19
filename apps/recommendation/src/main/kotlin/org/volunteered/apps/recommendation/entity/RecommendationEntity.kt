@@ -1,6 +1,5 @@
 package org.volunteered.apps.recommendation.entity
 
-
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -10,7 +9,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "recommendation_request")
-class RecommendationEntity (
+class RecommendationEntity(
     @Id
     @GeneratedValue
     var id: Long? = null,
@@ -19,7 +18,7 @@ class RecommendationEntity (
     @Column(name = "position_held")
     var positionHeld: String,
 
-    var duration : Int,
+    var duration: Int,
 
     @Size(max = 255)
     @Column(name = "recommender_position")

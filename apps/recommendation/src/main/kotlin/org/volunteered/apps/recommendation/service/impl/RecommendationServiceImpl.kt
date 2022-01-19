@@ -35,7 +35,7 @@ class RecommendationServiceImpl(
         ensureOrganizationSubsidiaryExists(organizationSubsidiaryId)
 
         val recommendationRequestEntity = DtoTransformer
-        .transformRequestRecommendationRequestToRecommendationRequestEntity(request)
+            .transformRequestRecommendationRequestToRecommendationRequestEntity(request)
 
         val savedRecommendationRequest = recommendationRequestRepository.save(recommendationRequestEntity)
 

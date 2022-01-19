@@ -25,13 +25,12 @@ class DtoTransformer {
 
         fun transformRecommendationRequestEntityToRecommendationRequestDto(
             recommendationRequestEntity:
-            RecommendationRequestEntity
+                RecommendationRequestEntity
         ) = recommendationRequest {
             id = recommendationRequestEntity.id!!
             userId = recommendationRequestEntity.userId
             organizationSubsidiaryId = recommendationRequestEntity.organizationSubsidiaryId
             status = recommendationRequestEntity.status
-
         }
 
         fun transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(
