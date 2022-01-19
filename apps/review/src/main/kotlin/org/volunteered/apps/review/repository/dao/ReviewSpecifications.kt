@@ -101,7 +101,7 @@ class ReviewSpecifications {
         fun buildReviewSpecificationForUser(
             filter: ReviewsFilterRequest,
             userId: Long,
-            hashedUserId : String
+            hashedUserId: String
         ): Specification<ReviewEntity> {
             val verified = filter.verified
             val rating = filter.rating
