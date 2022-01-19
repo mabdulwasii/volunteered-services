@@ -19,7 +19,7 @@ import javax.persistence.Table
         ),
         Index(
             name = "index_user_id_organization_subsidiary_id",
-            columnList = "user_id,organization_subsidiary_id",
+            columnList = "user_id, organization_subsidiary_id",
             unique = true
         )
     ]
