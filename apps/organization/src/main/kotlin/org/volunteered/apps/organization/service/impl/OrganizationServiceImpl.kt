@@ -1,6 +1,8 @@
 package org.volunteered.apps.organization.service.impl
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
+import com.google.protobuf.boolValue
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,19 +17,23 @@ import org.volunteered.apps.organization.service.OrganizationService
 import org.volunteered.apps.organization.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.Id
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
+import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -131,6 +137,22 @@ class OrganizationServiceImpl(
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
 
+    override suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue {
+        return boolValue {
+            value = organizationSubsidiaryRepository.existsById(request.id)
+        }
+    }
+
+    override suspend fun getOrganizationOrganizationSubsidiaryIds(request: GetOrganizationOrganizationSubsidiaryIdsRequest): GetOrganizationOrganizationSubsidiaryIdsResponse {
+        return getOrganizationOrganizationSubsidiaryIdsResponse {
+            organizationSubsidiaryIds.addAll(
+                organizationSubsidiaryRepository
+                    .findAllByParentId(request.organizationId)
+                    .mapNotNull { it.id }
+            )
+        }
+    }
+
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
         val organizationEntityList = organizationRepository.findByNameLike(request.name)
         return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
@@ -138,7 +160,7 @@ class OrganizationServiceImpl(
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
         val creatorExists = userServiceStub.existsById(
-            existsByIdRequest { id = creatorId }
+            id { id = creatorId }
         ).value
 
         if (!creatorExists)

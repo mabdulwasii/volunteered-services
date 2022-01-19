@@ -14,10 +14,10 @@ import org.volunteered.apps.user.repository.UserRepository
 import org.volunteered.apps.user.service.UserService
 import org.volunteered.apps.user.util.DtoTransformer
 import org.volunteered.libs.core.extension.whenNotEmpty
+import org.volunteered.libs.proto.common.v1.Id
 import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.user.v1.CreateUserRequest
 import org.volunteered.libs.proto.user.v1.DeleteUserRequest
-import org.volunteered.libs.proto.user.v1.ExistsByIdRequest
 import org.volunteered.libs.proto.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.proto.user.v1.GetUserByIdRequest
 
@@ -38,7 +38,7 @@ class UserServiceImpl(
         return DtoTransformer.transformUserEntityToUserDto(createdUserEntity)
     }
 
-    override suspend fun existsById(request: ExistsByIdRequest): BoolValue {
+    override suspend fun existsById(request: Id): BoolValue {
         return boolValue {
             value = userRepository.existsById(request.id)
         }

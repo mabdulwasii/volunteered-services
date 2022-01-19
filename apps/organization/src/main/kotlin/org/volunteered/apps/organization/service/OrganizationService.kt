@@ -1,12 +1,16 @@
 package org.volunteered.apps.organization.service
 
+import com.google.protobuf.BoolValue
 import com.google.protobuf.Empty
+import org.volunteered.libs.proto.common.v1.Id
 import org.volunteered.libs.proto.common.v1.Organization
 import org.volunteered.libs.proto.common.v1.OrganizationSubsidiary
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
@@ -23,4 +27,8 @@ interface OrganizationService {
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
     suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse
+    suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue
+    suspend fun getOrganizationOrganizationSubsidiaryIds(
+        request: GetOrganizationOrganizationSubsidiaryIdsRequest
+    ): GetOrganizationOrganizationSubsidiaryIdsResponse
 }

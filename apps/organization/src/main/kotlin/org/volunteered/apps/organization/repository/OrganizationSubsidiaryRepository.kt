@@ -6,6 +6,5 @@ import org.volunteered.apps.organization.entity.OrganizationSubsidiaryEntity
 
 @Repository
 interface OrganizationSubsidiaryRepository : JpaRepository<OrganizationSubsidiaryEntity, Long> {
-    fun findByEmail(email: String): OrganizationSubsidiaryEntity?
-    fun existsByEmail(email: String): Boolean
+    fun findAllByParentId(organizationId: Long): List<OrganizationSubsidiaryEntity>
 }
