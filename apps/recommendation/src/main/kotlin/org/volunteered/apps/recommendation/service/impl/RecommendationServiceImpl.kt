@@ -1,7 +1,12 @@
 package org.volunteered.apps.recommendation.service.impl
 
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.volunteered.apps.recommendation.exception.CreatorDoesNotExistException
+import org.volunteered.apps.recommendation.repository.RecommendationRepository
+import org.volunteered.apps.recommendation.repository.RecommendationRequestRepository
 import org.volunteered.apps.recommendation.service.RecommendationService
+import org.volunteered.apps.recommendation.util.DtoTransformer
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationsRequest
@@ -13,19 +18,41 @@ import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 class RecommendationServiceImpl(
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
     private val organizationServiceCoroutineStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
+    private val recommendationRepository: RecommendationRepository,
+    private val recommendationRequestRepository: RecommendationRequestRepository
 ) : RecommendationService {
     override suspend fun requestRecommendation(request: RequestRecommendationRequest): RecommendationRequest {
-        TODO("Not yet implemented")
+        val userId = request.userId
+        val organizationSubsidiaryId = request.organizationSubsidiaryId
+        ensureUserExists(userId)
+        ensureOrganizationSubsidiaryExists(organizationSubsidiaryId)
+
+        val recommendationRequestEntity = DtoTransformer
+            .transformRequestRecommendationRequestToRecommendationRequestEntity(request)
+
+        val savedRecommendationRequest = recommendationRequestRepository.save(recommendationRequestEntity)
+
+        return DtoTransformer.transformRecommendationRequestEntityToRecommendationRequestDto(savedRecommendationRequest)
     }
 
     override suspend fun getOrganizationRecommendationRequests(request: OrganizationRecommendationRequests): GetOrganizationRecommendationRequestsResponse {
-        TODO("Not yet implemented")
+        val organizationSubsidiary = request.organizationSubsidiaryId
+        val pagination = request.pagination
+        val paginationLimitPerPage = pagination.limitPerPage
+        val paginationPage = pagination.page
+        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
+
+        val organizationRecommendationRequestPage =
+            recommendationRequestRepository.findAllByOrganizationSubsidiaryId(organizationSubsidiary, pageable)
+
+        return DtoTransformer.transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(organizationRecommendationRequestPage, pagination)
     }
 
     override suspend fun writeRecommendation(request: WriteRecommendationRequest): Recommendation {
@@ -38,5 +65,25 @@ class RecommendationServiceImpl(
 
     override suspend fun getUserRecommendations(request: GetUserRecommendationsRequest): GetRecommendationsResponse {
         TODO("Not yet implemented")
+    }
+
+    private suspend fun ensureUserExists(userId: Long) {
+        val creatorExists = userServiceStub.existsById(
+            existsByIdRequest { id = userId }
+        ).value
+
+        if (!creatorExists)
+            throw CreatorDoesNotExistException("Creator does not exist")
+    }
+
+    private suspend fun ensureOrganizationSubsidiaryExists(organizationSubsidiaryId: Long) {
+//        val organizationSubsidiaryExists = organizationServiceCoroutineStub.organizationSubsidiaryExistsById(
+//            existsByIdRequest { id = organizationSubsidiaryId }
+//        )
+
+        val organizationSubsidiaryExists = true
+
+        if (!organizationSubsidiaryExists)
+            throw CreatorDoesNotExistException("Creator does not exist")
     }
 }

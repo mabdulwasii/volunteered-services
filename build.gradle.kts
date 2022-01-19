@@ -309,4 +309,3 @@ open class AffectedTask : DefaultTask() {
         }
     }
 }
-

@@ -6,6 +6,8 @@ import net.devh.boot.grpc.client.inject.GrpcClientBeans
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.volunteered.apps.recommendation.repository.RecommendationRepository
+import org.volunteered.apps.recommendation.repository.RecommendationRequestRepository
 import org.volunteered.apps.recommendation.service.RecommendationService
 import org.volunteered.apps.recommendation.service.impl.RecommendationServiceImpl
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
@@ -32,7 +34,12 @@ class RecommendationServiceConfiguration {
     fun recommendationService(
         @Autowired userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub,
         @Autowired organizationServiceCoroutineStub: OrganizationServiceGrpcKt.OrganizationServiceCoroutineStub,
+        @Autowired recommendationRepository: RecommendationRepository,
+        @Autowired recommendationRequestRepository: RecommendationRequestRepository,
     ): RecommendationService {
-        return RecommendationServiceImpl(userServiceCoroutineStub, organizationServiceCoroutineStub)
+        return RecommendationServiceImpl(
+            userServiceCoroutineStub, organizationServiceCoroutineStub,
+            recommendationRepository, recommendationRequestRepository
+        )
     }
 }
