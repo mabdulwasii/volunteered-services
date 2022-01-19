@@ -25,9 +25,9 @@ class UserHelpfulReviewEntity(
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
-    @Column(name = "user_id", unique = true)
+    @Column(name = "user_id")
     var userId: Long,
 
-    @Column(name = "review_id", unique = true)
+    @Column(name = "review_id")
     var reviewId: Long,
 )
