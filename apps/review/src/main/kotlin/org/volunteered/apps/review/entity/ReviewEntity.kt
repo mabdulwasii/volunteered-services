@@ -12,10 +12,14 @@ import javax.persistence.Table
 @Table(
     name = "review",
     indexes = [
-        Index(name = "index_userId", columnList = "userId", unique = true),
+        Index(name = "index_user_id", columnList = "user_id"),
         Index(
-            name = "index_organizationSubsidiaryId",
-            columnList = "organizationSubsidiaryId",
+            name = "index_organization_subsidiary_id",
+            columnList = "organization_subsidiary_id"
+        ),
+        Index(
+            name = "index_user_id_organization_subsidiary_id",
+            columnList = "user_id,organization_subsidiary_id",
             unique = true
         )
     ]

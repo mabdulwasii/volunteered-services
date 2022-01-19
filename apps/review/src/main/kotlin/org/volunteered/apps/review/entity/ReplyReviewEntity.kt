@@ -13,9 +13,9 @@ import javax.persistence.Table
 
 @Entity
 @Table(
-    name = "reply-review",
+    name = "reply_review",
     indexes = [
-        Index(name = "index_userId", columnList = "userId", unique = true)
+        Index(name = "index_userId", columnList = "user_id")
     ]
 )
 class ReplyReviewEntity(

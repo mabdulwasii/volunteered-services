@@ -12,7 +12,11 @@ import javax.persistence.Table
 @Table(
     name = "helpful_review",
     indexes = [
-        Index(name = "index_reviewId", columnList = "reviewId", unique = true)
+        Index(
+            name = "index_user_id_review_id",
+            columnList = "user_id,review_id",
+            unique = true
+        )
     ]
 )
 class UserHelpfulReviewEntity(
