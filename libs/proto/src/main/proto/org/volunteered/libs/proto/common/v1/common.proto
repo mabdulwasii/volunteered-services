@@ -44,12 +44,13 @@ message Organization {
 
 message OrganizationSubsidiary {
   int64 id = 1;
-  string name = 2;
-  string email = 3 [(validate.rules).string.email = true];
-  string city = 4;
-  string country = 5 [(validate.rules).string = {len: 2}];
-  string phone = 6;
-  string description = 7;
+  int64 organizationId = 2;
+  string name = 3;
+  string email = 4 [(validate.rules).string.email = true];
+  string city = 5;
+  string country = 6 [(validate.rules).string = {len: 2}];
+  string phone = 7;
+  string description = 8;
 }
 
 enum Gender {
@@ -82,4 +83,8 @@ message PaginationResponse {
   int64 total = 1;
   int32 limit_per_page = 2;
   int32 page = 3;
+}
+
+message Id {
+  int64 id = 1;
 }

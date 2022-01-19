@@ -155,6 +155,7 @@ internal class DtoTransformerTest {
             phone = DEFAULT_SUBSIDIARY_PHONE,
             description = DEFAULT_SUBSIDIARY_DESCRIPTION,
             parent = OrganizationEntity(
+                id = DEFAULT_ID,
                 name = DEFAULT_ORG_NAME,
                 email = DEFAULT_EMAIL,
                 bio = BIO

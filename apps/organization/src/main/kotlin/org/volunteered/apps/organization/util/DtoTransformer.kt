@@ -79,6 +79,7 @@ class DtoTransformer {
             organizationSubsidiaryEntity: OrganizationSubsidiaryEntity
         ) = organizationSubsidiary {
             id = organizationSubsidiaryEntity.id!!
+            organizationId = organizationSubsidiaryEntity.parent.id!!
             organizationSubsidiaryEntity.name?.let { name = it }
             organizationSubsidiaryEntity.email?.let { email = it }
             city = organizationSubsidiaryEntity.city
@@ -129,6 +130,14 @@ class DtoTransformer {
             }
             return searchOrganizationByNameResponse {
                 organizations.addAll(organizationList)
+            }
+        }
+
+        fun transformOrganizationEntityListToOrganizationDtoList(
+            organizationEntityList: List<OrganizationEntity>
+        ): SearchOrganizationByNameResponse {
+            return searchOrganizationByNameResponse {
+                organizations.addAll(organizationEntityList.map { transformOrganizationEntityToOrganizationDto(it) })
             }
         }
 

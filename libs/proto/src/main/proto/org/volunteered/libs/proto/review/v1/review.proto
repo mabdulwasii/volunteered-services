@@ -6,6 +6,8 @@ option java_multiple_files = true;
 option java_outer_classname = "ReviewServiceProto";
 option java_package = "org.volunteered.libs.proto.review.v1";
 
+//import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 import "org/volunteered/libs/proto/common/v1/common.proto";
@@ -14,9 +16,13 @@ service ReviewService {
   rpc WriteReview(WriteReviewRequest) returns (Review);
   rpc GetOrganizationReviews(GetOrganizationReviewsRequest) returns (GetReviewsResponse);
   rpc GetOrganizationSubsidiaryReviews(GetOrganizationSubsidiaryReviewsRequest) returns (GetReviewsResponse);
+  rpc GetUserReviews(GetUserReviewsRequest) returns (GetReviewsResponse);
   rpc MarkReviewAsHelpful(MarkReviewAsHelpfulRequest) returns (google.protobuf.Empty);
   rpc ReplyReview(ReplyReviewRequest) returns (ReviewReply);
+  rpc GetReviewReplies(GetReviewRepliesRequest) returns (GetReviewRepliesResponse);
   rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
+  rpc UpdateReview(UpdateReviewRequest) returns (Review);
+  rpc GetOrganizationSubsidiaryRating(GetOrganizationSubsidiaryRatingRequest) returns (Rating);
 }
 
 message WriteReviewRequest {
@@ -25,6 +31,33 @@ message WriteReviewRequest {
   int32 rating = 3;
   string body = 4;
   bool anonymous = 5;
+}
+
+message UpdateReviewRequest {
+  int64 id = 1;
+  int32 rating = 2;
+  string body = 3;
+}
+
+message ReviewsFilterRequest {
+  google.protobuf.BoolValue verified = 1;
+  google.protobuf.StringValue city = 2;
+  google.protobuf.Int32Value rating = 3;
+}
+
+message ReviewsSortRequest {
+    ReviewsSort sort = 1;
+    SortDirection direction = 2;
+}
+
+message ReviewsSort {
+  google.protobuf.BoolValue helpful = 1;
+  google.protobuf.BoolValue rating = 2;
+}
+
+enum SortDirection {
+  ASC = 0;
+  DESC = 1;
 }
 
 message Review {
@@ -40,7 +73,9 @@ message Review {
 
 message GetOrganizationReviewsRequest {
   int64 organization_id = 1;
-  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
+  ReviewsFilterRequest filter = 2;
+  ReviewsSortRequest sort = 3;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 4;
 }
 
 message GetReviewsResponse {
@@ -50,7 +85,16 @@ message GetReviewsResponse {
 
 message GetOrganizationSubsidiaryReviewsRequest {
   int64 organization_subsidiary_id = 1;
-  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
+  ReviewsFilterRequest filter = 2;
+  ReviewsSortRequest sort = 3;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 4;
+}
+
+message GetUserReviewsRequest {
+  int64 user_id = 1;
+  ReviewsFilterRequest filter = 2;
+  ReviewsSortRequest sort = 3;
+  org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 4;
 }
 
 message MarkReviewAsHelpfulRequest {
@@ -75,4 +119,37 @@ message ReviewReply {
 
 message DeleteReviewRequest {
   int64 id = 1;
+}
+
+message GetOrganizationSubsidiaryRatingRequest{
+  int64 organizationSubsidiaryId = 1;
+}
+
+message Rating {
+  double rating = 3;
+}
+
+message GetOrganizationReviewsByCriteriaRequest {
+  int64 organizationSubsidiaryId = 1;
+  bool verified = 2;
+  string city = 3;
+  string country = 4;
+  int32 rating = 5;
+  bool sort_by_most_helpful = 6;
+  int32 sort_by_rating = 7;
+}
+message GetReviewRepliesRequest {
+  int64 review_id = 1;
+}
+
+message GetReviewRepliesResponse {
+  repeated ReviewReply reviewReplies = 1;
+}
+
+enum RatingType {
+  VERIFIED = 0;
+  UNVERIFIED = 1;
+}
+message GetOrganizationReviewsByVerifiedReviewsRequest {
+  int64 organizationSubsidiaryId = 1;
 }

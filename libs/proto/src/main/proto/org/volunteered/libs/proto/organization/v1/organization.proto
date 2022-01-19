@@ -7,6 +7,7 @@ option java_outer_classname = "OrganizationServiceProto";
 option java_package = "org.volunteered.libs.proto.organization.v1";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 import "validate/validate.proto";
 import "org/volunteered/libs/proto/common/v1/common.proto";
 
@@ -16,12 +17,16 @@ service OrganizationService {
       returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc GetOrganizationById(GetOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc SearchOrganizationByName(SearchOrganizationByNameRequest) returns (SearchOrganizationByNameResponse);
-  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest) returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+  rpc GetOrganizationOrganizationSubsidiaryIds(GetOrganizationOrganizationSubsidiaryIdsRequest) returns
+      (GetOrganizationOrganizationSubsidiaryIdsResponse);
+  rpc GetOrganizationSubsidiaryById(GetOrganizationSubsidiaryRequest)
+    returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc UpdateOrganization(UpdateOrganizationRequest) returns (org.volunteered.libs.proto.common.v1.Organization);
   rpc UpdateOrganizationSubsidiary(org.volunteered.libs.proto.common.v1.OrganizationSubsidiary)
-      returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
+    returns (org.volunteered.libs.proto.common.v1.OrganizationSubsidiary);
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
+  rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
 }
 
 message CreateOrganizationRequest {
@@ -77,4 +82,12 @@ message UpdateOrganizationRequest {
   string founder = 11;
   int32 number_of_employees = 12;
   repeated string benefits = 13;
+}
+
+message GetOrganizationOrganizationSubsidiaryIdsRequest {
+  int64 organization_id = 1;
+}
+
+message GetOrganizationOrganizationSubsidiaryIdsResponse {
+  repeated int64 organizationSubsidiaryIds = 1;
 }
