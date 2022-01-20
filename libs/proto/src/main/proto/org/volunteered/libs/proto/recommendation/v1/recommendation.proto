@@ -53,8 +53,8 @@ message Recommendation {
   int32 duration = 3;
   string recommender_position = 4;
   string body = 5;
-  repeated int64 userIds = 6;
   int64 organization_subsidiary_id = 7;
+  int64 user_id = 8;
 }
 
 message RecommendationRequest {

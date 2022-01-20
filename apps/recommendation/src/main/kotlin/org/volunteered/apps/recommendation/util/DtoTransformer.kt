@@ -1,6 +1,7 @@
 package org.volunteered.apps.recommendation.util
 
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.volunteered.apps.recommendation.entity.RecommendationEntity
 import org.volunteered.apps.recommendation.entity.RecommendationRequestEntity
 import org.volunteered.libs.proto.common.v1.PaginationRequest
@@ -60,8 +61,7 @@ class DtoTransformer {
 
         fun transformRecommendationEntityListToRecommendationDtoList(
             recommendationEntityList: Page<RecommendationEntity>
-        ):
-            MutableList<Recommendation> {
+        ): MutableList<Recommendation> {
                 val recommendationDtoList = mutableListOf<Recommendation>()
                 recommendationEntityList.forEach {
                     val recommendationDto = transformRecommendationEntityToRecommendationDto(it)
@@ -76,8 +76,23 @@ class DtoTransformer {
             duration = recommendationEntity.duration
             recommenderPosition = recommendationEntity.recommenderPosition
             body = recommendationEntity.body
-            userIds.addAll(recommendationEntity.userIds)
+            userId = recommendationEntity.userId
             organizationSubsidiaryId = recommendationEntity.organizationSubsidiaryId
+        }
+
+        fun buildPageable(pagination: PaginationRequest) =
+            PageRequest.of(
+                pagination.page,
+                pagination.limitPerPage
+            )
+
+        fun buildPaginationResponse(
+            totalElements : Long,
+            pagination: PaginationRequest
+        ) = paginationResponse {
+            total = totalElements
+            limitPerPage = pagination.limitPerPage
+            page = pagination.page
         }
     }
 }

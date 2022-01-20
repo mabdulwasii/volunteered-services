@@ -9,4 +9,5 @@ import org.volunteered.apps.recommendation.entity.RecommendationEntity
 @Repository
 interface RecommendationRepository : JpaRepository<RecommendationEntity, Long> {
     fun findAllByOrganizationSubsidiaryId(organizationSubsidiaryId: Long, pageable: Pageable): Page<RecommendationEntity>
+    fun findAllByUserId(userId: Long, pageable: Pageable): Page<RecommendationEntity>
 }
