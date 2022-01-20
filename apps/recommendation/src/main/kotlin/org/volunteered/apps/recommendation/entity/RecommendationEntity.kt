@@ -4,15 +4,19 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.Size
 
 @Entity
-@Table(name = "recommendation_request")
+@Table(name = "recommendation")
 class RecommendationEntity(
     @Id
     @GeneratedValue
     var id: Long? = null,
+
+    @Column(name = "organization_subsidiary_id")
+    var organizationSubsidiaryId: Long,
 
     @Size(max = 255)
     @Column(name = "position_held")
@@ -26,4 +30,7 @@ class RecommendationEntity(
 
     @Size(max = 2000)
     var body: String,
+
+    @OneToMany
+    var userIds: List<Long> = emptyList()
 )

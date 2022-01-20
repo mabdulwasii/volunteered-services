@@ -30,6 +30,7 @@ message WriteRecommendation {
   string recommender_position = 3;
   string body = 4;
   repeated int64 userIds = 5;
+  int64 organization_subsidiary_id = 6;
 }
 
 message WriteRecommendationRequest {
@@ -53,6 +54,7 @@ message Recommendation {
   string recommender_position = 4;
   string body = 5;
   repeated int64 userIds = 6;
+  int64 organization_subsidiary_id = 7;
 }
 
 message RecommendationRequest {

@@ -8,6 +8,7 @@ import org.volunteered.apps.recommendation.repository.RecommendationRequestRepos
 import org.volunteered.apps.recommendation.service.RecommendationService
 import org.volunteered.apps.recommendation.util.DtoTransformer
 import org.volunteered.libs.proto.common.v1.id
+import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationsRequest
@@ -18,6 +19,7 @@ import org.volunteered.libs.proto.recommendation.v1.Recommendation
 import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
+import org.volunteered.libs.proto.recommendation.v1.getRecommendationsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -60,7 +62,22 @@ class RecommendationServiceImpl(
     }
 
     override suspend fun getOrganizationRecommendations(request: GetOrganizationRecommendationsRequest): GetRecommendationsResponse {
-        TODO("Not yet implemented")
+        return getRecommendationsResponse {
+            val pageable = PageRequest.of(
+                request.pagination.page,
+                request.pagination.limitPerPage
+            )
+            val retrievedRecommendations =
+                recommendationRepository.findAllByOrganizationSubsidiaryId(request.organizationSubsidiaryId, pageable)
+            recommendations.addAll(
+                DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
+            )
+            pagination = paginationResponse {
+                total = retrievedRecommendations.totalElements
+                limitPerPage = request.pagination.limitPerPage
+                page = request.pagination.page
+            }
+        }
     }
 
     override suspend fun getUserRecommendations(request: GetUserRecommendationsRequest): GetRecommendationsResponse {
