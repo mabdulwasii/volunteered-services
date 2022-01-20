@@ -5,7 +5,6 @@ plugins {
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
     kotlin("plugin.allopen")
-    kotlin("kapt")
 }
 
 allOpen {
@@ -15,9 +14,6 @@ allOpen {
 }
 
 dependencies {
-
-    kapt("org.hibernate:hibernate-jpamodelgen:5.4.30.Final")
-
     implementation(kotlin("stdlib"))
 
     implementation(project(":libs:core"))
@@ -44,13 +40,13 @@ affectedTestConfiguration {
 }
 
 application {
-    mainClass.set("org.volunteered.apps.review.ReviewApplicationKt")
+    mainClass.set("org.volunteered.apps.recommendation.RecommendationApplicationKt")
 }
 
 jib {
     containerizingMode = "packaged"
     container {
-        ports = listOf("9894")
+        ports = listOf("9895")
         mainClass = application.mainClass.get()
     }
 }

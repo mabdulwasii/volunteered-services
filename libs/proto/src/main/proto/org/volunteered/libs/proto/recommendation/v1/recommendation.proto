@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package org.volunteered.libs.proto.recommendation.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "RecommendationServiceProto";
+option java_package = "org.volunteered.libs.proto.recommendation.v1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "validate/validate.proto";
+import "org/volunteered/libs/proto/common/v1/common.proto";
+
+service RecommendationService {
+  rpc RequestRecommendation(RequestRecommendationRequest) returns (RecommendationRequest);
+  rpc GetOrganizationRecommendationRequests(OrganizationRecommendationRequests) returns(GetOrganizationRecommendationRequestsResponse);
+  rpc WriteRecommendation(WriteRecommendationRequest) returns (Recommendation);
+  rpc GetOrganizationRecommendations(GetOrganizationRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc GetUserRecommendations(GetUserRecommendationsRequest) returns (GetRecommendationsResponse);
+}
+
+message RequestRecommendationRequest {
+  int64 user_id = 1;
+  int64 organization_subsidiary_id = 2;
+}
+
+message WriteRecommendation {
+  string position_held = 1;
+  int32 duration = 2;
+  string recommender_position = 3;
+  string body = 4;
+  repeated int64 userIds = 5;
+}
+
+message WriteRecommendationRequest {
+  repeated WriteRecommendation recommendations = 1;
+}
+
+message GetOrganizationRecommendationsRequest {
+  int64 organization_subsidiary_id = 1;
+}
+
+message GetUserRecommendationsRequest {
+  int64 user_id = 1;
+}
+
+message Recommendation {
+  int64 id = 1;
+  string position_held = 2;
+  int32 duration = 3;
+  string recommender_position = 4;
+  string body = 5;
+  repeated int64 userIds = 6;
+}
+
+message RecommendationRequest {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 organization_subsidiary_id = 3;
+  string status = 4;
+}
+
+message GetRecommendationsResponse {
+  repeated Recommendation recommendations = 1;
+  org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
+}
+
+message OrganizationRecommendationRequests {
+  int64 organization_subsidiary_id = 1;
+}
+
+message GetOrganizationRecommendationRequestsResponse {
+  repeated RecommendationRequest recommendationRequests = 1;
+  org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
+}
