@@ -27,6 +27,7 @@ service OrganizationService {
   rpc DeleteOrganization(DeleteOrganizationRequest) returns (google.protobuf.Empty);
   rpc DeleteOrganizationSubsidiary(DeleteOrganizationSubsidiaryRequest) returns (google.protobuf.Empty);
   rpc OrganizationSubsidiaryExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
+  rpc GetOrganizationJobTitles(org.volunteered.libs.proto.common.v1.Id) returns (GetOrganizationJobTitlesResponse);
 }
 
 message CreateOrganizationRequest {
@@ -90,4 +91,8 @@ message GetOrganizationOrganizationSubsidiaryIdsRequest {
 
 message GetOrganizationOrganizationSubsidiaryIdsResponse {
   repeated int64 organizationSubsidiaryIds = 1;
+}
+
+message GetOrganizationJobTitlesResponse {
+  repeated string job_titles = 1;
 }
