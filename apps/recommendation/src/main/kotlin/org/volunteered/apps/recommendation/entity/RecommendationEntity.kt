@@ -1,10 +1,10 @@
 package org.volunteered.apps.recommendation.entity
 
 import javax.persistence.Column
+import javax.persistence.ElementCollection
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.Size
 
@@ -31,6 +31,6 @@ class RecommendationEntity(
     @Size(max = 2000)
     var body: String,
 
-    @OneToMany
+    @ElementCollection
     var userIds: List<Long> = emptyList()
 )
