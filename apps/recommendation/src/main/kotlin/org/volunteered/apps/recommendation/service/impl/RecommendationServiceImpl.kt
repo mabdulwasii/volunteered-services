@@ -7,6 +7,7 @@ import org.volunteered.apps.recommendation.repository.RecommendationRepository
 import org.volunteered.apps.recommendation.repository.RecommendationRequestRepository
 import org.volunteered.apps.recommendation.service.RecommendationService
 import org.volunteered.apps.recommendation.util.DtoTransformer
+import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationsRequest
@@ -18,7 +19,6 @@ import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.existsByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -69,7 +69,7 @@ class RecommendationServiceImpl(
 
     private suspend fun ensureUserExists(userId: Long) {
         val creatorExists = userServiceStub.existsById(
-            existsByIdRequest { id = userId }
+            id { id = userId }
         ).value
 
         if (!creatorExists)
@@ -77,11 +77,9 @@ class RecommendationServiceImpl(
     }
 
     private suspend fun ensureOrganizationSubsidiaryExists(organizationSubsidiaryId: Long) {
-//        val organizationSubsidiaryExists = organizationServiceCoroutineStub.organizationSubsidiaryExistsById(
-//            existsByIdRequest { id = organizationSubsidiaryId }
-//        )
-
-        val organizationSubsidiaryExists = true
+        val organizationSubsidiaryExists = organizationServiceCoroutineStub.organizationSubsidiaryExistsById(
+            id { id = organizationSubsidiaryId }
+        ).value
 
         if (!organizationSubsidiaryExists)
             throw CreatorDoesNotExistException("Creator does not exist")
