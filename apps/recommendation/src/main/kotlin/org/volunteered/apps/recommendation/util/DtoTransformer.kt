@@ -80,7 +80,7 @@ class DtoTransformer {
             organizationSubsidiaryId = recommendationEntity.organizationSubsidiaryId
         }
 
-        fun buildPageable(pagination: PaginationRequest) =
+        fun buildPageable(pagination: PaginationRequest): PageRequest =
             PageRequest.of(
                 pagination.page,
                 pagination.limitPerPage
