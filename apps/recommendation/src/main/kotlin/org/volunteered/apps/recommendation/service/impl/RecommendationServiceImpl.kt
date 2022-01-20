@@ -76,7 +76,18 @@ class RecommendationServiceImpl(
     }
 
     override suspend fun getUserRecommendations(request: GetUserRecommendationsRequest): GetRecommendationsResponse {
-        TODO("Not yet implemented")
+        return getRecommendationsResponse {
+            val pageable = DtoTransformer.buildPageable(request.pagination)
+            val retrievedRecommendations =
+                recommendationRepository.findAllByUserId(request.userId, pageable)
+            recommendations.addAll(
+                DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
+            )
+            pagination = DtoTransformer.buildPaginationResponse(
+                retrievedRecommendations.totalElements,
+                request.pagination
+            )
+        }
     }
 
     private suspend fun ensureUserExists(userId: Long) {
