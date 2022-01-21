@@ -14,7 +14,7 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 service RecommendationService {
   rpc RequestRecommendation(RequestRecommendationRequest) returns (RecommendationRequest);
   rpc GetOrganizationRecommendationRequests(OrganizationRecommendationRequests) returns(GetOrganizationRecommendationRequestsResponse);
-  rpc WriteRecommendation(WriteRecommendationRequest) returns (Recommendation);
+  rpc WriteRecommendation(WriteRecommendationRequest) returns (WriteRecommendationResponse);
   rpc GetOrganizationRecommendations(GetOrganizationRecommendationsRequest) returns (GetRecommendationsResponse);
   rpc GetUserRecommendations(GetUserRecommendationsRequest) returns (GetRecommendationsResponse);
 }
@@ -77,6 +77,9 @@ message OrganizationRecommendationRequests {
 message GetOrganizationRecommendationRequestsResponse {
   repeated RecommendationRequest recommendationRequests = 1;
   org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
+}
+message WriteRecommendationResponse {
+  repeated Recommendation recommendations = 1;
 }
 
 enum RequestStatus{
