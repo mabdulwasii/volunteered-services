@@ -7,6 +7,8 @@ import org.volunteered.apps.recommendation.repository.RecommendationRepository
 import org.volunteered.apps.recommendation.repository.RecommendationRequestRepository
 import org.volunteered.apps.recommendation.service.RecommendationService
 import org.volunteered.apps.recommendation.util.DtoTransformer
+import org.volunteered.libs.proto.common.v1.Gender
+import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
@@ -14,12 +16,14 @@ import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendatio
 import org.volunteered.libs.proto.recommendation.v1.GetRecommendationsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetUserRecommendationsRequest
 import org.volunteered.libs.proto.recommendation.v1.OrganizationRecommendationRequests
-import org.volunteered.libs.proto.recommendation.v1.Recommendation
 import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
+import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationResponse
 import org.volunteered.libs.proto.recommendation.v1.getRecommendationsResponse
+import org.volunteered.libs.proto.recommendation.v1.writeRecommendationResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
+import org.volunteered.libs.proto.user.v1.getUserByIdRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -30,10 +34,8 @@ class RecommendationServiceImpl(
     private val recommendationRequestRepository: RecommendationRequestRepository
 ) : RecommendationService {
     override suspend fun requestRecommendation(request: RequestRecommendationRequest): RecommendationRequest {
-        val userId = request.userId
-        val organizationSubsidiaryId = request.organizationSubsidiaryId
-        ensureUserExists(userId)
-        ensureOrganizationSubsidiaryExists(organizationSubsidiaryId)
+        ensureUserExists(request.userId)
+        ensureOrganizationSubsidiaryExists(request.organizationSubsidiaryId)
 
         val recommendationRequestEntity = DtoTransformer
             .transformRequestRecommendationRequestToRecommendationRequestEntity(request)
@@ -53,11 +55,50 @@ class RecommendationServiceImpl(
         val organizationRecommendationRequestPage =
             recommendationRequestRepository.findAllByOrganizationSubsidiaryId(organizationSubsidiary, pageable)
 
-        return DtoTransformer.transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(organizationRecommendationRequestPage, pagination)
+        return DtoTransformer.transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(
+            organizationRecommendationRequestPage,
+            pagination
+        )
     }
 
-    override suspend fun writeRecommendation(request: WriteRecommendationRequest): Recommendation {
-        TODO("Not yet implemented")
+    override suspend fun writeRecommendation(request: WriteRecommendationRequest): WriteRecommendationResponse {
+        return writeRecommendationResponse {
+            request.recommendationsList.forEach {
+                it.userIdsList.forEach { userId ->
+                    val retrievedUser = getUserById(userId)
+                    val userRecommendationExists =
+                        recommendationRepository.existsByUserIdAndOrganizationSubsidiaryId(
+                            userId,
+                            it.organizationSubsidiaryId
+                        )
+                    if (!userRecommendationExists) {
+                        resolveRecommendationBodyForUser(it.body, retrievedUser)
+                        val recommendationEntity = DtoTransformer
+                            .transformWriteRecommendationRequestDtoRecommendationEntity(it, userId)
+                        val savedRecommendationEntity = recommendationRepository.save(recommendationEntity)
+                        recommendations.add(
+                            DtoTransformer.transformRecommendationEntityToRecommendationDto(savedRecommendationEntity)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resolveRecommendationBodyForUser(body: String, user: User) {
+        body.replace("{{name}}", user.firstName)
+        body.replace("{{email}}", user.email)
+        val subject : String
+        val objectPronoun : String
+        if(user.gender.equals(Gender.MALE)){
+            subject = "he"
+            objectPronoun = "his"
+        }else{
+            subject = "she"
+            objectPronoun = "her"
+        }
+        body.replace("{{subject}}", subject)
+        body.replace("{{object}}", objectPronoun)
     }
 
     override suspend fun getOrganizationRecommendations(request: GetOrganizationRecommendationsRequest): GetRecommendationsResponse {
@@ -88,6 +129,14 @@ class RecommendationServiceImpl(
                 request.pagination
             )
         }
+    }
+
+    private suspend fun getUserById(userId: Long) : User {
+        return userServiceStub.getUserById(
+            getUserByIdRequest {
+                id = userId
+            }
+        )
     }
 
     private suspend fun ensureUserExists(userId: Long) {

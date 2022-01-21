@@ -11,6 +11,7 @@ import org.volunteered.libs.proto.recommendation.v1.Recommendation
 import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestStatus
+import org.volunteered.libs.proto.recommendation.v1.WriteRecommendation
 import org.volunteered.libs.proto.recommendation.v1.getOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.recommendation
 import org.volunteered.libs.proto.recommendation.v1.recommendationRequest
@@ -70,7 +71,7 @@ class DtoTransformer {
                 return recommendationDtoList
             }
 
-        private fun transformRecommendationEntityToRecommendationDto(recommendationEntity: RecommendationEntity) = recommendation {
+        fun transformRecommendationEntityToRecommendationDto(recommendationEntity: RecommendationEntity) = recommendation {
             id = recommendationEntity.id!!
             positionHeld = recommendationEntity.positionHeld
             duration = recommendationEntity.duration
@@ -94,5 +95,16 @@ class DtoTransformer {
             limitPerPage = pagination.limitPerPage
             page = pagination.page
         }
+
+        fun transformWriteRecommendationRequestDtoRecommendationEntity(
+            it: WriteRecommendation,
+            userId: Long
+        ) = RecommendationEntity(
+            organizationSubsidiaryId = it.organizationSubsidiaryId,
+            positionHeld = it.positionHeld,
+            duration = it.duration,
+            recommenderPosition = it.recommenderPosition, body = it.body,
+            userId = userId
+        )
     }
 }

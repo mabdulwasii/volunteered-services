@@ -7,11 +7,11 @@ import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendatio
 import org.volunteered.libs.proto.recommendation.v1.GetRecommendationsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetUserRecommendationsRequest
 import org.volunteered.libs.proto.recommendation.v1.OrganizationRecommendationRequests
-import org.volunteered.libs.proto.recommendation.v1.Recommendation
 import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RecommendationServiceGrpcKt
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
+import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationResponse
 
 @GrpcService
 class RecommendationGrpcService(
@@ -25,7 +25,7 @@ class RecommendationGrpcService(
         return recommendationService.getOrganizationRecommendationRequests(request)
     }
 
-    override suspend fun writeRecommendation(request: WriteRecommendationRequest): Recommendation {
+    override suspend fun writeRecommendation(request: WriteRecommendationRequest): WriteRecommendationResponse {
         return recommendationService.writeRecommendation(request)
     }
 
