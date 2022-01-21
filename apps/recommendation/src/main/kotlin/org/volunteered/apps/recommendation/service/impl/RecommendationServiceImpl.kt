@@ -88,14 +88,17 @@ class RecommendationServiceImpl(
     private fun resolveRecommendationBodyForUser(body: String, user: User) {
         body.replace("{{name}}", user.firstName)
         body.replace("{{email}}", user.email)
-        val subject : String
-        val objectPronoun : String
-        if(user.gender.equals(Gender.MALE)){
-            subject = "he"
-            objectPronoun = "his"
-        }else{
-            subject = "she"
-            objectPronoun = "her"
+        val subject: String
+        val objectPronoun: String
+        when {
+            user.gender.equals(Gender.MALE) -> {
+                subject = "he"
+                objectPronoun = "his"
+            }
+            else -> {
+                subject = "she"
+                objectPronoun = "her"
+            }
         }
         body.replace("{{subject}}", subject)
         body.replace("{{object}}", objectPronoun)
@@ -131,7 +134,7 @@ class RecommendationServiceImpl(
         }
     }
 
-    private suspend fun getUserById(userId: Long) : User {
+    private suspend fun getUserById(userId: Long): User {
         return userServiceStub.getUserById(
             getUserByIdRequest {
                 id = userId
