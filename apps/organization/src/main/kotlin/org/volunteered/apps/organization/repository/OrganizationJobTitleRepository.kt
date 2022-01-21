@@ -6,5 +6,5 @@ import org.volunteered.apps.organization.entity.OrganizationJobTitleEntity
 
 @Repository
 interface OrganizationJobTitleRepository : JpaRepository<OrganizationJobTitleEntity, Long> {
-    fun findAllByOrganizationId(organizationId: Long) : List<OrganizationJobTitleEntity>
+    fun findAllByOrganizationId(organizationId: Long): List<OrganizationJobTitleEntity>
 }

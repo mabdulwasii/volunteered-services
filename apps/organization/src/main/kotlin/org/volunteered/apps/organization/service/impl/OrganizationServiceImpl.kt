@@ -181,7 +181,7 @@ class OrganizationServiceImpl(
 
     override suspend fun getOrganizationJobTitles(request: Id): GetOrganizationJobTitlesResponse {
         return getOrganizationJobTitlesResponse {
-            titles.addAll( jobTitleRepository.findAllByOrganizationId(request.id).map { it.title })
+            titles.addAll(jobTitleRepository.findAllByOrganizationId(request.id).map { it.title })
         }
     }
 

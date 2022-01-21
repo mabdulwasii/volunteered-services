@@ -132,11 +132,12 @@ class DtoTransformer {
         }
 
         fun transformOrganizationJobTitleEntityToOrganizationJobTitleDto(
-            organizationJobTitleEntity: OrganizationJobTitleEntity) =
+            organizationJobTitleEntity: OrganizationJobTitleEntity
+        ) =
             organizationJobTitle {
                 id = organizationJobTitleEntity.id!!
                 organizationId = organizationJobTitleEntity.organizationId
                 title = organizationJobTitleEntity.title
-        }
+            }
     }
 }
