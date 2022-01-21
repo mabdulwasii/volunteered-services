@@ -6,11 +6,13 @@ import com.google.protobuf.boolValue
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.volunteered.apps.organization.entity.OrganizationJobTitleEntity
 import org.volunteered.apps.organization.entity.OrganizationSubsidiaryEntity
 import org.volunteered.apps.organization.exception.CreatorDoesNotExistException
 import org.volunteered.apps.organization.exception.OrganizationAlreadyExistsException
 import org.volunteered.apps.organization.exception.OrganizationDoesNotExistException
 import org.volunteered.apps.organization.repository.BenefitRepository
+import org.volunteered.apps.organization.repository.OrganizationJobTitleRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
 import org.volunteered.apps.organization.service.OrganizationService
@@ -25,13 +27,16 @@ import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationJobTitlesResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationJobTitle
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.getOrganizationJobTitlesResponse
 import org.volunteered.libs.proto.organization.v1.getOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
@@ -42,6 +47,7 @@ class OrganizationServiceImpl(
     private val organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
     private val benefitRepository: BenefitRepository,
     private val userServiceStub: UserServiceGrpcKt.UserServiceCoroutineStub,
+    private val jobTitleRepository: OrganizationJobTitleRepository,
 ) : OrganizationService {
     override suspend fun createOrganization(request: CreateOrganizationRequest): Organization {
         ensureCreatorExists(request.creatorId)
@@ -156,6 +162,27 @@ class OrganizationServiceImpl(
     override suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse {
         val organizationEntityList = organizationRepository.findByNameLike(request.name)
         return DtoTransformer.transformOrganizationEntityListToOrganizationDtoList(organizationEntityList)
+    }
+
+    override suspend fun createOrganizationJobTitle(request: OrganizationJobTitle): OrganizationJobTitle {
+        if (!organizationRepository.existsById(request.organizationId))
+            throw OrganizationDoesNotExistException("Organization does not exist")
+
+        val organizationJobTitleEntity = OrganizationJobTitleEntity(
+            organizationId = request.organizationId,
+            title = request.title
+        )
+        val updatedJobTitleRepository = jobTitleRepository.save(organizationJobTitleEntity)
+
+        return DtoTransformer.transformOrganizationJobTitleEntityToOrganizationJobTitleDto(
+            updatedJobTitleRepository
+        )
+    }
+
+    override suspend fun getOrganizationJobTitles(request: Id): GetOrganizationJobTitlesResponse {
+        return getOrganizationJobTitlesResponse {
+            titles.addAll( jobTitleRepository.findAllByOrganizationId(request.id).map { it.title })
+        }
     }
 
     private suspend fun ensureCreatorExists(creatorId: Long) {
