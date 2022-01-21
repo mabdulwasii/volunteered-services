@@ -63,13 +63,13 @@ class DtoTransformer {
         fun transformRecommendationEntityListToRecommendationDtoList(
             recommendationEntityList: Page<RecommendationEntity>
         ): MutableList<Recommendation> {
-                val recommendationDtoList = mutableListOf<Recommendation>()
-                recommendationEntityList.forEach {
-                    val recommendationDto = transformRecommendationEntityToRecommendationDto(it)
-                    recommendationDtoList.add(recommendationDto)
-                }
-                return recommendationDtoList
+            val recommendationDtoList = mutableListOf<Recommendation>()
+            recommendationEntityList.forEach {
+                val recommendationDto = transformRecommendationEntityToRecommendationDto(it)
+                recommendationDtoList.add(recommendationDto)
             }
+            return recommendationDtoList
+        }
 
         fun transformRecommendationEntityToRecommendationDto(recommendationEntity: RecommendationEntity) = recommendation {
             id = recommendationEntity.id!!
@@ -88,7 +88,7 @@ class DtoTransformer {
             )
 
         fun buildPaginationResponse(
-            totalElements : Long,
+            totalElements: Long,
             pagination: PaginationRequest
         ) = paginationResponse {
             total = totalElements
