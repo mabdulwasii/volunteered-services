@@ -99,16 +99,14 @@ class OrganizationServiceImpl(
     }
 
     override suspend fun getOrganizationById(request: GetOrganizationRequest): Organization {
-        val organizationEntity = organizationRepository.findByIdOrNull(request.id)
-
-        return organizationEntity?.let { DtoTransformer.transformOrganizationEntityToOrganizationDto(it) }
-            ?: throw OrganizationDoesNotExistException("Organization does not exist")
+        return organizationRepository.findByIdOrNull(request.id)?.let {
+            DtoTransformer.transformOrganizationEntityToOrganizationDto(it)
+        } ?: throw OrganizationDoesNotExistException("Organization does not exist")
     }
 
     @Transactional
     override suspend fun updateOrganization(request: UpdateOrganizationRequest): Organization {
-        val organizationEntity = organizationRepository.findByIdOrNull(request.id)
-        organizationEntity?.let {
+        organizationRepository.findByIdOrNull(request.id)?.let {
             request.benefitsList.whenNotEmpty { benefits ->
                 it.benefits = benefitRepository.findByNameIn(benefits).toSet()
             }
@@ -136,9 +134,7 @@ class OrganizationServiceImpl(
     }
 
     override suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary {
-        val organizationSubsidiaryEntity = organizationSubsidiaryRepository.findByIdOrNull(request.id)
-
-        return organizationSubsidiaryEntity?.let {
+        return organizationSubsidiaryRepository.findByIdOrNull(request.id)?.let {
             DtoTransformer.transformOrganizationSubsidiaryEntityToOrganizationSubsidiaryDto(it)
         } ?: throw OrganizationDoesNotExistException("Organization Subsidiary does not exist")
     }
@@ -172,16 +168,18 @@ class OrganizationServiceImpl(
             organizationId = request.organizationId,
             title = request.title
         )
-        val updatedJobTitleRepository = jobTitleRepository.save(organizationJobTitleEntity)
-
         return DtoTransformer.transformOrganizationJobTitleEntityToOrganizationJobTitleDto(
-            updatedJobTitleRepository
+            jobTitleRepository.save(organizationJobTitleEntity)
         )
     }
 
     override suspend fun getOrganizationJobTitles(request: Id): GetOrganizationJobTitlesResponse {
         return getOrganizationJobTitlesResponse {
-            titles.addAll(jobTitleRepository.findAllByOrganizationId(request.id).map { it.title })
+            titles.addAll(
+                DtoTransformer.transformOrganizationJobTileEntityListToOrganizationJobTitleDtoList(
+                    jobTitleRepository.findAllByOrganizationId(request.id)
+                )
+            )
         }
     }
 

@@ -13,7 +13,7 @@ import "org/volunteered/libs/proto/common/v1/common.proto";
 
 service RecommendationService {
   rpc RequestRecommendation(RequestRecommendationRequest) returns (RecommendationRequest);
-  rpc GetOrganizationRecommendationRequests(OrganizationRecommendationRequests) returns(GetOrganizationRecommendationRequestsResponse);
+  rpc GetRecommendationRequestsForOrganization(GetOrganizationRecommendationRequests) returns(GetOrganizationRecommendationRequestsResponse);
   rpc WriteRecommendation(WriteRecommendationRequest) returns (WriteRecommendationResponse);
   rpc GetOrganizationRecommendations(GetOrganizationRecommendationsRequest) returns (GetRecommendationsResponse);
   rpc GetUserRecommendations(GetUserRecommendationsRequest) returns (GetRecommendationsResponse);
@@ -27,9 +27,9 @@ message RequestRecommendationRequest {
 message WriteRecommendation {
   string position_held = 1;
   int32 duration = 2;
-  string recommender_position = 3;
+  int64 recommender_position_id = 3;
   string body = 4;
-  repeated int64 userIds = 5;
+  repeated int64 user_ids = 5;
   int64 organization_subsidiary_id = 6;
 }
 
@@ -51,7 +51,7 @@ message Recommendation {
   int64 id = 1;
   string position_held = 2;
   int32 duration = 3;
-  string recommender_position = 4;
+  int64 recommender_position_id = 4;
   string body = 5;
   int64 organization_subsidiary_id = 7;
   int64 user_id = 8;
@@ -69,7 +69,7 @@ message GetRecommendationsResponse {
   org.volunteered.libs.proto.common.v1.PaginationResponse pagination = 2;
 }
 
-message OrganizationRecommendationRequests {
+message GetOrganizationRecommendationRequests {
   int64 organization_subsidiary_id = 1;
   org.volunteered.libs.proto.common.v1.PaginationRequest pagination = 2;
 }

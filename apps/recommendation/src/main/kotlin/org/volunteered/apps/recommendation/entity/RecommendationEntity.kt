@@ -24,8 +24,8 @@ class RecommendationEntity(
     var duration: Int,
 
     @Size(max = 255)
-    @Column(name = "recommender_position")
-    var recommenderPosition: String,
+    @Column(name = "recommender_position_id")
+    var recommenderPositionId: Long,
 
     @Size(max = 2000)
     var body: String,

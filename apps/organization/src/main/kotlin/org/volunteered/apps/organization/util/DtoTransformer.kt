@@ -11,6 +11,7 @@ import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationJobTitle
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.organizationJobTitle
@@ -139,5 +140,17 @@ class DtoTransformer {
                 organizationId = organizationJobTitleEntity.organizationId
                 title = organizationJobTitleEntity.title
             }
+
+        fun transformOrganizationJobTileEntityListToOrganizationJobTitleDtoList(
+            organizationJobTitleEntities: List<OrganizationJobTitleEntity>
+        ): List<OrganizationJobTitle> {
+            val organizationJobTitleList = mutableListOf<OrganizationJobTitle>()
+            organizationJobTitleEntities.forEach {
+                organizationJobTitleList.add(
+                    transformOrganizationJobTitleEntityToOrganizationJobTitleDto(it)
+                )
+            }
+            return organizationJobTitleList
+        }
     }
 }

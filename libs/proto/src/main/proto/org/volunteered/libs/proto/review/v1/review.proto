@@ -122,7 +122,7 @@ message DeleteReviewRequest {
 }
 
 message GetOrganizationSubsidiaryRatingRequest{
-  int64 organizationSubsidiaryId = 1;
+  int64 organization_subsidiary_id = 1;
 }
 
 message Rating {
@@ -130,7 +130,7 @@ message Rating {
 }
 
 message GetOrganizationReviewsByCriteriaRequest {
-  int64 organizationSubsidiaryId = 1;
+  int64 organization_subsidiary_id = 1;
   bool verified = 2;
   string city = 3;
   string country = 4;
@@ -143,7 +143,7 @@ message GetReviewRepliesRequest {
 }
 
 message GetReviewRepliesResponse {
-  repeated ReviewReply reviewReplies = 1;
+  repeated ReviewReply review_replies = 1;
 }
 
 enum RatingType {
@@ -151,5 +151,5 @@ enum RatingType {
   UNVERIFIED = 1;
 }
 message GetOrganizationReviewsByVerifiedReviewsRequest {
-  int64 organizationSubsidiaryId = 1;
+  int64 organization_subsidiary_id = 1;
 }

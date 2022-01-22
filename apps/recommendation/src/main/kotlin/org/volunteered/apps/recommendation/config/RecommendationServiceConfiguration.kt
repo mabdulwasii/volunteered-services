@@ -38,8 +38,10 @@ class RecommendationServiceConfiguration {
         @Autowired recommendationRequestRepository: RecommendationRequestRepository,
     ): RecommendationService {
         return RecommendationServiceImpl(
-            userServiceCoroutineStub, organizationServiceCoroutineStub,
-            recommendationRepository, recommendationRequestRepository
+            userServiceCoroutineStub,
+            organizationServiceCoroutineStub,
+            recommendationRepository,
+            recommendationRequestRepository
         )
     }
 }

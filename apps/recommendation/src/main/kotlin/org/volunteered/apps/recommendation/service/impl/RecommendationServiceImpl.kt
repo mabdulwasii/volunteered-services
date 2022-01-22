@@ -7,15 +7,12 @@ import org.volunteered.apps.recommendation.repository.RecommendationRepository
 import org.volunteered.apps.recommendation.repository.RecommendationRequestRepository
 import org.volunteered.apps.recommendation.service.RecommendationService
 import org.volunteered.apps.recommendation.util.DtoTransformer
-import org.volunteered.libs.proto.common.v1.Gender
-import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.id
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
+import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequests
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationsRequest
-import org.volunteered.libs.proto.recommendation.v1.GetRecommendationsResponse
 import org.volunteered.libs.proto.recommendation.v1.GetUserRecommendationsRequest
-import org.volunteered.libs.proto.recommendation.v1.OrganizationRecommendationRequests
 import org.volunteered.libs.proto.recommendation.v1.RecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.RequestRecommendationRequest
 import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationRequest
@@ -45,7 +42,8 @@ class RecommendationServiceImpl(
         return DtoTransformer.transformRecommendationRequestEntityToRecommendationRequestDto(savedRecommendationRequest)
     }
 
-    override suspend fun getOrganizationRecommendationRequests(request: OrganizationRecommendationRequests): GetOrganizationRecommendationRequestsResponse {
+    override suspend fun getRecommendationRequestsForOrganization(request: GetOrganizationRecommendationRequests):
+            GetOrganizationRecommendationRequestsResponse {
         val organizationSubsidiary = request.organizationSubsidiaryId
         val pagination = request.pagination
         val paginationLimitPerPage = pagination.limitPerPage
@@ -65,19 +63,25 @@ class RecommendationServiceImpl(
         return writeRecommendationResponse {
             request.recommendationsList.forEach {
                 it.userIdsList.forEach { userId ->
-                    val retrievedUser = getUserById(userId)
-                    val userRecommendationExists =
-                        recommendationRepository.existsByUserIdAndOrganizationSubsidiaryId(
+                    val retrievedUser = userServiceStub.getUserById(
+                        getUserByIdRequest {
+                            id = userId
+                        }
+                    )
+                    val userRecommendationExists = recommendationRepository.existsByUserIdAndOrganizationSubsidiaryId(
                             userId,
                             it.organizationSubsidiaryId
                         )
                     if (!userRecommendationExists) {
-                        resolveRecommendationBodyForUser(it.body, retrievedUser)
-                        val recommendationEntity = DtoTransformer
-                            .transformWriteRecommendationRequestDtoRecommendationEntity(it, userId)
-                        val savedRecommendationEntity = recommendationRepository.save(recommendationEntity)
+                        DtoTransformer.resolveRecommendationBodyForUser(it.body, retrievedUser)
+                        val recommendationEntity = DtoTransformer.transformWriteRecommendationRequestDtoRecommendationEntity(
+                            it,
+                            userId
+                        )
                         recommendations.add(
-                            DtoTransformer.transformRecommendationEntityToRecommendationDto(savedRecommendationEntity)
+                            DtoTransformer.transformRecommendationEntityToRecommendationDto(
+                                recommendationRepository.save(recommendationEntity)
+                            )
                         )
                     }
                 }
@@ -85,69 +89,42 @@ class RecommendationServiceImpl(
         }
     }
 
-    private fun resolveRecommendationBodyForUser(body: String, user: User) {
-        body.replace("{{name}}", user.firstName)
-        body.replace("{{email}}", user.email)
-        val subject: String
-        val objectPronoun: String
-        when {
-            user.gender.equals(Gender.MALE) -> {
-                subject = "he"
-                objectPronoun = "his"
-            }
-            else -> {
-                subject = "she"
-                objectPronoun = "her"
-            }
-        }
-        body.replace("{{subject}}", subject)
-        body.replace("{{object}}", objectPronoun)
+    override suspend fun getOrganizationRecommendations(request: GetOrganizationRecommendationsRequest) = getRecommendationsResponse {
+        val pageable = DtoTransformer.buildPageable(request.pagination)
+        val retrievedRecommendations = recommendationRepository.findAllByOrganizationSubsidiaryId(
+            request.organizationSubsidiaryId,
+            pageable
+        )
+        recommendations.addAll(
+            DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
+        )
+        pagination = DtoTransformer.buildPaginationResponse(
+            retrievedRecommendations.totalElements,
+            request.pagination
+        )
     }
 
-    override suspend fun getOrganizationRecommendations(request: GetOrganizationRecommendationsRequest): GetRecommendationsResponse {
-        return getRecommendationsResponse {
-            val pageable = DtoTransformer.buildPageable(request.pagination)
-            val retrievedRecommendations =
-                recommendationRepository.findAllByOrganizationSubsidiaryId(request.organizationSubsidiaryId, pageable)
-            recommendations.addAll(
-                DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
-            )
-            pagination = DtoTransformer.buildPaginationResponse(
-                retrievedRecommendations.totalElements,
-                request.pagination
-            )
-        }
-    }
-
-    override suspend fun getUserRecommendations(request: GetUserRecommendationsRequest): GetRecommendationsResponse {
-        return getRecommendationsResponse {
-            val pageable = DtoTransformer.buildPageable(request.pagination)
-            val retrievedRecommendations =
-                recommendationRepository.findAllByUserId(request.userId, pageable)
-            recommendations.addAll(
-                DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
-            )
-            pagination = DtoTransformer.buildPaginationResponse(
-                retrievedRecommendations.totalElements,
-                request.pagination
-            )
-        }
-    }
-
-    private suspend fun getUserById(userId: Long): User {
-        return userServiceStub.getUserById(
-            getUserByIdRequest {
-                id = userId
-            }
+    override suspend fun getUserRecommendations(request: GetUserRecommendationsRequest) = getRecommendationsResponse {
+        val pageable = DtoTransformer.buildPageable(request.pagination)
+        val retrievedRecommendations = recommendationRepository.findAllByUserId(
+            request.userId,
+            pageable
+        )
+        recommendations.addAll(
+            DtoTransformer.transformRecommendationEntityListToRecommendationDtoList(retrievedRecommendations)
+        )
+        pagination = DtoTransformer.buildPaginationResponse(
+            retrievedRecommendations.totalElements,
+            request.pagination
         )
     }
 
     private suspend fun ensureUserExists(userId: Long) {
-        val creatorExists = userServiceStub.existsById(
+        val userExists = userServiceStub.existsById(
             id { id = userId }
         ).value
 
-        if (!creatorExists)
+        if (!userExists)
             throw CreatorDoesNotExistException("Creator does not exist")
     }
 
@@ -157,6 +134,6 @@ class RecommendationServiceImpl(
         ).value
 
         if (!organizationSubsidiaryExists)
-            throw CreatorDoesNotExistException("Creator does not exist")
+            throw CreatorDoesNotExistException("Organization does not exist")
     }
 }

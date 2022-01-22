@@ -91,15 +91,15 @@ message GetOrganizationOrganizationSubsidiaryIdsRequest {
 }
 
 message GetOrganizationOrganizationSubsidiaryIdsResponse {
-  repeated int64 organizationSubsidiaryIds = 1;
+  repeated int64 organizationSubsidiary_ids = 1;
 }
 
 message GetOrganizationJobTitlesResponse {
-  repeated string titles = 1;
+  repeated OrganizationJobTitle titles = 1;
 }
 
 message OrganizationJobTitle {
   int64 id = 1;
   string title = 2;
-  int64 organizationId = 3;
+  int64 organization_id = 3;
 }

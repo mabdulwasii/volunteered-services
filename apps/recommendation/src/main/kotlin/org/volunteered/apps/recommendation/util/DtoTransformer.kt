@@ -4,7 +4,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.volunteered.apps.recommendation.entity.RecommendationEntity
 import org.volunteered.apps.recommendation.entity.RecommendationRequestEntity
+import org.volunteered.libs.proto.common.v1.Gender
 import org.volunteered.libs.proto.common.v1.PaginationRequest
+import org.volunteered.libs.proto.common.v1.User
 import org.volunteered.libs.proto.common.v1.paginationResponse
 import org.volunteered.libs.proto.recommendation.v1.GetOrganizationRecommendationRequestsResponse
 import org.volunteered.libs.proto.recommendation.v1.Recommendation
@@ -75,7 +77,7 @@ class DtoTransformer {
             id = recommendationEntity.id!!
             positionHeld = recommendationEntity.positionHeld
             duration = recommendationEntity.duration
-            recommenderPosition = recommendationEntity.recommenderPosition
+            recommenderPositionId = recommendationEntity.recommenderPositionId
             body = recommendationEntity.body
             userId = recommendationEntity.userId
             organizationSubsidiaryId = recommendationEntity.organizationSubsidiaryId
@@ -103,8 +105,28 @@ class DtoTransformer {
             organizationSubsidiaryId = it.organizationSubsidiaryId,
             positionHeld = it.positionHeld,
             duration = it.duration,
-            recommenderPosition = it.recommenderPosition, body = it.body,
+            recommenderPositionId = it.recommenderPositionId,
+            body = it.body,
             userId = userId
         )
+
+        fun resolveRecommendationBodyForUser(body: String, user: User) {
+            body.replace("{{name}}", user.firstName)
+            body.replace("{{email}}", user.email)
+            val subject: String
+            val objectPronoun: String
+            when {
+                user.gender.equals(Gender.MALE) -> {
+                    subject = "he"
+                    objectPronoun = "his"
+                }
+                else -> {
+                    subject = "she"
+                    objectPronoun = "her"
+                }
+            }
+            body.replace("{{subject}}", subject)
+            body.replace("{{object}}", objectPronoun)
+        }
     }
 }
