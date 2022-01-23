@@ -58,7 +58,7 @@ class RecommendationServiceImpl(
                 organizationRecommendationRequestPage,
                 pagination
             )
-    }
+        }
 
     override suspend fun writeRecommendation(request: WriteRecommendationRequest): WriteRecommendationResponse {
         return writeRecommendationResponse {
