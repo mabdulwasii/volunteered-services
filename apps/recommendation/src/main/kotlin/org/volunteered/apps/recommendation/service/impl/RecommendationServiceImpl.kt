@@ -20,7 +20,7 @@ import org.volunteered.libs.proto.recommendation.v1.WriteRecommendationResponse
 import org.volunteered.libs.proto.recommendation.v1.getRecommendationsResponse
 import org.volunteered.libs.proto.recommendation.v1.writeRecommendationResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
-import org.volunteered.libs.proto.user.v1.getUserByIdRequest
+import org.volunteered.libs.proto.user.v1.getUsersByIdsRequest
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -63,22 +63,20 @@ class RecommendationServiceImpl(
     override suspend fun writeRecommendation(request: WriteRecommendationRequest): WriteRecommendationResponse {
         return writeRecommendationResponse {
             request.recommendationsList.forEach {
-                it.userIdsList.forEach { userId ->
-                    val retrievedUser = userServiceStub.getUserById(
-                        getUserByIdRequest {
-                            id = userId
-                        }
-                    )
-                    val userRecommendationExists = recommendationRepository.existsByUserIdAndOrganizationSubsidiaryId(
-                        userId,
-                        it.organizationSubsidiaryId
-                    )
-                    if (!userRecommendationExists) {
-                        DtoTransformer.resolveRecommendationBodyForUser(it.body, retrievedUser)
+                val users = userServiceStub.getUsersByIds(
+                    getUsersByIdsRequest { it.userIdsList }
+                ).usersList
+                val recommendationUserIds = recommendationRepository.findAllByUserIdInAndOrganizationSubsidiaryId(
+                    users.mapNotNull { user ->  user.id },
+                    it.organizationSubsidiaryId
+                ).map { recommendationEntity ->  recommendationEntity.userId }
+                users.forEach{ user ->
+                    if(!recommendationUserIds.contains(user.id)) {
+                        DtoTransformer.resolveRecommendationBodyForUser(it.body, user)
                         val recommendationEntity = DtoTransformer.transformWriteRecommendationRequestDtoRecommendationEntity(
-                            it,
-                            userId
-                        )
+                                it,
+                                user.id
+                            )
                         recommendations.add(
                             DtoTransformer.transformRecommendationEntityToRecommendationDto(
                                 recommendationRepository.save(recommendationEntity)
