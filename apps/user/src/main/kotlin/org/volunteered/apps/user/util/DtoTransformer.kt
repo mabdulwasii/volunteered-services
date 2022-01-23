@@ -70,5 +70,13 @@ class DtoTransformer {
             user.webAndSocialUrls.skype.whenNotEmpty { userEntity.skype = it }
             user.webAndSocialUrls.github.whenNotEmpty { userEntity.github = it }
         }
+
+        fun transformUserEntityListToUserDtoList(userEntities: List<UserEntity>): List<User> {
+            val userDtoList = mutableListOf<User>()
+            userEntities.forEach {
+                userDtoList.add(transformUserEntityToUserDto(it))
+            }
+            return userDtoList
+        }
     }
 }

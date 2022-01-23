@@ -8,6 +8,8 @@ import org.volunteered.libs.proto.user.v1.CreateUserRequest
 import org.volunteered.libs.proto.user.v1.DeleteUserRequest
 import org.volunteered.libs.proto.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.proto.user.v1.GetUserByIdRequest
+import org.volunteered.libs.proto.user.v1.GetUsersByIdsRequest
+import org.volunteered.libs.proto.user.v1.GetUsersByIdsResponse
 
 interface UserService {
     suspend fun createUser(request: CreateUserRequest): User
@@ -16,4 +18,5 @@ interface UserService {
     suspend fun getUserByEmail(request: GetUserByEmailRequest): User
     suspend fun updateUser(request: User): User
     suspend fun deleteUser(request: DeleteUserRequest): Empty
+    suspend fun getUsersByIds(request: GetUsersByIdsRequest): GetUsersByIdsResponse
 }

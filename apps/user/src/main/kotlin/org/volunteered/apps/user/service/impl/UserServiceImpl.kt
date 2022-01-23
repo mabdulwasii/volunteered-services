@@ -20,6 +20,8 @@ import org.volunteered.libs.proto.user.v1.CreateUserRequest
 import org.volunteered.libs.proto.user.v1.DeleteUserRequest
 import org.volunteered.libs.proto.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.proto.user.v1.GetUserByIdRequest
+import org.volunteered.libs.proto.user.v1.GetUsersByIdsRequest
+import org.volunteered.libs.proto.user.v1.getUsersByIdsResponse
 
 @Service
 class UserServiceImpl(
@@ -83,5 +85,12 @@ class UserServiceImpl(
     override suspend fun deleteUser(request: DeleteUserRequest): Empty {
         userRepository.deleteById(request.id)
         return Empty.getDefaultInstance()
+    }
+
+    override suspend fun getUsersByIds(request: GetUsersByIdsRequest) = getUsersByIdsResponse {
+        val userEntities = userRepository.findAllByIdIn(request.idList)
+        users.addAll(
+            DtoTransformer.transformUserEntityListToUserDtoList(userEntities)
+        )
     }
 }
