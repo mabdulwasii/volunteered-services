@@ -43,20 +43,21 @@ class RecommendationServiceImpl(
     }
 
     override suspend fun getRecommendationRequestsForOrganization(request: GetOrganizationRecommendationRequests):
-            GetOrganizationRecommendationRequestsResponse {
-        val organizationSubsidiary = request.organizationSubsidiaryId
-        val pagination = request.pagination
-        val paginationLimitPerPage = pagination.limitPerPage
-        val paginationPage = pagination.page
-        val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
+        GetOrganizationRecommendationRequestsResponse {
+            val organizationSubsidiary = request.organizationSubsidiaryId
+            val pagination = request.pagination
+            val paginationLimitPerPage = pagination.limitPerPage
+            val paginationPage = pagination.page
+            val pageable = PageRequest.of(paginationPage, paginationLimitPerPage)
 
-        val organizationRecommendationRequestPage =
-            recommendationRequestRepository.findAllByOrganizationSubsidiaryId(organizationSubsidiary, pageable)
-
-        return DtoTransformer.transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(
-            organizationRecommendationRequestPage,
-            pagination
-        )
+            val organizationRecommendationRequestPage = recommendationRequestRepository.findAllByOrganizationSubsidiaryId(
+                organizationSubsidiary,
+                pageable
+            )
+            return DtoTransformer.transformOrganizationRecommendationRequestListToGetOrganizationRecommendationRequestsResponse(
+                organizationRecommendationRequestPage,
+                pagination
+            )
     }
 
     override suspend fun writeRecommendation(request: WriteRecommendationRequest): WriteRecommendationResponse {
@@ -69,9 +70,9 @@ class RecommendationServiceImpl(
                         }
                     )
                     val userRecommendationExists = recommendationRepository.existsByUserIdAndOrganizationSubsidiaryId(
-                            userId,
-                            it.organizationSubsidiaryId
-                        )
+                        userId,
+                        it.organizationSubsidiaryId
+                    )
                     if (!userRecommendationExists) {
                         DtoTransformer.resolveRecommendationBodyForUser(it.body, retrievedUser)
                         val recommendationEntity = DtoTransformer.transformWriteRecommendationRequestDtoRecommendationEntity(
