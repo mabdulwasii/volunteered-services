@@ -67,16 +67,16 @@ class RecommendationServiceImpl(
                     getUsersByIdsRequest { it.userIdsList }
                 ).usersList
                 val recommendationUserIds = recommendationRepository.findAllByUserIdInAndOrganizationSubsidiaryId(
-                    users.mapNotNull { user ->  user.id },
+                    users.mapNotNull { user -> user.id },
                     it.organizationSubsidiaryId
-                ).map { recommendationEntity ->  recommendationEntity.userId }
-                users.forEach{ user ->
-                    if(!recommendationUserIds.contains(user.id)) {
+                ).map { recommendationEntity -> recommendationEntity.userId }
+                users.forEach { user ->
+                    if (!recommendationUserIds.contains(user.id)) {
                         DtoTransformer.resolveRecommendationBodyForUser(it.body, user)
                         val recommendationEntity = DtoTransformer.transformWriteRecommendationRequestDtoRecommendationEntity(
-                                it,
-                                user.id
-                            )
+                            it,
+                            user.id
+                        )
                         recommendations.add(
                             DtoTransformer.transformRecommendationEntityToRecommendationDto(
                                 recommendationRepository.save(recommendationEntity)
