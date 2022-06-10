@@ -48,8 +48,8 @@ logging:
 
 rating:
   weight:
-    unverifiedRating: 1
-    verifiedRating: 3
+    unverifiedRatingWeight: 1
+    verifiedRatingWeight: 3
 
 
 
