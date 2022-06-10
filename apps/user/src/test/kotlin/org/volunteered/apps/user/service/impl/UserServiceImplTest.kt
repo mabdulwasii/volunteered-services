@@ -130,7 +130,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should throw exception if user does not exist`(): Unit = runBlocking {
+    fun `should throw exception if user does not exist`() : Unit = runBlocking {
         val request = getUserByEmailRequest {
             email = DEFAULT_EMAIL
         }
@@ -166,7 +166,7 @@ internal class UserServiceImplTest {
     }
 
     @Test
-    fun `should not update user if user is invalid`(): Unit = runBlocking {
+    fun `should not update user if user is invalid`() : Unit = runBlocking {
         val user = user {
             id = DEFAULT_ID
             firstName = DEFAULT_FIRST_NAME

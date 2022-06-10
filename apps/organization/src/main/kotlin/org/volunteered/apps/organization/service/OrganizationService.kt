@@ -27,8 +27,8 @@ interface OrganizationService {
     suspend fun deleteOrganization(request: DeleteOrganizationRequest): Empty
     suspend fun deleteOrganizationSubsidiary(request: DeleteOrganizationSubsidiaryRequest): Empty
     suspend fun getOrganizationSubsidiaryById(request: GetOrganizationSubsidiaryRequest): OrganizationSubsidiary
+    suspend fun updateOrganizationSubsidiary(request: UpdateOrganizationSubsidiaryRequest): OrganizationSubsidiary
     suspend fun updateOrganizationSubsidiary(request: OrganizationSubsidiary): OrganizationSubsidiary
-    suspend fun searchOrganizationByName(request: SearchOrganizationByNameRequest): SearchOrganizationByNameResponse
     suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue
     suspend fun getOrganizationOrganizationSubsidiaryIds(
         request: GetOrganizationOrganizationSubsidiaryIdsRequest

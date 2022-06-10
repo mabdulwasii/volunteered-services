@@ -528,7 +528,6 @@ internal class OrganizationServiceImplTest {
         const val INVALID_ID = 222L
         const val DEFAULT_SUBSIDIARY_ID = 21L
         const val DEFAULT_WEBSITE = "website url"
-        const val DEFAULT_LINKEDIN = "linkedin url"
         const val BIO = "my bio"
         const val EMPTY_STRING = ""
     }
