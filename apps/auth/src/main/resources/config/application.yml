@@ -40,8 +40,8 @@ logging:
 
 rsa:
   key:
-    privateKeyFile: 'src/main/resources/private_key.key'
-    publicKeyFile: 'src/main/resources/public_key.pub'
+    privateKeyFile: 'apps/auth/src/main/resources/private_key.key'
+    publicKeyFile: 'apps/auth/src/main/resources/public_key.pub'
 
 
 token:
