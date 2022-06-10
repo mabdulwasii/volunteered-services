@@ -13,10 +13,12 @@ import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationJobTitlesResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationJobTitle
 import org.volunteered.libs.proto.organization.v1.OrganizationServiceGrpcKt
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
@@ -75,5 +77,13 @@ class OrganizationGrpcService(
 
     override suspend fun organizationSubsidiaryExistsById(request: Id): BoolValue {
         return organizationService.organizationSubsidiaryExistsById(request)
+    }
+
+    override suspend fun createOrganizationJobTitle(request: OrganizationJobTitle): OrganizationJobTitle {
+        return organizationService.createOrganizationJobTitle(request)
+    }
+
+    override suspend fun getOrganizationJobTitles(request: Id): GetOrganizationJobTitlesResponse {
+        return organizationService.getOrganizationJobTitles(request)
     }
 }

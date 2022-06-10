@@ -1,6 +1,7 @@
 package org.volunteered.apps.organization.util
 
 import org.volunteered.apps.organization.entity.OrganizationEntity
+import org.volunteered.apps.organization.entity.OrganizationJobTitleEntity
 import org.volunteered.apps.organization.entity.OrganizationSubsidiaryEntity
 import org.volunteered.libs.core.extension.whenGreaterThanZero
 import org.volunteered.libs.core.extension.whenNotEmpty
@@ -10,8 +11,10 @@ import org.volunteered.libs.proto.common.v1.organizationSubsidiary
 import org.volunteered.libs.proto.common.v1.websiteAndSocialMediaUrls
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationJobTitle
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
+import org.volunteered.libs.proto.organization.v1.organizationJobTitle
 import org.volunteered.libs.proto.organization.v1.searchOrganizationByNameResponse
 
 class DtoTransformer {
@@ -127,6 +130,27 @@ class DtoTransformer {
             return searchOrganizationByNameResponse {
                 organizations.addAll(organizationEntityList.map { transformOrganizationEntityToOrganizationDto(it) })
             }
+        }
+
+        fun transformOrganizationJobTitleEntityToOrganizationJobTitleDto(
+            organizationJobTitleEntity: OrganizationJobTitleEntity
+        ) =
+            organizationJobTitle {
+                id = organizationJobTitleEntity.id!!
+                organizationId = organizationJobTitleEntity.organizationId
+                title = organizationJobTitleEntity.title
+            }
+
+        fun transformOrganizationJobTileEntityListToOrganizationJobTitleDtoList(
+            organizationJobTitleEntities: List<OrganizationJobTitleEntity>
+        ): List<OrganizationJobTitle> {
+            val organizationJobTitleList = mutableListOf<OrganizationJobTitle>()
+            organizationJobTitleEntities.forEach {
+                organizationJobTitleList.add(
+                    transformOrganizationJobTitleEntityToOrganizationJobTitleDto(it)
+                )
+            }
+            return organizationJobTitleList
         }
     }
 }

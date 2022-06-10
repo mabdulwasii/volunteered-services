@@ -13,6 +13,8 @@ import org.volunteered.libs.proto.user.v1.CreateUserRequest
 import org.volunteered.libs.proto.user.v1.DeleteUserRequest
 import org.volunteered.libs.proto.user.v1.GetUserByEmailRequest
 import org.volunteered.libs.proto.user.v1.GetUserByIdRequest
+import org.volunteered.libs.proto.user.v1.GetUsersByIdsRequest
+import org.volunteered.libs.proto.user.v1.GetUsersByIdsResponse
 import org.volunteered.libs.proto.user.v1.UserServiceGrpcKt
 
 @GrpcService
@@ -47,5 +49,9 @@ class UserGrpcService(private val userService: UserService) : UserServiceGrpcKt.
 
     override suspend fun deleteUser(request: DeleteUserRequest): Empty {
         return userService.deleteUser(request)
+    }
+
+    override suspend fun getUsersByIds(request: GetUsersByIdsRequest): GetUsersByIdsResponse {
+        return userService.getUsersByIds(request)
     }
 }

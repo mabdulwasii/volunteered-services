@@ -15,6 +15,7 @@ service UserService {
   rpc CreateUser(CreateUserRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc ExistsById(org.volunteered.libs.proto.common.v1.Id) returns (google.protobuf.BoolValue);
   rpc GetUserById(GetUserByIdRequest) returns (org.volunteered.libs.proto.common.v1.User);
+  rpc GetUsersByIds(GetUsersByIdsRequest) returns (GetUsersByIdsResponse);
   rpc GetUserByEmail(GetUserByEmailRequest) returns (org.volunteered.libs.proto.common.v1.User);
   rpc UpdateUser(org.volunteered.libs.proto.common.v1.User) returns (org.volunteered.libs.proto.common.v1.User);
   rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
@@ -30,7 +31,13 @@ message CreateUserRequest {
 message GetUserByIdRequest {
   int64 id = 1;
 }
+message GetUsersByIdsRequest {
+  repeated int64 id = 1;
+}
 
+message GetUsersByIdsResponse {
+  repeated org.volunteered.libs.proto.common.v1.User users = 1;
+}
 message GetUserByEmailRequest {
   string email = 1 [(validate.rules).string.email = true];
 }

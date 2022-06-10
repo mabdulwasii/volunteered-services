@@ -19,6 +19,7 @@ import org.volunteered.apps.organization.exception.CreatorDoesNotExistException
 import org.volunteered.apps.organization.exception.OrganizationAlreadyExistsException
 import org.volunteered.apps.organization.exception.OrganizationDoesNotExistException
 import org.volunteered.apps.organization.repository.BenefitRepository
+import org.volunteered.apps.organization.repository.OrganizationJobTitleRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
 import org.volunteered.libs.proto.common.v1.id
@@ -39,11 +40,13 @@ internal class OrganizationServiceImplTest {
     private val organizationSubsidiaryRepository = mockk<OrganizationSubsidiaryRepository>()
     private val benefitRepository = mockk<BenefitRepository>()
     private val userServiceStub = mockk<UserServiceGrpcKt.UserServiceCoroutineStub>()
+    private val organizationJobTitleRepository = mockk<OrganizationJobTitleRepository>()
     private val service = OrganizationServiceImpl(
         organizationRepository,
         organizationSubsidiaryRepository,
         benefitRepository,
-        userServiceStub
+        userServiceStub,
+        organizationJobTitleRepository
     )
 
     @BeforeEach

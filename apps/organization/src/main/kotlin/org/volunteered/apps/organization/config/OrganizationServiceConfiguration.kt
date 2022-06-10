@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.volunteered.apps.organization.repository.BenefitRepository
+import org.volunteered.apps.organization.repository.OrganizationJobTitleRepository
 import org.volunteered.apps.organization.repository.OrganizationRepository
 import org.volunteered.apps.organization.repository.OrganizationSubsidiaryRepository
 import org.volunteered.apps.organization.service.OrganizationService
@@ -25,13 +26,15 @@ class OrganizationServiceConfiguration {
         @Autowired organizationRepository: OrganizationRepository,
         @Autowired organizationSubsidiaryRepository: OrganizationSubsidiaryRepository,
         @Autowired benefitRepository: BenefitRepository,
-        @Autowired userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub
+        @Autowired userServiceCoroutineStub: UserServiceGrpcKt.UserServiceCoroutineStub,
+        @Autowired organizationJobTitleRepository: OrganizationJobTitleRepository
     ): OrganizationService {
         return OrganizationServiceImpl(
             organizationRepository,
             organizationSubsidiaryRepository,
             benefitRepository,
-            userServiceCoroutineStub
+            userServiceCoroutineStub,
+            organizationJobTitleRepository
         )
     }
 }

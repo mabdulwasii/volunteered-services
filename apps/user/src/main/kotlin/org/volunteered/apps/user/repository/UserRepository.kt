@@ -8,4 +8,5 @@ import org.volunteered.apps.user.entity.UserEntity
 interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findByEmail(email: String): UserEntity?
     fun existsByEmail(email: String): Boolean
+    fun findAllByIdIn(id: List<Long>): List<UserEntity>
 }

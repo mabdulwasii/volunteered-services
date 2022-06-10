@@ -9,10 +9,12 @@ import org.volunteered.libs.proto.organization.v1.CreateOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.CreateOrganizationSubsidiaryRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.DeleteOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.GetOrganizationJobTitlesResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationOrganizationSubsidiaryIdsResponse
 import org.volunteered.libs.proto.organization.v1.GetOrganizationRequest
 import org.volunteered.libs.proto.organization.v1.GetOrganizationSubsidiaryRequest
+import org.volunteered.libs.proto.organization.v1.OrganizationJobTitle
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameRequest
 import org.volunteered.libs.proto.organization.v1.SearchOrganizationByNameResponse
 import org.volunteered.libs.proto.organization.v1.UpdateOrganizationRequest
@@ -31,4 +33,6 @@ interface OrganizationService {
     suspend fun getOrganizationOrganizationSubsidiaryIds(
         request: GetOrganizationOrganizationSubsidiaryIdsRequest
     ): GetOrganizationOrganizationSubsidiaryIdsResponse
+    suspend fun createOrganizationJobTitle(request: OrganizationJobTitle): OrganizationJobTitle
+    suspend fun getOrganizationJobTitles(request: Id): GetOrganizationJobTitlesResponse
 }
